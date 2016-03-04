@@ -1,0 +1,1 @@
+<div class="center">Search Page</div>
