@@ -209,7 +209,7 @@ function showNewDialogPopup() {
       return;
     }
     $.each(users, function(index, item){
-      showUsers(this.user.login, this.user.id);
+      showUsers(this.user.full_name, this.user.id);
     });
   });
 
@@ -283,8 +283,32 @@ function createNewDialog() {
 
       triggerDialog(createdDialog._id);
 
+      saveNewDialogToDB(createdDialog)
+
       $('a.users_form').removeClass('active');
     }
+  });
+}
+
+// save data on db
+function saveNewDialogToDB(itemDialog) {
+  var dialogId = itemDialog._id;
+  var dialogName = itemDialog.name;
+  var dialogLastMessage = itemDialog.last_message;
+  var dialogOccupants = itemDialog.occupants_ids;
+
+ $.ajax({
+     url: site_url + 'chat/new',
+     data: {
+        did: dialogId,
+        dname: dialogName,
+        dmessage: dialogLastMessage,
+        dusers: dialogOccupants
+     },
+     success: function(data) {
+        alert(data);
+     },
+     type: 'POST'
   });
 }
 

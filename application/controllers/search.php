@@ -15,6 +15,10 @@ class Search extends CI_Controller
 
 		$data['page_title'] = 'Search Result | Relayy';
 
+		$data['role'] = gf_cu_type();
+
+		$data['user_name'] = gf_cu_fname();
+
 		$chat_data = array();
     
     	$this->load->view('templates/header-chat', $data);

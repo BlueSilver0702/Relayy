@@ -18,6 +18,10 @@ class Profile extends CI_Controller
 
 		$data['page_title'] = 'Profile | Relayy';
 
+		$data['role'] = gf_cu_type();
+
+		$data['user_name'] = gf_cu_fname();
+
 		$chat_data = array();
 
 		$user_data['fname'] = gf_cu_fname();
@@ -48,6 +52,10 @@ class Profile extends CI_Controller
     	$data['body_class'] = 'profile-page';
 
 		$data['page_title'] = 'Edit Profile | Relayy';
+
+		$data['role'] = gf_cu_type();
+
+		$data['user_name'] = gf_cu_fname();
 
 		$chat_data = array();
 

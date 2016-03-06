@@ -4,22 +4,24 @@ var currentUser;
 
 $(document).ready(function() {
 
-  $("#loginForm").modal("show");
-  $('#loginForm .progress').hide();
+  // $("#loginForm").modal("show");
+  // $('#loginForm .progress').hide();
 
+currentUser = QBUser;
+connectToChat(QBUser);
   // User1 login action
   //
-  $('#user1').click(function() {
-    currentUser = QBUser1;
-    connectToChat(QBUser1);
-  });
+  // $('#user1').click(function() {
+  //   currentUser = QBUser1;
+  //   connectToChat(QBUser1);
+  // });
 
   // User2 login action
   //
-  $('#user2').click(function() {
-    currentUser = QBUser2;
-    connectToChat(QBUser2);
-  });
+  // $('#user2').click(function() {
+  //   currentUser = QBUser2;
+  //   connectToChat(QBUser2);
+  // });
 });
 
 function connectToChat(user) {

@@ -15,6 +15,10 @@ class Setting extends CI_Controller
 
 		$data['page_title'] = 'Settings | Relayy';
 
+		$data['role'] = gf_cu_type();
+
+		$data['user_name'] = gf_cu_fname();
+
 		$chat_data = array();
     
     	$this->load->view('templates/header-chat', $data);

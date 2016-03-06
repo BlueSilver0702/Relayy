@@ -64,34 +64,19 @@ class Muser extends CI_Model {
         return (isset($id)) ? $id : FALSE;
     }
 
-    public function getUserlist()
+    public function getUserlist($status = USERSTATUS_INIT)
     {
-        $query;// = new ParseQuery("SystemUser");
-
-        $result = array();// = $query->find();
-
-        $userlist = array();
-
-        for ($i = 0; $i < count($result); $i++) {
-
-            $object = $result[$i];
-
-            $user_one = new Muser();
-
-            // $uesr_one->id = $object->getObjectId();
-            // $uesr_one->fname = $object->get("username");
-            // $uesr_one->password = $object->get("usergroup");
-            // $uesr_one->type = $object->get("userStatus");
-            // $uesr_one->status = $object->get("userStatus");
-            // $uesr_one->email = $object->get("firstName");
-            // $uesr_one->photo = $object->get("firstName");
-
-            
-            $userlist[] = $uesr_one;
-
+        if ($status = 100) {
+            $query = $this->db->select('uid, fname, pwd, type, status, email, photo, phone, facebook')
+                          ->get('tbl_user');
+        } else {
+            $query = $this->db->select('uid, fname, pwd, type, status, email, photo, phone, facebook')
+                          ->where('status', $status)
+                          ->get('tbl_user');
         }
 
-        return $userlist;
+        return $query->result_array();
+
     }
 
     public function getUser($user_id)
@@ -137,6 +122,25 @@ class Muser extends CI_Model {
         $this->db->update('tbl_user', $data, array('uid' => $id));
 
         return $this->getUser($id);
+    }
+
+    public function changeStatus($user_id)
+    {
+        $user = $this->getUser($user_id);
+
+        if ($user->status == USERSTATUS_INIT) {
+            $data = array(
+                'status' => USERSTATUS_LIVE
+            );
+
+            $this->db->update('tbl_user', $data, array('uid' => $user_id));            
+        } else {
+            $data = array(
+                'status' => USERSTATUS_INIT
+            );
+
+            $this->db->update('tbl_user', $data, array('uid' => $user_id));            
+        }
     }
 
     public static function deleteUser($user_id)
@@ -191,7 +195,7 @@ class Muser extends CI_Model {
 
         if (!$newUser)
         {
-            $newUser = $this->insertUser($id, $fname, $pwd, $type, 0, $email, '', $facebook);    
+            $newUser = $this->insertUser($id, $fname, $pwd, $type, USERSTATUS_INIT, $email, '', $facebook);    
         }
         
 
@@ -203,7 +207,7 @@ class Muser extends CI_Model {
             $user_one->fname = $fname;
             $user_one->password = $pwd;
             $user_one->type = $type;
-            $user_one->status = 0;
+            $user_one->status = USERSTATUS_INIT;
             $user_one->email = $email;
             $user_one->photo = '';
             $user_one->facebook = $facebook;
