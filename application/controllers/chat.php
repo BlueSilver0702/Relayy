@@ -30,13 +30,54 @@ class Chat extends CI_Controller
     
     	$this->load->view('templates/header-chat', $data);
 		
+		$chat_data['history'] = $this->mchat->getDialogs(gf_cu_id());
+
 		$this->load->view('templates/left-sidebar', $chat_data);
 
 		$this->load->view('chat');
 
-		// $this->load->view('templates/right-sidebar', $chat_data);
+		$this->load->view('templates/right-sidebar', $chat_data);
 
-		$this->load->view('templates/footer-chat');
+		$this->load->view('templates/footer-chat', $chat_data);
+
+
+	}
+
+	public function channel($cid)
+	{
+		$this->loginCheck();    	
+
+    	$data['body_class'] = 'chat-page';
+
+		$data['page_title'] = 'Chat | Relayy';
+
+		$data['role'] = gf_cu_type();
+
+		$data['user_name'] = gf_cu_fname();
+
+		$chat_data['u_id'] = gf_cu_id();
+		
+		$chat_data['u_name'] = gf_cu_fname();
+
+		$chat_data['u_login'] = gf_cu_email();
+
+		$chat_data['u_password'] = gf_cu_password();
+    
+    	$this->load->view('templates/header-chat', $data);
+		
+		$chat_data['history'] = $this->mchat->getDialogs(gf_cu_id());
+
+		$chat_data['current_dialog'] = $cid;
+
+		$this->load->view('templates/left-sidebar', $chat_data);
+
+		$chat_data['history'] = $this->mchat->getDialog($cid);
+
+		$this->load->view('chat');
+
+		$this->load->view('templates/right-sidebar', $chat_data);
+
+		$this->load->view('templates/footer-chat', $chat_data);
 	}
 
 	public function new()
@@ -49,16 +90,11 @@ class Chat extends CI_Controller
 
         $dmessage = $this->input->post('dmessage');
 
-       // $this->mchat->addDialog($did, $dname, $dusers, $dmessage);
-        print_r($dusers);
-        // echo "$did::$dusers";
-        exit;
-	}
+        $dtype = $this->input->post('dtype');
 
-	public function ha()
-	{
-		$object = $this->mchat->addDialog("12312312321", 'hello', '2123123123, 123123123', "hello world");		
-		print_r($object);exit;
+        $this->mchat->addDialog($did, $dname, $dusers, $dmessage, $dtype);
+
+        exit;
 	}
 
 	private function loginCheck()

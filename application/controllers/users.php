@@ -6,6 +6,7 @@ class Users extends CI_Controller
 	{
 		parent::__construct();
 		$this->load->model('muser');
+		$this->load->model('mchat');
 		$this->load->library('session');
 	}
 
@@ -30,6 +31,8 @@ class Users extends CI_Controller
     
     	$this->load->view('templates/header-chat', $data);
 		
+		$chat_data['history'] = $this->mchat->getDialogs(gf_cu_id());
+
 		$this->load->view('templates/left-sidebar', $chat_data);
 
 		$this->load->view('users');

@@ -1,5 +1,5 @@
 <div class="user-manage">
-  <div class="container">
+  <!-- <div class=""> -->
 	<ul class="nav nav-tabs">
 	  <li <?php echo $page==0?'class="active"':''?>>
 	    <a href="<?= site_url('users')?>">All</a>
@@ -39,5 +39,5 @@
 ?>
 	  
 	</div>
-  </div>
+  <!-- </div> -->
 </div>

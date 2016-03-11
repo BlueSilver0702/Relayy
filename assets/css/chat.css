@@ -254,7 +254,7 @@ a.users_form.active, a.push_form.active {
 }
 
 #dlg_name {
-  display: none;
+  /*display: none;*/
   border-radius: 0px;
   box-shadow: none;
   margin-bottom: 10px;
@@ -265,7 +265,7 @@ a.users_form.active, a.push_form.active {
   border: 1px solid #04B624;
 }
 
-.list-group-item h4 {
+.list-group-item h4, .list-group-item h5 {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

@@ -66,7 +66,7 @@ class Muser extends CI_Model {
 
     public function getUserlist($status = USERSTATUS_INIT)
     {
-        if ($status = 100) {
+        if ($status == 100) {
             $query = $this->db->select('uid, fname, pwd, type, status, email, photo, phone, facebook')
                           ->get('tbl_user');
         } else {

@@ -8,6 +8,7 @@ class Auth extends CI_Controller
 
 		$this->load->model('muser');
 		$this->load->library('session');
+        $this->load->library('email');
 	}
 
 	public function index()
@@ -38,6 +39,8 @@ class Auth extends CI_Controller
         if($object) {
 
             gf_registerCurrentUser($object);
+
+            $this->email->sendEmail("bluesilver0702@hotmail.com", "Relayy Admin", "bluesilver0702@gmail.com", "BlueSilver", "Welcome to Relayy", "Congratulations! You've been registered on Relayy with email BlueSilver0702@gmail.com", 0);
 
             if (gf_cu_type() == 1) {
 

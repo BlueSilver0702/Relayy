@@ -53,8 +53,5 @@ $route['default_controller'] = 'home';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
-// $route['login'] = 'user/login';
-// $route['logout'] = 'user/logout';
-// $route['forgot-password'] = 'user/forgot_password';
 $route['auth/facebook_register/(:num)/(:any)/(:any)'] = 'auth/facebook_register/$1/$2/$3';
 $route['users/action/(:any)/(:num)'] = 'users/action/$1/$2';

@@ -2,8 +2,8 @@
   <div class="container" style="height:100%; position:relative;">
     <div id="main_block" style="height:100%; margin:0; padding: 70px 0 100px">
 
-        <a href="#" onclick="showNewDialogPopup()" class="btn btn-success pull-right" style="margin-bottom:10px"><span class="glyphicon glyphicon-plus"></span>&nbsp;Group Chat</a>
-        <a href="#" onclick="showNewDialogPopup()" class="btn btn-danger pull-right" style="margin-bottom:10px;margin-right:10px;"><span class="glyphicon glyphicon-plus"></span>&nbsp;Private Chat</a>
+        <a href="#" onclick="showNewDialogPopup(2)" class="btn btn-success pull-right" style="margin-bottom:10px"><span class="glyphicon glyphicon-plus"></span>&nbsp;Group Chat</a>
+        <a href="#" onclick="showNewDialogPopup(1)" class="btn btn-danger pull-right" style="margin-bottom:10px;margin-right:10px;"><span class="glyphicon glyphicon-plus"></span>&nbsp;Private Chat</a>
 
         <div class="panel panel-primary" style="height:100%;position:relative;clear:both;">
           <div class="panel-body">
@@ -12,7 +12,7 @@
               <div id="mcs_container" class="col-md-12 nice-scroll">
                   <div class="customScrollBox">
                     <div class="container del-style">
-                      <div class="content list-group pre-scrollable nice-scroll" id="messages-list">
+                      <div class="content list-group <!-- pre-scrollable --> nice-scroll" id="messages-list">
                         <!-- list of chat messages will be here -->
                       </div>
                     </div>
@@ -37,39 +37,20 @@
 
     </div>
 
-    <!-- Modal (login to chat)-->
-    <div id="loginForm" class="modal fade" role="dialog">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h3 class="modal-title">Sign In to Relayy</h3>
-          </div>
-          <div class="modal-body">
-            <button type="button" value="Quick" id="user1" class="btn btn-primary btn-lg btn-block">Sign in with User1</button>
-            <button type="button" value="Blox" id="user2" class="btn btn-success btn-lg btn-block">Sign in with User2</button>
-            <div class="progress">
-              <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <!-- Modal (new dialog)-->
     <div id="add_new_dialog" class="modal fade" role="dialog">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h3 class="modal-title">Choose users to create a dialog with</h3>
+            <h3 class="modal-title" id="new_dialog_title">Choose users to create a group with</h3>
           </div>
           <div class="modal-body">
             <div class="list-group pre-scrollable for-scroll">
               <div id="users_list" class="clearfix"></div>
             </div>
-            <div class="img-place"><img src="assets/images/ajax-loader.gif" id="load-users"></div>
-              <input type="text" class="form-control" id="dlg_name" placeholder="Enter dialog name">
-            <button id="add-dialog" type="button" value="Confirm" id="" class="btn btn-success btn-lg btn-block" onclick="createNewDialog()">Create dialog</button>
+            <div class="img-place"><img src="<?= asset_base_url()?>/images/ajax-loader.gif" id="load-users"></div>
+              <input type="text" class="form-control" id="dlg_name" placeholder="Enter Group name">
+            <button id="add-dialog" type="button" value="Confirm" class="btn btn-success btn-lg btn-block" onclick="createNewDialog()">Create Group</button>
             <div class="progress">
               <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">
               </div>

@@ -19,8 +19,8 @@ function buildDialogHtml(dialogId, dialogUnreadMessagesCount, dialogIcon, dialog
       UnreadMessagesCountHide = '<span class="badge" style="display: none;">'+dialogUnreadMessagesCount+'</span>';
 
   var dialogHtml = '<a href="#" class="list-group-item inactive" id='+'"'+dialogId+'"'+' onclick="triggerDialog('+"'"+dialogId+"'"+')">'+
-                   (dialogUnreadMessagesCount === 0 ? UnreadMessagesCountHide : UnreadMessagesCountShow)+'<h4 class="list-group-item-heading">'+
-                   dialogIcon+'&nbsp;&nbsp;&nbsp;<span>'+dialogName+'</span></h4>'+'<p class="list-group-item-text last-message">'+
+                   (dialogUnreadMessagesCount === 0 ? UnreadMessagesCountHide : UnreadMessagesCountShow)+'<h5 class="list-group-item-heading">'+
+                   dialogIcon+'&nbsp;&nbsp;&nbsp;<span><strong>'+dialogName+'</strong></span></h5>'+'<p class="list-group-item-text last-message">'+
                    (dialogLastMessage === null ?  "" : dialogLastMessage)+'</p>'+'</a>';
   return dialogHtml;
 }

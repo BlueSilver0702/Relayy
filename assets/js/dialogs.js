@@ -1,5 +1,6 @@
 
 var dialogs = {};
+var currentDType = 2;
 
 function onSystemMessageListener(message) {
   if (!message.delay) {
@@ -195,15 +196,25 @@ function setupUsersScrollHandler(){
 //
 function showUsers(userLogin, userId) {
   var userHtml = buildUserHtml(userLogin, userId, false);
+
   $('#users_list').append(userHtml);
 }
 
 // show modal window with users
-function showNewDialogPopup() {
+function showNewDialogPopup(type) {
+  currentDType = type;
+
+  if (type == 1) {
+    $("#add-dialog").text("Create 1:1 Chat");
+    $("#add_new_dialog .new_dialog_title").text("Choose one user to create 1:1 Chat with");
+  } else {
+    $("#add-dialog").text("Create Group");
+    $("#add_new_dialog .new_dialog_title").text("Choose users to create a group with");
+  }
+
   $("#add_new_dialog").modal("show");
   $('#add_new_dialog .progress').hide();
 
-  // get and show users
   retrieveUsersForDialogCreation(function(users) {
     if(users === null || users.length === 0){
       return;
@@ -218,10 +229,19 @@ function showNewDialogPopup() {
 
 // select users from users list
 function clickToAdd(forFocus) {
-  if ($('#'+forFocus).hasClass("active")) {
-    $('#'+forFocus).removeClass("active");
+  if (currentDType == 1) {
+    if ($('#'+forFocus).hasClass("active")) {
+      $('a.users_form').removeClass('active');
+    } else {
+      $('a.users_form').removeClass('active');
+      $('#'+forFocus).addClass("active");
+    }
   } else {
-    $('#'+forFocus).addClass("active");
+    if ($('#'+forFocus).hasClass("active")) {
+      $('#'+forFocus).removeClass("active");
+    } else {
+      $('#'+forFocus).addClass("active");
+    }
   }
 }
 
@@ -242,18 +262,21 @@ function createNewDialog() {
   var dialogOccupants;
   var dialogType;
 
-  if (usersIds.length > 1) {
-    if (usersNames.indexOf(currentUser.login) > -1) {
-      dialogName = usersNames.join(', ');
-    }else{
-      dialogName = currentUser.login + ', ' + usersNames.join(', ');
-    }
+  //if (usersIds.length > 1) {
+    // if (usersNames.indexOf(currentUser.login) > -1) {
+    //   dialogName = usersNames.join(', ');
+    // }else{
+    //   dialogName = currentUser.login + ', ' + usersNames.join(', ');
+    // }
+    if (currentDType == 1) dialogName = "Private"
+    else dialogName = $("#dlg_name").val();
     dialogOccupants = usersIds;
-    dialogType = 2;
-  } else {
-    dialogOccupants = usersIds;
-    dialogType = 3;
-  }
+    // alert(dialogOccupants); 
+    dialogType = 1;
+  // } else {
+  //   dialogOccupants = usersIds;
+  //   dialogType = 3;
+  // }
 
   var params = {
     type: dialogType,
@@ -283,7 +306,7 @@ function createNewDialog() {
 
       triggerDialog(createdDialog._id);
 
-      saveNewDialogToDB(createdDialog)
+      saveNewDialogToDB(createdDialog, dialogOccupants, currentDType)
 
       $('a.users_form').removeClass('active');
     }
@@ -291,11 +314,12 @@ function createNewDialog() {
 }
 
 // save data on db
-function saveNewDialogToDB(itemDialog) {
+function saveNewDialogToDB(itemDialog, occupants, type) {
   var dialogId = itemDialog._id;
   var dialogName = itemDialog.name;
   var dialogLastMessage = itemDialog.last_message;
-  var dialogOccupants = itemDialog.occupants_ids;
+  var dialogOccupants = occupants;
+  var dialogType = type;
 
  $.ajax({
      url: site_url + 'chat/new',
@@ -303,10 +327,11 @@ function saveNewDialogToDB(itemDialog) {
         did: dialogId,
         dname: dialogName,
         dmessage: dialogLastMessage,
-        dusers: dialogOccupants
+        dusers: dialogOccupants,
+        dtype: dialogType
      },
      success: function(data) {
-        alert(data);
+        //alert(data);
      },
      type: 'POST'
   });

@@ -29,13 +29,14 @@ class Mchat extends CI_Model {
         $this->load->database();
     }
 
-    public function addDialog($id, $name, $occupants, $message)
+    public function addDialog($id, $name, $occupants, $message, $type)
     {
         $data = array(
             'did'        => $id,
             'name'      => $name,
-            'occupants'        => $occupants,
-            'message'      => $message
+            'occupants'        => json_encode($occupants),
+            'message'      => $message,
+            'type'      => $type
         );
 
         $this->db->insert('tbl_chat', $data);
@@ -43,6 +44,48 @@ class Mchat extends CI_Model {
         $nid = $this->db->insert_id();
 
         return (isset($nid)) ? $nid : FALSE;
+    }
+
+    public function getDialogs($uid)
+    {
+        $query = $this->db->select('*')
+                      ->like('occupants', $uid."", 'both')
+                      ->get('tbl_chat');
+
+        if ($query->num_rows() > 0)
+        {
+            return $query->result_array();
+        }
+
+        return FALSE;
+    }
+
+    public function getDialog($did)
+    {
+        $query = $this->db->select('did, name, occupants, type, status, message, time')
+                          ->where('did', $did)
+                          ->limit(1)
+                          ->get('tbl_chat');
+
+        if ($query->num_rows() === 1)
+        {
+            $dialog = $query->row();
+
+            $dialog_one = new Mchat();
+        
+            $dialog_one->id = $dialog->did;
+            $dialog_one->name = $dialog->name;
+            $dialog_one->occupants = json_decode($dialog->occupants);
+            $dialog_one->type = $dialog->type;
+            $dialog_one->status = $dialog->status;
+            $dialog_one->message = $dialog->message;
+            $dialog_one->time = $dialog->time;
+
+            return $dialog_one;
+
+        }
+
+        return FALSE;
     }
 
     public function updateChat($id, $message)
