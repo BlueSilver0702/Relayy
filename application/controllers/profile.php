@@ -41,6 +41,8 @@ class Profile extends CI_Controller
 		
 		$chat_data['history'] = $this->mchat->getDialogs(gf_cu_id());
 
+		// print_r($chat_data['history']);exit;
+
 		$this->load->view('templates/left-sidebar', $chat_data);
 
 		$this->load->view('profile', $user_data);

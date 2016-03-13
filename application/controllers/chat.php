@@ -12,6 +12,31 @@ class Chat extends CI_Controller
 	{
     	$this->loginCheck();    	
 
+		///////////////////////////
+		
+		$dialog_arr = $this->mchat->getDialogs(gf_cu_id());
+
+		if (count($dialog_arr) > 0) {
+			$chat_data['d_id'] = $dialog_arr[0]['did'];
+
+	    	$chat_data['d_name'] = $dialog_arr[0]['name'];
+
+	    	$chat_data['d_occupants'] = $dialog_arr[0]['occupants'];
+
+	    	$chat_data['d_type'] = $dialog_arr[0]['type'];
+
+	    	$chat_data['d_jid'] = $dialog_arr[0]['jid'];
+
+	    	$chat_data['d_status'] = $dialog_arr[0]['status'];
+
+	    	$chat_data['d_message'] = $dialog_arr[0]['message'];
+
+	    	$chat_data['d_time'] = $dialog_arr[0]['time'];	
+		}
+    	
+		$chat_data['history'] = $dialog_arr;
+    	///////////////////////////
+
     	$data['body_class'] = 'chat-page';
 
 		$data['page_title'] = 'Chat | Relayy';
@@ -27,10 +52,8 @@ class Chat extends CI_Controller
 		$chat_data['u_login'] = gf_cu_email();
 
 		$chat_data['u_password'] = gf_cu_password();
-    
+
     	$this->load->view('templates/header-chat', $data);
-		
-		$chat_data['history'] = $this->mchat->getDialogs(gf_cu_id());
 
 		$this->load->view('templates/left-sidebar', $chat_data);
 
@@ -47,6 +70,40 @@ class Chat extends CI_Controller
 	{
 		$this->loginCheck();    	
 
+		///////////////////////////
+		
+		$dialog_arr = $this->mchat->getDialogs(gf_cu_id());
+
+		$find = FALSE;
+
+		foreach ($dialog_arr as $dialog) {
+
+			if ($dialog['did'] == $cid) {
+				$chat_data['d_id'] = $dialog['did'];
+
+		    	$chat_data['d_name'] = $dialog['name'];
+
+		    	$chat_data['d_occupants'] = $dialog['occupants'];
+
+		    	$chat_data['d_type'] = $dialog['type'];
+
+		    	$chat_data['d_jid'] = $dialog['jid'];
+
+		    	$chat_data['d_status'] = $dialog['status'];
+
+		    	$chat_data['d_message'] = $dialog['message'];
+
+		    	$chat_data['d_time'] = $dialog['time'];
+
+		    	$find = TRUE;
+			}
+		}
+
+		if (!$find) redirect(site_url('chat'), 'get');
+
+		$chat_data['history'] = $dialog_arr;
+    	///////////////////////////
+
     	$data['body_class'] = 'chat-page';
 
 		$data['page_title'] = 'Chat | Relayy';
@@ -62,16 +119,10 @@ class Chat extends CI_Controller
 		$chat_data['u_login'] = gf_cu_email();
 
 		$chat_data['u_password'] = gf_cu_password();
-    
-    	$this->load->view('templates/header-chat', $data);
-		
-		$chat_data['history'] = $this->mchat->getDialogs(gf_cu_id());
 
-		$chat_data['current_dialog'] = $cid;
+    	$this->load->view('templates/header-chat', $data);
 
 		$this->load->view('templates/left-sidebar', $chat_data);
-
-		$chat_data['history'] = $this->mchat->getDialog($cid);
 
 		$this->load->view('chat');
 
@@ -92,7 +143,9 @@ class Chat extends CI_Controller
 
         $dtype = $this->input->post('dtype');
 
-        $this->mchat->addDialog($did, $dname, $dusers, $dmessage, $dtype);
+        $djid = $this->input->post('djid');
+
+        $this->mchat->addDialog($did, $dname, $dusers, $dmessage, $dtype, $djid);
 
         exit;
 	}

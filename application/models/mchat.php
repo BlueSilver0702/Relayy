@@ -18,6 +18,7 @@ class Mchat extends CI_Model {
     var $name;
     var $occupants;
     var $type;
+    var $jid;
     var $status;
     var $message;
     var $time;
@@ -29,14 +30,15 @@ class Mchat extends CI_Model {
         $this->load->database();
     }
 
-    public function addDialog($id, $name, $occupants, $message, $type)
+    public function addDialog($id, $name, $occupants, $message, $type, $jid)
     {
         $data = array(
             'did'        => $id,
             'name'      => $name,
             'occupants'        => json_encode($occupants),
             'message'      => $message,
-            'type'      => $type
+            'type'      => $type,
+            'jid'       => $jid
         );
 
         $this->db->insert('tbl_chat', $data);
@@ -50,19 +52,15 @@ class Mchat extends CI_Model {
     {
         $query = $this->db->select('*')
                       ->like('occupants', $uid."", 'both')
+                      ->order_by("time", "desc")
                       ->get('tbl_chat');
 
-        if ($query->num_rows() > 0)
-        {
-            return $query->result_array();
-        }
-
-        return FALSE;
+        return $query->result_array();
     }
 
     public function getDialog($did)
     {
-        $query = $this->db->select('did, name, occupants, type, status, message, time')
+        $query = $this->db->select('*')
                           ->where('did', $did)
                           ->limit(1)
                           ->get('tbl_chat');
@@ -77,6 +75,7 @@ class Mchat extends CI_Model {
             $dialog_one->name = $dialog->name;
             $dialog_one->occupants = json_decode($dialog->occupants);
             $dialog_one->type = $dialog->type;
+            $dialog_one->jid = $dialog->jid;
             $dialog_one->status = $dialog->status;
             $dialog_one->message = $dialog->message;
             $dialog_one->time = $dialog->time;

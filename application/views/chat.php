@@ -86,13 +86,3 @@
         </div>
       </div>
     </div>
-
-<script>
-var QBUser = {
-        id: <?= $u_id?>,
-        name: '<?= $u_name?>',
-        login: '<?= $u_login?>',
-        pass: '<?= $u_password?>'
-    };
-var site_url = "<?= site_url()?>";
-</script>

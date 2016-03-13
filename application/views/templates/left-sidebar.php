@@ -15,10 +15,15 @@
     if (isset($history)) {
         foreach ($history as $dialog) {
     ?>
-        <a href="<?= site_url('chat/channel/'.$dialog['did']) ?>" class="list-group-item inactive" id="<?= $dialog['did']?>" onclick="triggerDialog('<?= $dialog['did']?>')">
+        <a href="<?= site_url('chat/channel/'.$dialog['did']) ?>" class="list-group-item <?php echo $dialog['did'] == $d_id?"active":"inactive"; ?>" id="<?= $dialog['did']?>" onclick="triggerDialog('<?= $dialog['did']?>')">
             <span class="badge" style="display: none;">0</span>
             <h5 class="list-group-item-heading">
+<?php 
+    if ($dialog['type'] == 1) {?>
+                <img src="<?= asset_base_url()?>/images/ava-single.svg" width="30" height="30" class="round">&nbsp;&nbsp;&nbsp;<span><strong><?= $dialog['name']?></strong></span>
+    <?php } else {?>
                 <img src="<?= asset_base_url()?>/images/ava-group.svg" width="30" height="30" class="round">&nbsp;&nbsp;&nbsp;<span><strong><?= $dialog['name']?></strong></span>
+    <?php }?>
             </h5>
             <p class="list-group-item-text last-message"><?= $dialog['message']?></p>
         </a>

@@ -45,8 +45,9 @@ function connectToChat(user) {
           console.log(roster);
           // load chat dialogs
           //
-          retrieveChatDialogs();
+//          retrieveChatDialogs();
 
+          retrieveDialog();
           // setup message listeners
           //
           setupAllListeners();

@@ -195,9 +195,8 @@ class Muser extends CI_Model {
 
         if (!$newUser)
         {
-            $newUser = $this->insertUser($id, $fname, $pwd, $type, USERSTATUS_INIT, $email, '', $facebook);    
+            $newUser = $this->insertUser($id, $fname, $pwd, $type, USERSTATUS_INIT, $email, '', '', $facebook);    
         }
-        
 
         if ($newUser) 
         {
@@ -210,6 +209,7 @@ class Muser extends CI_Model {
             $user_one->status = USERSTATUS_INIT;
             $user_one->email = $email;
             $user_one->photo = '';
+            $user_one->phone = '';
             $user_one->facebook = $facebook;
 
             return $user_one;

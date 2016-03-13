@@ -97,6 +97,38 @@ function retrieveChatDialogs() {
   });
 }
 
+function retrieveDialog() {
+
+  // join room
+  QB.chat.muc.join(DialogJID, function() {
+    console.log("Joined dialog "+DialogID);
+
+    updateDialogsUsersStorage(DialogUIDS, function(){
+      // show dialogs
+      //
+      //showOrUpdateDialogInUI(item, false);
+
+      //  and trigger the 1st dialog
+      //
+      triggerDialog(DialogID);
+
+      // hide login form
+      // $("#loginForm").modal("hide");
+
+      $("#load-img").change(function(){
+        var inputFile = $("input[type=file]")[0].files[0];
+        if (inputFile) {
+          $("#progress").show(0);
+        }
+
+        clickSendAttachments(inputFile);
+      });
+    });
+      
+  });
+
+}
+
 function showOrUpdateDialogInUI(itemRes, updateHtml) {
   var dialogId = itemRes._id;
   var dialogName = itemRes.name;
@@ -158,7 +190,6 @@ function updateDialogsList(dialogId, text){
 
 // Choose dialog
 function triggerDialog(dialogId){
-  console.log("Select a dialog with id: " + dialogId + ", name: " + dialogs[dialogId].name);
 
   // deselect
   var kids = $('#dialogs-list').children();
@@ -173,9 +204,19 @@ function triggerDialog(dialogId){
 
   // load chat history
   //
-  retrieveChatMessages(dialogs[dialogId], null);
+  var filters = {"_id": dialogId};
+ 
+  QB.chat.dialog.list(filters, function(err, resDialogs) {
+    if (err) {
+      console.log(err);
+    } else {
 
-  $('#messages-list').scrollTop($('#messages-list').prop('scrollHeight'));
+      retrieveChatMessages(resDialogs.items[0], null);
+
+      $('#messages-list').scrollTop($('#messages-list').prop('scrollHeight')); 
+    }
+  });
+
 }
 
 function setupUsersScrollHandler(){
@@ -206,10 +247,12 @@ function showNewDialogPopup(type) {
 
   if (type == 1) {
     $("#add-dialog").text("Create 1:1 Chat");
-    $("#add_new_dialog .new_dialog_title").text("Choose one user to create 1:1 Chat with");
+    $("#new_dialog_title").text("Choose one user to create 1:1 Chat with");
+    $("#dlg_name").hide();
   } else {
     $("#add-dialog").text("Create Group");
-    $("#add_new_dialog .new_dialog_title").text("Choose users to create a group with");
+    $("#new_dialog_title").text("Choose users to create a group with");
+    $("#dlg_name").show();
   }
 
   $("#add_new_dialog").modal("show");
@@ -220,7 +263,8 @@ function showNewDialogPopup(type) {
       return;
     }
     $.each(users, function(index, item){
-      showUsers(this.user.full_name, this.user.id);
+      if (this.user.id != QBUser.id)
+        showUsers(this.user.full_name, this.user.id);
     });
   });
 
@@ -254,6 +298,8 @@ function createNewDialog() {
     usersIds[index] = $(this).attr('id');
     usersNames[index] = $(this).text();
   });
+
+  usersIds.unshift(QBUser.id);
 
   $("#add_new_dialog").modal("hide");
   $('#add_new_dialog .progress').show();
@@ -308,6 +354,8 @@ function createNewDialog() {
 
       saveNewDialogToDB(createdDialog, dialogOccupants, currentDType)
 
+      alert(currentDType);
+
       $('a.users_form').removeClass('active');
     }
   });
@@ -318,8 +366,11 @@ function saveNewDialogToDB(itemDialog, occupants, type) {
   var dialogId = itemDialog._id;
   var dialogName = itemDialog.name;
   var dialogLastMessage = itemDialog.last_message;
-  var dialogOccupants = occupants;
+  var dialogOccupants = occupants;//.unshift(QBUser.id);
   var dialogType = type;
+  var dialogJID = itemDialog.xmpp_room_jid;
+
+  //alert(dialogOccupants);
 
  $.ajax({
      url: site_url + 'chat/new',
@@ -328,7 +379,8 @@ function saveNewDialogToDB(itemDialog, occupants, type) {
         dname: dialogName,
         dmessage: dialogLastMessage,
         dusers: dialogOccupants,
-        dtype: dialogType
+        dtype: dialogType,
+        djid: dialogJID
      },
      success: function(data) {
         //alert(data);
