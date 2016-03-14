@@ -9,15 +9,12 @@
     <div class="upload-image user-type">
 
   <div class="image-wrap text-center">
-    <img class="img-responsive" src="<?= asset_base_url()?>/images/emp.jpg">
+    <img id="user_pic" class="img-responsive" src="<?= strlen($u_photo)>0?$u_photo:asset_base_url().'/images/emp.jpg'?>" width="100">
 
-    <div class="action-label text-center">
-      <span class="btn btn-secondary">
-        Change Avatar
-      </span>
-    </div>
+    <input id="user_pic_info" type="hidden" name="picture" value="<?= strlen($u_photo)>0?$u_photo:asset_base_url().'/images/emp.jpg'?>">
 
-    <input type="file">
+    <a id="img-upload" href="#" title="Change Profile Image"><span class="glyphicon glyphicon-plus"></span><input id="img-file" type="file" name="files[]" multiple></a>
+
   </div>
 
 </div>
@@ -29,7 +26,7 @@
       <div class="col-xs-2 col-xs-offset-3">Full Name:</div>
 
       <div class="col-xs-5">
-        <input type="text" name="fname" class="form-control" placeholder="Full Name" required="true" value="<?= $fname?>">
+        <input type="text" name="fname" class="form-control" placeholder="Full Name" required="true" value="<?= $u_name?>">
       </div>
 
     </div>
@@ -39,7 +36,7 @@
       <div class="col-xs-2 col-xs-offset-3">Email:</div>
 
       <div class="col-xs-5">
-        <input type="email" class="form-control" placeholder="Email" required="true" value="<?= $email?>" disabled="disabled">
+        <input type="email" class="form-control" placeholder="Email" required="true" value="<?= $u_email?>" disabled="disabled">
       </div>
 
     </div>
@@ -48,7 +45,7 @@
       <div class="col-xs-2 col-xs-offset-3">Password:</div>
 
       <div class="col-xs-5">
-        <input type="password" name="password" class="form-control new-password" placeholder="New Password" required="true" value="<?= $password?>">
+        <input type="password" name="password" class="form-control new-password" placeholder="New Password" required="true" value="<?= $u_password?>">
       </div>
 
     </div>
@@ -57,7 +54,7 @@
       <div class="col-xs-2 col-xs-offset-3">Phone:</div>
 
       <div class="col-xs-5">
-        <input type="phone" name="phone" class="form-control" placeholder="Phone Number" required="true" value="<?= $phone?>">
+        <input type="phone" name="phone" class="form-control" placeholder="Phone Number" required="true" value="<?= $u_phone?>">
       </div>
 
     </div>

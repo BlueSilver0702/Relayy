@@ -73,7 +73,7 @@ class Mchat extends CI_Model {
         
             $dialog_one->id = $dialog->did;
             $dialog_one->name = $dialog->name;
-            $dialog_one->occupants = json_decode($dialog->occupants);
+            $dialog_one->occupants = $dialog->occupants;
             $dialog_one->type = $dialog->type;
             $dialog_one->jid = $dialog->jid;
             $dialog_one->status = $dialog->status;

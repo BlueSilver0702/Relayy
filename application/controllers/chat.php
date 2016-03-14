@@ -1,11 +1,12 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Chat extends CI_Controller
+include_once (dirname(__FILE__) . "/chatController.php");
+
+class Chat extends ChatController
 {
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->model('mchat');
 	}
 
 	public function index()
@@ -13,47 +14,15 @@ class Chat extends CI_Controller
     	$this->loginCheck();    	
 
 		///////////////////////////
-		
-		$dialog_arr = $this->mchat->getDialogs(gf_cu_id());
+    	$chat_data = $this->getChatData();
 
-		if (count($dialog_arr) > 0) {
-			$chat_data['d_id'] = $dialog_arr[0]['did'];
+    	$chat_data['d_current'] = $chat_data['d_id'];
 
-	    	$chat_data['d_name'] = $dialog_arr[0]['name'];
+    	$chat_data['body_class'] = 'chat-page';
 
-	    	$chat_data['d_occupants'] = $dialog_arr[0]['occupants'];
+		$chat_data['page_title'] = 'Chat | Relayy';		
 
-	    	$chat_data['d_type'] = $dialog_arr[0]['type'];
-
-	    	$chat_data['d_jid'] = $dialog_arr[0]['jid'];
-
-	    	$chat_data['d_status'] = $dialog_arr[0]['status'];
-
-	    	$chat_data['d_message'] = $dialog_arr[0]['message'];
-
-	    	$chat_data['d_time'] = $dialog_arr[0]['time'];	
-		}
-    	
-		$chat_data['history'] = $dialog_arr;
-    	///////////////////////////
-
-    	$data['body_class'] = 'chat-page';
-
-		$data['page_title'] = 'Chat | Relayy';
-
-		$data['role'] = gf_cu_type();
-
-		$data['user_name'] = gf_cu_fname();
-
-		$chat_data['u_id'] = gf_cu_id();
-		
-		$chat_data['u_name'] = gf_cu_fname();
-
-		$chat_data['u_login'] = gf_cu_email();
-
-		$chat_data['u_password'] = gf_cu_password();
-
-    	$this->load->view('templates/header-chat', $data);
+    	$this->load->view('templates/header-chat', $chat_data);
 
 		$this->load->view('templates/left-sidebar', $chat_data);
 
@@ -63,7 +32,6 @@ class Chat extends CI_Controller
 
 		$this->load->view('templates/footer-chat', $chat_data);
 
-
 	}
 
 	public function channel($cid)
@@ -71,6 +39,8 @@ class Chat extends CI_Controller
 		$this->loginCheck();    	
 
 		///////////////////////////
+
+		$chat_data = $this->getChatData();
 		
 		$dialog_arr = $this->mchat->getDialogs(gf_cu_id());
 
@@ -83,7 +53,12 @@ class Chat extends CI_Controller
 
 		    	$chat_data['d_name'] = $dialog['name'];
 
-		    	$chat_data['d_occupants'] = $dialog['occupants'];
+		    	$chat_data['d_occupants'] = json_decode($dialog['occupants']);
+
+		    	$chat_data['d_users'] = array();
+		    	foreach ($chat_data['d_occupants'] as $d_user) {
+					$chat_data['d_users'][] = $this->muser->getUserArray($d_user);
+		    	}
 
 		    	$chat_data['d_type'] = $dialog['type'];
 
@@ -99,28 +74,23 @@ class Chat extends CI_Controller
 			}
 		}
 
+		$d_owner = $this->muser->getUser($chat_data['d_occupants'][0]);
+	    	
+    	$chat_data['d_owner'] = $d_owner->fname;
+
+    	if ($d_owner->id == gf_cu_id()) $chat_data['d_owner'] = "Me";
+
 		if (!$find) redirect(site_url('chat'), 'get');
 
-		$chat_data['history'] = $dialog_arr;
     	///////////////////////////
 
-    	$data['body_class'] = 'chat-page';
+    	$chat_data['d_current'] = $chat_data['d_id'];
 
-		$data['page_title'] = 'Chat | Relayy';
+    	$chat_data['body_class'] = 'chat-page';
 
-		$data['role'] = gf_cu_type();
+		$chat_data['page_title'] = 'Chat | Relayy';
 
-		$data['user_name'] = gf_cu_fname();
-
-		$chat_data['u_id'] = gf_cu_id();
-		
-		$chat_data['u_name'] = gf_cu_fname();
-
-		$chat_data['u_login'] = gf_cu_email();
-
-		$chat_data['u_password'] = gf_cu_password();
-
-    	$this->load->view('templates/header-chat', $data);
+    	$this->load->view('templates/header-chat', $chat_data);
 
 		$this->load->view('templates/left-sidebar', $chat_data);
 
@@ -150,13 +120,4 @@ class Chat extends CI_Controller
         exit;
 	}
 
-	private function loginCheck()
-	{
-		if ( !gf_isLogin() )
-		{
-			redirect(site_url('home'), 'get');
-			
-			return;	
-		}
-	}
 }

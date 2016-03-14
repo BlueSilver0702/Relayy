@@ -67,10 +67,10 @@ class Muser extends CI_Model {
     public function getUserlist($status = USERSTATUS_INIT)
     {
         if ($status == 100) {
-            $query = $this->db->select('uid, fname, pwd, type, status, email, photo, phone, facebook')
+            $query = $this->db->select('*')
                           ->get('tbl_user');
         } else {
-            $query = $this->db->select('uid, fname, pwd, type, status, email, photo, phone, facebook')
+            $query = $this->db->select('*')
                           ->where('status', $status)
                           ->get('tbl_user');
         }
@@ -81,7 +81,7 @@ class Muser extends CI_Model {
 
     public function getUser($user_id)
     {
-        $query = $this->db->select('uid, fname, pwd, type, status, email, photo, phone, facebook')
+        $query = $this->db->select('*')
                           ->where('uid', $user_id)
                           ->limit(1)
                           ->get('tbl_user');
@@ -109,14 +109,31 @@ class Muser extends CI_Model {
         return FALSE;
     }
 
-    public function editUser($id, $fname, $email, $password, $type, $phone)
+    public function getUserArray($user_id)
+    {
+        $query = $this->db->select('*')
+                          ->where('uid', $user_id)
+                          ->limit(1)
+                          ->get('tbl_user');
+
+        if ($query->num_rows() === 1)
+        {
+            $result = $query->result_array();
+            return $result[0];
+        }
+
+        return FALSE;
+    }
+
+    public function editUser($id, $fname, $email, $password, $type, $phone, $picture)
     {
         $data = array(
             'fname' => $fname,
             'email' => $email,
             'pwd' => $password,
             'type' => $type,
-            'phone' => $phone
+            'phone' => $phone,
+            'photo' => $picture
         );
 
         $this->db->update('tbl_user', $data, array('uid' => $id));

@@ -337,3 +337,28 @@ body {
 #l-side .list-group-item: hover {
     border-left: 4px solid #90ff50;
 }
+
+.profile-page #img-upload {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width:100px;
+    height:100px;
+    font-size: 40px;
+    padding: 28px;
+    opacity: 0.3;
+    color:white;
+}
+
+.profile-page #img-upload:hover {
+    color:#ddd;
+}
+
+#img-file {
+    position:absolute;
+    top:0;
+    left:0;
+    opacity: 0;
+    width:100px;
+    height:100px;
+}

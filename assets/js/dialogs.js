@@ -216,7 +216,6 @@ function triggerDialog(dialogId){
       $('#messages-list').scrollTop($('#messages-list').prop('scrollHeight')); 
     }
   });
-
 }
 
 function setupUsersScrollHandler(){

@@ -5,15 +5,8 @@
     <div class="upload-image user-type">
 
   <div class="image-wrap text-center">
-    <img class="img-responsive" src="<?= asset_base_url()?>/images/emp.jpg">
+    <img class="img-responsive" src="<?= strlen($u_photo)>0?$u_photo:asset_base_url().'/images/emp.jpg'?>">
 
-    <div class="action-label text-center">
-      <span class="btn btn-secondary">
-        Change Avatar
-      </span>
-    </div>
-
-    <input type="file">
   </div>
 
 </div>
@@ -24,7 +17,7 @@
     <div class="row">
       <div class="col-xs-2 col-xs-offset-3">Full Name:</div>
       <div class="col-xs-6 ng-binding">
-        <?= $fname?>
+        <?= $u_name?>
       </div>
     </div>
 
@@ -32,7 +25,7 @@
 
       <div class="col-xs-2 col-xs-offset-3">Email:</div>
       <div class="col-xs-6">
-        <?= $email?>
+        <?= $u_email?>
       </div>
     </div>
     <div class="row">
@@ -40,7 +33,7 @@
       <div class="col-xs-2 col-xs-offset-3">Password:</div>
       <div class="col-xs-6">
         <?php 
-          for ($i=0; $i<strlen($password); $i++) {
+          for ($i=0; $i<strlen($u_password); $i++) {
             echo "*";
           }
         ?>
@@ -52,7 +45,7 @@
       <div class="col-xs-2 col-xs-offset-3">Phone:</div>
 
       <div class="col-xs-6">
-        <?= $phone?>
+        <?= $u_phone?>
       </div>
     </div>
   </div>
@@ -69,7 +62,7 @@
       </div>
 
       <div class="col-xs-6">
-        <?= $facebook?>
+        <?= $u_facebook?>
       </div>
 
     </div>

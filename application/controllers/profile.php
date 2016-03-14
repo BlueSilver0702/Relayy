@@ -1,100 +1,65 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Profile extends CI_Controller
+include_once (dirname(__FILE__) . "/chatController.php");
+include_once (dirname(__FILE__) . "/uploadHandler.php");
+
+class Profile extends ChatController
 {
 	public function __construct()
 	{
 		parent::__construct();
-
-		$this->load->model('muser');
-		$this->load->model('mchat');
-		$this->load->library('session');
 	}
 
 	public function index()
 	{
     	$this->loginCheck();    	
 
-    	$data['body_class'] = 'profile-page';
+    	$chat_data = $this->getChatData();
 
-		$data['page_title'] = 'Profile | Relayy';
+    	$chat_data['body_class'] = 'profile-page';
 
-		$data['role'] = gf_cu_type();
-
-		$data['user_name'] = gf_cu_fname();
-
-		$chat_data = array();
-
-		$user_data['fname'] = gf_cu_fname();
-
-		$user_data['email'] = gf_cu_email();
-
-		$user_data['password'] = gf_cu_password();
-
-		$user_data['photo'] = gf_cu_photo();
-
-		$user_data['phone'] = gf_cu_phone();
-
-		$user_data['facebook'] = gf_cu_facebook();
+		$chat_data['page_title'] = 'Profile | Relayy';
     
-    	$this->load->view('templates/header-chat', $data);
+    	$this->load->view('templates/header-chat', $chat_data);
 		
-		$chat_data['history'] = $this->mchat->getDialogs(gf_cu_id());
-
-		// print_r($chat_data['history']);exit;
-
 		$this->load->view('templates/left-sidebar', $chat_data);
 
-		$this->load->view('profile', $user_data);
+		$this->load->view('profile', $chat_data);
 
-		$this->load->view('templates/footer-chat');
+		$this->load->view('templates/footer-chat', $chat_data);
 	}
 
 	public function edit()
 	{
-		$this->loginCheck();    	
+		$this->loginCheck();    
 
-    	$data['body_class'] = 'profile-page';
+		$chat_data = $this->getChatData();	
 
-		$data['page_title'] = 'Edit Profile | Relayy';
+    	$chat_data['body_class'] = 'profile-page';
 
-		$data['role'] = gf_cu_type();
+		$chat_data['page_title'] = 'Edit Profile | Relayy';
 
-		$data['user_name'] = gf_cu_fname();
-
-		$chat_data = array();
-
-		$user_data['fname'] = gf_cu_fname();
-
-		$user_data['email'] = gf_cu_email();
-
-		$user_data['password'] = gf_cu_password();
-
-		$user_data['photo'] = gf_cu_photo();
-
-		$user_data['phone'] = gf_cu_phone();
-
-		$user_data['facebook'] = gf_cu_facebook();		
+		$chat_data['profile_js'] = TRUE;		
     
-    	$this->load->view('templates/header-chat', $data);
+    	$this->load->view('templates/header-chat', $chat_data);
 		
 		$this->load->view('templates/left-sidebar', $chat_data);
 
-		$this->load->view('profile_edit', $user_data);
+		$this->load->view('profile_edit', $chat_data);
 
-		$this->load->view('templates/footer-chat');	
+		$this->load->view('templates/footer-chat', $chat_data);	
 	}
 
 	public function save()
 	{
-    	
     	$this->loginCheck();
 
     	$fname = $this->input->post('fname');
         $password = $this->input->post('password');
         $phone = $this->input->post('phone');
+        $picture = $this->input->post('picture');
 
-        $object = $this->muser->editUser(gf_cu_id(), $fname, gf_cu_email(), $password, gf_cu_type(), $phone);
+        $object = $this->muser->editUser(gf_cu_id(), $fname, gf_cu_email(), $password, gf_cu_type(), $phone, $picture);
 
         // print_r($object);exit;
         gf_registerCurrentUser($object);
@@ -102,13 +67,8 @@ class Profile extends CI_Controller
 		redirect(site_url('profile/edit'), 'get');
 	}
 
-	private function loginCheck()
+	public function upload()
 	{
-		if ( !gf_isLogin() )
-		{
-			redirect(site_url('home'), 'get');
-			
-			return;	
-		}
+		$upload_handler = new UploadHandler();
 	}
 }

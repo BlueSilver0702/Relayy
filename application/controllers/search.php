@@ -1,45 +1,30 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Search extends CI_Controller
+include_once (dirname(__FILE__) . "/chatController.php");
+
+class Search extends ChatController
 {
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->model('mchat');
 	}
 
 	public function index()
 	{
-    	$this->loginCheck();    	
+    	$this->loginCheck();  
 
-    	$data['body_class'] = 'search-page';
+    	$chat_data = $this->getChatData();  	
 
-		$data['page_title'] = 'Search Result | Relayy';
+    	$chat_data['body_class'] = 'search-page';
 
-		$data['role'] = gf_cu_type();
-
-		$data['user_name'] = gf_cu_fname();
-
-		$chat_data = array();
+		$chat_data['page_title'] = 'Search Result | Relayy';
     
-    	$this->load->view('templates/header-chat', $data);
-		
-		$chat_data['history'] = $this->mchat->getDialogs(gf_cu_id());
+    	$this->load->view('templates/header-chat', $chat_data);
 
 		$this->load->view('templates/left-sidebar', $chat_data);
 
 		$this->load->view('search');
 
-		$this->load->view('templates/footer-chat');
-	}
-
-	private function loginCheck()
-	{
-		if ( !gf_isLogin() )
-		{
-			redirect(site_url('home'), 'get');
-			
-			return;	
-		}
+		$this->load->view('templates/footer-chat', $chat_data);
 	}
 }

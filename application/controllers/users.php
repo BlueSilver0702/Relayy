@@ -1,26 +1,23 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Users extends CI_Controller
+include_once (dirname(__FILE__) . "/chatController.php");
+
+class Users extends ChatController
 {
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->model('muser');
-		$this->load->model('mchat');
-		$this->load->library('session');
 	}
 
 	public function index()
 	{
     	$this->loginCheck();    	
 
-    	$data['body_class'] = 'users-page';
+    	$chat_data = $this->getChatData();
 
-		$data['page_title'] = 'User Management | Relayy';
+    	$chat_data['body_class'] = 'users-page';
 
-		$data['role'] = gf_cu_type();
-
-		$data['user_name'] = gf_cu_fname();
+		$chat_data['page_title'] = 'User Management | Relayy';
 
 		$chat_data['users'] = $this->muser->getUserlist(100);
 
@@ -29,28 +26,24 @@ class Users extends CI_Controller
 
 		$chat_data['page'] = 0;
     
-    	$this->load->view('templates/header-chat', $data);
-		
-		$chat_data['history'] = $this->mchat->getDialogs(gf_cu_id());
+    	$this->load->view('templates/header-chat', $chat_data);
 
 		$this->load->view('templates/left-sidebar', $chat_data);
 
 		$this->load->view('users');
 
-		$this->load->view('templates/footer-chat');
+		$this->load->view('templates/footer-chat', $chat_data);
 	}
 
 	public function pending() 
 	{
-		$this->loginCheck();    	
+		$this->loginCheck(); 
 
-    	$data['body_class'] = 'users-page';
+		$chat_data = $this->getChatData();   	
 
-		$data['page_title'] = 'User Management | Relayy';
+    	$chat_data['body_class'] = 'users-page';
 
-		$data['role'] = gf_cu_type();
-
-		$data['user_name'] = gf_cu_fname();
+		$chat_data['page_title'] = 'User Management | Relayy';
 
 		$chat_data['users'] = $this->muser->getUserlist(0);
 
@@ -58,24 +51,24 @@ class Users extends CI_Controller
 
 		$chat_data['page'] = 1;
     
-    	$this->load->view('templates/header-chat', $data);
+    	$this->load->view('templates/header-chat', $chat_data);
 		
 		$this->load->view('templates/left-sidebar', $chat_data);
 
 		$this->load->view('users');
 
-		$this->load->view('templates/footer-chat');
+		$this->load->view('templates/footer-chat', $chat_data);
 	}
 
 	public function activated() 
 	{
 		$this->loginCheck();    	
 
-    	$data['body_class'] = 'users-page';
+		$chat_data = $this->getChatData();
 
-		$data['page_title'] = 'User Management | Relayy';
+    	$chat_data['body_class'] = 'users-page';
 
-		$data['role'] = gf_cu_type();
+		$chat_data['page_title'] = 'User Management | Relayy';
 
 		$data['user_name'] = gf_cu_fname();
 
@@ -85,13 +78,13 @@ class Users extends CI_Controller
 
 		$chat_data['page'] = 2;
     
-    	$this->load->view('templates/header-chat', $data);
+    	$this->load->view('templates/header-chat', $chat_data);
 		
 		$this->load->view('templates/left-sidebar', $chat_data);
 
 		$this->load->view('users');
 
-		$this->load->view('templates/footer-chat');
+		$this->load->view('templates/footer-chat', $chat_data);
 	}
 
 	public function action($uid, $page) 
@@ -107,18 +100,6 @@ class Users extends CI_Controller
 		} else {
 			redirect(site_url('users/activated'), 'get');
 		}
-	}
-
-	private function loginCheck()
-	{
-		if ( !gf_isLogin() )
-		{
-			redirect(site_url('home'), 'get');
-			
-			return;	
-		}
-
-		$this->roleCheck();
 	}
 
 	private function roleCheck() {

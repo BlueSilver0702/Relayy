@@ -27,5 +27,39 @@
             <script src="<?php echo asset_base_url()?>/js/ui_helpers.js"></script>
             <script src="<?php echo asset_base_url()?>/js/dialogs.js"></script>
             <script src="<?php echo asset_base_url()?>/js/users.js"></script>
+
+<?php 
+    if (isset($profile_js)) {?>
+<script src="<?php echo asset_base_url()?>/js/vendor/jquery.ui.widget.js"></script>
+<script src="<?php echo asset_base_url()?>/js/jquery.iframe-transport.js"></script>
+<script src="<?php echo asset_base_url()?>/js/jquery.fileupload.js"></script>
+<script>
+/*jslint unparam: true */
+/*global window, $ */
+$(function () {
+    'use strict';
+    // Change this to the location of your server-side upload handler:
+    var url = '<?= site_url("profile/upload")?>';
+    $('#img-file').fileupload({
+        url: url,
+        dataType: 'json',
+        done: function (e, data) {
+            $.each(data.result.files, function (index, file) {
+                console.log("###################");
+                // thumbnailUrl
+                console.log(file);
+                $("#user_pic").attr("src", file.thumbnailUrl);
+                $("#user_pic_info").val(file.thumbnailUrl);
+            });
+        },
+        progressall: function (e, data) {
+            var progress = parseInt(data.loaded / data.total * 100, 10);
+        }
+    }).prop('disabled', !$.support.fileInput)
+        .parent().addClass($.support.fileInput ? undefined : 'disabled');
+});
+</script>
+<?php  }
+?>
     </body>
 </html>

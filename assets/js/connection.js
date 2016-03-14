@@ -28,6 +28,8 @@ function connectToChat(user) {
   $('#loginForm button').hide();
   $('#loginForm .progress').show();
 
+  $(".load-msg").show(0);
+
   // Create session and connect to chat
   //
   QB.createSession({login: user.login, password: user.pass}, function(err, res) {
