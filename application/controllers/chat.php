@@ -34,7 +34,7 @@ class Chat extends ChatController
 
 	}
 
-	public function channel($cid)
+	public function channel($current_id)
 	{
 		$this->loginCheck();    	
 
@@ -42,13 +42,13 @@ class Chat extends ChatController
 
 		$chat_data = $this->getChatData();
 		
-		$dialog_arr = $this->mchat->getDialogs(gf_cu_id());
+		$dialog_arr = $this->mchat->getDialogs($this->cid);
 
 		$find = FALSE;
 
 		foreach ($dialog_arr as $dialog) {
 
-			if ($dialog['did'] == $cid) {
+			if ($dialog['did'] == $current_id) {
 				$chat_data['d_id'] = $dialog['did'];
 
 		    	$chat_data['d_name'] = $dialog['name'];
@@ -69,6 +69,8 @@ class Chat extends ChatController
 		    	$chat_data['d_message'] = $dialog['message'];
 
 		    	$chat_data['d_time'] = $dialog['time'];
+
+		    	$chat_data['d_noti'] = $this->moption->get($this->cid, 'notify_'.$chat_data['d_id']);
 
 		    	$find = TRUE;
 			}
@@ -119,5 +121,121 @@ class Chat extends ChatController
 
         exit;
 	}
+
+	public function notification() {
+
+		$did = $this->input->post('did');
+		
+		$notification = $this->input->post('notification');
+
+        echo $this->moption->update($this->cid, "notify_".$did, $notification);
+
+        exit;
+	}
+
+	public function dialog() {
+		
+		$did = $this->input->post('did');
+
+		$ret_arr = array(
+        			'notify' => $this->moption->get($this->cid, "notify_".$did)
+        			// 'd_name' => ,
+        			// 'd_owner' => ,
+        			// 'd_users' => 
+        		);
+
+		$dialog_arr = $this->mchat->getDialogs($this->cid);
+
+		$find = FALSE;
+
+		foreach ($dialog_arr as $dialog) {
+
+			if ($dialog['did'] == $did) {
+
+				$ret_arr['d_id'] = $dialog['did'];
+
+		    	$ret_arr['d_name'] = $dialog['name'];
+
+		    	$ret_arr['d_type'] = $dialog['type'];
+
+		    	$d_occupants = json_decode($dialog['occupants']);
+
+		    	$d_users = array();
+
+		    	foreach ($d_occupants as $d_user) {
+					$d_users[] = $this->muser->getUserArray($d_user);
+		    	}
+
+		    	$ret_arr['d_users'] = $d_users;
+
+		    	$d_owner = $this->muser->getUser($d_occupants[0]);
+
+		    	if ($d_owner->id == $this->cid) $ret_arr['d_owner'] = "Me";
+		    	else $ret_arr['d_owner'] = $d_owner->fname;
+
+		    	$find = TRUE;
+
+		    	break;
+			}
+		}
+
+		if (!$find) {echo "error"; exit;}
+
+        echo json_encode($ret_arr);
+        exit;	
+	}
+
+	public function delete() {
+		
+		$did = $this->input->post('did');
+
+        echo $this->mchat->deleteDialog($did);
+
+        exit;	
+	}
+
+	public function leave() {
+		
+		$did = $this->input->post('did');
+
+		$dialog = $this->mchat->getDialog($did);
+
+		$new_occupants = array();
+
+		foreach (json_decode($dialog->occupants) as $occu_id) {
+			if ($occu_id != $this->cid) {
+				$new_occupants[] = $occu_id;
+			}
+		}
+
+		$dialog->occupants = json_encode($new_occupants);
+
+		echo $this->mchat->updateDialog($dialog);
+
+        exit;	
+	}
+
+	public function remove() {
+		
+		$did = $this->input->post('did');
+		$uid = $this->input->post('uid');
+
+		$dialog = $this->mchat->getDialog($did);
+
+		$new_occupants = array();
+
+		foreach (json_decode($dialog->occupants) as $occu_id) {
+			if ($occu_id != $uid) {
+				$new_occupants[] = $occu_id;
+			}
+		}
+
+		$dialog->occupants = json_encode($new_occupants);
+
+		echo $this->mchat->updateDialog($dialog);
+
+        exit;	
+	}
+
 
 }

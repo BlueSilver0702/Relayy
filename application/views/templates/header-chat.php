@@ -27,11 +27,14 @@
           <input type="text" placeholder="search contact" class="search-box" name="search">
         </form>
         <div id="icon-list" class="pull-right">
-          <a class="menu-chat" href="<?php echo site_url('chat')?>" title="Chat"><span class="glyphicon glyphicon-comment"></span></a>
+          <a class="menu-chat <?= $body_class=='chat-page'?'current':''?>" href="<?php echo site_url('chat')?>" title="Chat Room"><span class="glyphicon glyphicon-comment"></span></a>
 <?php if ($u_type == 1) { ?>
-          <a class="menu-users" href="<?php echo site_url('users')?>" title="User Management"><span class="glyphicon glyphicon-user"></span></a>
+          <a class="menu-invite <?= $body_class=='invite-page'?'current':''?>" href="<?php echo site_url('invite')?>" title="Invite Management"><span class="glyphicon glyphicon-send"></span></a>
+          <a class="menu-users <?= $body_class=='users-page'?'current':''?>" href="<?php echo site_url('users')?>" title="User Management"><span class="glyphicon glyphicon-user"></span></a>
+          <a class="menu-allow <?= $body_class=='allow-page'?'current':''?>" href="<?php echo site_url('allow')?>" title="Chat Management"><span class="glyphicon glyphicon-flag"></span></a>
 <?php }?>
-          <a class="menu-setting" href="<?php echo site_url('setting')?>" title="Settings"><span class="glyphicon glyphicon-cog"></span></a>
+          <a class="menu-setting <?= $body_class=='setting-page'?'current':''?>" href="<?php echo site_url('setting')?>" title="Settings"><span class="glyphicon glyphicon-cog"></span></a>
+          <a class="menu-logoff" href="<?php echo site_url('auth/logout')?>" title="Sign Out"><span class="glyphicon glyphicon-off"></span></a>
         </div>
       </div>
       <div id="content-wrapper">

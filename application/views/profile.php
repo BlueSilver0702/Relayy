@@ -5,7 +5,7 @@
     <div class="upload-image user-type">
 
   <div class="image-wrap text-center">
-    <img class="img-responsive" src="<?= strlen($u_photo)>0?$u_photo:asset_base_url().'/images/emp.jpg'?>">
+    <img class="img-responsive" src="<?= strlen($u_photo)>0?$u_photo:asset_base_url().'/images/emp.jpg'?>" width="100">
 
   </div>
 

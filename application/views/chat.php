@@ -64,7 +64,7 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h3 class="modal-title">Dialog info</h3>
+            <h3 class="modal-title">Chat Room info</h3>
           </div>
           <div class="modal-body">
             <div class="col-md-12 col-sm-12 col-xs-12 new-info">
@@ -79,8 +79,8 @@
             <h5 class="col-md-12 col-sm-12 col-xs-12" id="all_occupants"></h5>
             <button id="update_dialog_button" type="button" value="Confirm" id="" class="btn btn-success btn-ms btn-block"
               onclick="onDialogUpdate()">Update</button>
-            <button id="delete_dialog_button" type="button" value="Confirm" id="for_width" class="btn btn-danger btn-ms btn-block"
-              onclick="onDialogDelete()">Delete dialog</button>
+<!--             <button id="delete_dialog_button" type="button" value="Confirm" id="for_width" class="btn btn-danger btn-ms btn-block"
+              onclick="onDialogDelete()">Delete dialog</button>-->
           </div>
         </div>
       </div>

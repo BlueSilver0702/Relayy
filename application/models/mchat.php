@@ -6,12 +6,6 @@
  * Time: 9:35 PM
  */
 
-define('CHAT_TYPE_PRIVATE', 1);
-define('CHAT_TYPE_GROUP',   2);
-
-define('CHAT_STATUS_INIT',    0);
-define('CHAT_STATUS_LIVE',       1);
-
 class Mchat extends CI_Model {
 
     var $id;
@@ -85,6 +79,30 @@ class Mchat extends CI_Model {
         }
 
         return FALSE;
+    }
+
+    public function deleteDialog($did) 
+    {
+        $this->db->where('did', $did);
+        $this->db->delete('tbl_chat'); 
+
+        return "success";
+    }
+
+    public function updateDialog($dialogObj)
+    {
+        $data = array(
+            'name'      => $dialogObj->name,
+            'occupants' => $dialogObj->occupants,
+            'message'   => $dialogObj->message,
+            'type'      => $dialogObj->type,
+            'status'    => $dialogObj->status,
+            'jid'       => $dialogObj->jid
+        );
+
+        $this->db->update('tbl_chat', $data, array('did' => $dialogObj->id));
+
+        return "success";
     }
 
     public function updateChat($id, $message)

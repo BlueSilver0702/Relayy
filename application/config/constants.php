@@ -83,3 +83,45 @@ defined('EXIT_USER_INPUT')     OR define('EXIT_USER_INPUT', 7); // invalid user 
 defined('EXIT_DATABASE')       OR define('EXIT_DATABASE', 8); // database error
 defined('EXIT__AUTO_MIN')      OR define('EXIT__AUTO_MIN', 9); // lowest automatically-assigned error code
 defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
+
+/*
+|--------------------------------------------------------------------------
+| User Status Codes
+|--------------------------------------------------------------------------
+|
+| Used to indicate the conditions under which the script is exit()ing.
+| While there is no universal standard for error codes, there are some
+| broad conventions.  Three such conventions are mentioned below, for
+| those who wish to make use of them.  The CodeIgniter defaults were
+| chosen for the least overlap with these conventions, while still
+| leaving room for others to be defined in future versions and user
+| applications.
+|
+| The three main conventions used for determining exit status codes
+| are as follows:
+|
+|    Standard C/C++ Library (stdlibc):
+|       http://www.gnu.org/software/libc/manual/html_node/Exit-Status.html
+|       (This link also contains other GNU-specific conventions)
+|    BSD sysexits.h:
+|       http://www.gsp.com/cgi-bin/man.cgi?section=3&topic=sysexits
+|    Bash scripting:
+|       http://tldp.org/LDP/abs/html/exitcodes.html
+|
+*/
+defined('USER_TYPE_ADMIN')        OR define('USER_TYPE_ADMIN', 1);
+defined('USER_TYPE_ADVISOR')      OR define('USER_TYPE_ADVISOR',   2);
+defined('USER_TYPE_EXPERT')       OR define('USER_TYPE_EXPERT',  3);
+
+defined('USER_STATUS_INIT')       OR define('USER_STATUS_INIT',    0);
+defined('USER_STATUS_LIVE')       OR define('USER_STATUS_LIVE',       1);
+defined('USER_STATUS_INVITE')     OR define('USER_STATUS_INVITE',    2);
+defined('USER_STATUS_INVITED')    OR define('USER_STATUS_INVITED',    3);
+
+
+defined('CHAT_TYPE_PRIVATE')      OR define('CHAT_TYPE_PRIVATE', 1);
+defined('CHAT_TYPE_GROUP')        OR define('CHAT_TYPE_GROUP',   2);
+defined('CHAT_TYPE_WELCOME')      OR define('CHAT_TYPE_WELCOME', 3);
+
+defined('CHAT_STATUS_INIT')       OR define('CHAT_STATUS_INIT',    0);
+defined('CHAT_STATUS_LIVE')       OR define('CHAT_STATUS_LIVE',    1);

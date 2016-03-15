@@ -100,7 +100,7 @@ function retrieveChatDialogs() {
 function retrieveDialog() {
 
   // join room
-  QB.chat.muc.join(DialogJID, function() {
+  // QB.chat.muc.join(DialogJID, function() {
     console.log("Joined dialog "+DialogID);
 
     updateDialogsUsersStorage(DialogUIDS, function(){
@@ -125,8 +125,85 @@ function retrieveDialog() {
       });
     });
       
-  });
+  // });
 
+}
+
+function notifyAction(did) {
+  var currentObj = $("#chat-noti");
+  var notiVal = 10;
+  if (currentObj.hasClass("icon-noti-off")) notiVal = 11;
+  $.ajax({
+   url: site_url + 'chat/notification',
+   data: {
+      did: did,
+      notification: notiVal
+   },
+   success: function(data) {
+      console.log(data);
+      if (notiVal == 10) {
+        currentObj.removeClass("icon-noti-on");
+        currentObj.addClass("icon-noti-off");
+        $("#chat-noti span").text("OFF");
+      } else {
+        currentObj.removeClass("icon-noti-off");
+        currentObj.addClass("icon-noti-on");
+        $("#chat-noti span").text("ON");
+      }
+   },
+   type: 'POST'
+  });
+}
+
+function deleteAction(did) {
+  if (confirm("Are you sure you want delete this chat room?")) {
+    $.ajax({
+     url: site_url + 'chat/delete',
+     data: {
+        did: did,
+     },
+     success: function(data) {
+        console.log(data);
+        onDialogDelete(did);
+        window.location.href = site_url + "chat";
+     },
+     type: 'POST'
+    });
+  }
+}
+
+function leaveAction(did) {
+  if (confirm("Are you sure you want leave this chat room?")) {
+    $.ajax({
+     url: site_url + 'chat/leave',
+     data: {
+        did: did,
+     },
+     success: function(data) {
+        console.log(data);
+        window.location.href = site_url + "chat";
+     },
+     type: 'POST'
+    });
+  }
+}
+
+function removeAction(did, uid) {
+  if (confirm("Are you sure you want remove this user?")) {
+    var currentObj = $("#remove-"+uid);
+    $.ajax({
+     url: site_url + 'chat/remove',
+     data: {
+        did: did,
+        uid: uid
+     },
+     success: function(data) {
+        console.log(data);
+        currentObj.remove();
+     },
+     type: 'POST'
+    });
+  }
 }
 
 function showOrUpdateDialogInUI(itemRes, updateHtml) {
@@ -189,8 +266,23 @@ function updateDialogsList(dialogId, text){
 }
 
 // Choose dialog
-function triggerDialog(dialogId){
+function triggerDialog(dialogId, ajaxFlag){
 
+  if (ajaxFlag == 1) {
+    console.log("****************************");
+    $.ajax({
+     url: site_url + 'chat/dialog',
+     data: {
+        did: dialogId
+     },
+     success: function(data) {
+        // console.log("####################");
+        // console.log(data);
+        showRightInfo(data);
+     },
+     type: 'POST'
+    });
+  }
   // deselect
   var kids = $('#dialogs-list').children();
   kids.removeClass('active').addClass('inactive');
@@ -238,6 +330,12 @@ function showUsers(userLogin, userId) {
   var userHtml = buildUserHtml(userLogin, userId, false);
 
   $('#users_list').append(userHtml);
+}
+
+function showRightInfo(jsonData) {
+  var rightHtml = buildMetaHtml(jsonData);
+
+  $('#information_holder').html(rightHtml); 
 }
 
 // show modal window with users
@@ -353,7 +451,7 @@ function createNewDialog() {
 
       saveNewDialogToDB(createdDialog, dialogOccupants, currentDType)
 
-      alert(currentDType);
+      //alert(currentDType);
 
       $('a.users_form').removeClass('active');
     }
@@ -590,6 +688,7 @@ function onDialogUpdate() {
 
   console.log("Updating the dialog with params: " + JSON.stringify(toUpdate));
 
+return;
   QB.chat.dialog.update(currentDialog._id, toUpdate, function(err, res) {
     if (err) {
       console.log(err);
@@ -617,27 +716,37 @@ function onDialogUpdate() {
 }
 
 // delete currend dialog
-function onDialogDelete() {
-  if (confirm("Are you sure you want remove the dialog?")) {
+function onDialogDelete(dialogId) {
+  // if (confirm("Are you sure you want remove the dialog?")) {
+  //   QB.chat.dialog.delete(currentDialog._id, function(err, res) {
+  //     if (err) {
+  //       console.log(err);
+  //     } else {
+  //       console.log("Dialog removed");
+  //       $('#'+currentDialog._id).remove();
+
+  //       // remove from storage
+  //       delete dialogs[currentDialog._id];
+
+  //       //  and trigger the next dialog
+  //       if(Object.keys(dialogs).length > 0){
+  //         triggerDialog(dialogs[Object.keys(dialogs)[0]]._id);
+  //       }
+
+  //     }
+  //   });
+
+  //   $("#update_dialog").modal("hide");
+  //   $('#update_dialog .progress').show();
+  // }
+
+//  if (confirm("Are you sure you want remove the dialog?")) {
     QB.chat.dialog.delete(currentDialog._id, function(err, res) {
       if (err) {
         console.log(err);
       } else {
         console.log("Dialog removed");
-        $('#'+currentDialog._id).remove();
-
-        // remove from storage
-        delete dialogs[currentDialog._id];
-
-        //  and trigger the next dialog
-        if(Object.keys(dialogs).length > 0){
-          triggerDialog(dialogs[Object.keys(dialogs)[0]]._id);
-        }
-
       }
     });
-
-    $("#update_dialog").modal("hide");
-    $('#update_dialog .progress').show();
-  }
+  // }
 }

@@ -7,56 +7,56 @@
 
 	    <h5 class="text-muted">Created by <?= $d_owner?></h5>
 	    <div class="information_actions">
-	      <a class="icon-noti-on text-muted">
+<?php if ($d_noti == 10) {?>	    
+	      <a id="chat-noti" class="icon-noti-off text-muted" onclick="notifyAction('<?= $d_id?>')">
+	        Notifications 
+	        <span class="">
+	          OFF
+	        </span>
+	      </a>
+<?php } else {?>
+		  <a id="chat-noti" class="icon-noti-on text-muted" onclick="notifyAction('<?= $d_id?>')">
 	        Notifications 
 	        <span class="">
 	          ON
 	        </span>
 	      </a>
-	      <a class="">
-	        <span class="text-warning">Leave</span>
-	      </a>
+<?php }?>	     
+	      
 <?php if ($d_owner == "Me") {?>
-	      <a class="">
+	      <a class="" onclick="deleteAction('<?= $d_id?>')">
 		      <span class="text-danger">Delete</span>
 		  </a>
+<?php } else {?>		  
+		  <a class="" onclick="leaveAction('<?= $d_id?>')">
+	        <span class="text-warning">Leave</span>
+	      </a>
 <?php }?>
 	    </div>
 
 	    <div class="information_members">
 	      <h5 class="">
 	        <?= count($d_occupants);?> Members
-<?php if ($d_owner == "Me") {?>
-	        <a class="">+ Add Members</a>
+<?php if ($d_owner == "Me" && $d_type == 2) {?>
+	        <a class="" onclick="showDialogInfoPopup()">+ Add Members</a>
 <?php }?>
 	      </h5>
 	      
 	      <ul>
 <?php   foreach ($d_users as $user) {?>
-			<li class="">
+			<li class="" id="remove-<?= $user['uid']?>">
 	          <a class="">
-	            <img class="avatar avatar_small" src="<?= strlen($user['photo'])>0?$user['photo']:asset_base_url().'/images/emp.jpg'?>">
+	            <img class="avatar avatar_small" src="<?= strlen($user['photo'])>0?$user['photo']:asset_base_url().'/images/emp-sm.jpg'?>">
 	            <?= $user['fname']?>
 	          </a>
 <?php if ($d_owner == "Me") {?>
-	          <a class="information_remove_user"></a>
+	          <a class="information_remove_user" onclick="removeAction('<?= $d_id?>', '<?= $user['uid']?>')"></a>
 <?php }?>
 	          <span class="">
 	            <lastseen data-user-id="4513703"><span class="lastseen">offline</span></lastseen>
 	          </span>
 	        </li>
 <?php	}?>
-	        
-<!-- 	        <li class="">
-	          <a class="">
-	            <img class="avatar avatar_small" src="<?= asset_base_url()?>/images/emp-sm.jpg">
-	            Kevin Yue
-	          </a>
-	          <a class="information_remove_user"></a>
-	          <span class="">
-	            <lastseen data-user-id="4537191" class=""><span class="lastseen">online</span></lastseen>
-	          </span>
-	        </li> -->
 	      </ul>
 
 	    </div>

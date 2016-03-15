@@ -173,7 +173,7 @@ body {
 
 .user-manage {
 	width:100%;
-	padding: 120px 30px 0;
+	padding: 90px 30px 0;
 }
 
 .user-manage .row span {
@@ -211,6 +211,16 @@ body {
     border: 0;
     background: url("../images/icon-notifications-on.png") no-repeat left 3px;
     background-size: 11px;
+    cursor: pointer;
+}
+
+#r-side #information .information_actions a.icon-noti-off {
+    background: url("../images/icon-notifications-off.png") no-repeat left 3px;
+    background-size: 11px;
+}
+
+#r-side a {
+    cursor: pointer;
 }
 
 #information ul li:last-child {
@@ -346,7 +356,7 @@ body {
     height:100px;
     font-size: 40px;
     padding: 28px;
-    opacity: 0.3;
+    opacity: 0.5;
     color:white;
 }
 
@@ -361,4 +371,12 @@ body {
     opacity: 0;
     width:100px;
     height:100px;
+}
+
+#header .current .glyphicon {
+    color: #1393d5;
+}
+
+.user-manage ul li:first-child {
+    margin-left:10px;
 }

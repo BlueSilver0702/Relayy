@@ -6,15 +6,6 @@
  * Time: 9:35 PM
  */
 
-define('USERTYPE_ADMIN', 1);
-define('USERTYPE_ADVISOR',   2);
-define('USERTYPE_EXPERT',  3);
-
-define('USERSTATUS_INIT',    0);
-define('USERSTATUS_LIVE',       1);
-define('USERSTATUS_INVITE',    2);
-define('USERSTATUS_INVITED',    3);
-
 class Muser extends CI_Model {
 
     var $id;
@@ -64,7 +55,7 @@ class Muser extends CI_Model {
         return (isset($id)) ? $id : FALSE;
     }
 
-    public function getUserlist($status = USERSTATUS_INIT)
+    public function getUserlist($status = USER_STATUS_INIT)
     {
         if ($status == 100) {
             $query = $this->db->select('*')
@@ -145,15 +136,15 @@ class Muser extends CI_Model {
     {
         $user = $this->getUser($user_id);
 
-        if ($user->status == USERSTATUS_INIT) {
+        if ($user->status == USER_STATUS_INIT) {
             $data = array(
-                'status' => USERSTATUS_LIVE
+                'status' => USER_STATUS_LIVE
             );
 
             $this->db->update('tbl_user', $data, array('uid' => $user_id));            
         } else {
             $data = array(
-                'status' => USERSTATUS_INIT
+                'status' => USER_STATUS_INIT
             );
 
             $this->db->update('tbl_user', $data, array('uid' => $user_id));            
@@ -212,7 +203,7 @@ class Muser extends CI_Model {
 
         if (!$newUser)
         {
-            $newUser = $this->insertUser($id, $fname, $pwd, $type, USERSTATUS_INIT, $email, '', '', $facebook);    
+            $newUser = $this->insertUser($id, $fname, $pwd, $type, USER_STATUS_INIT, $email, '', '', $facebook);    
         }
 
         if ($newUser) 
@@ -223,7 +214,7 @@ class Muser extends CI_Model {
             $user_one->fname = $fname;
             $user_one->password = $pwd;
             $user_one->type = $type;
-            $user_one->status = USERSTATUS_INIT;
+            $user_one->status = USER_STATUS_INIT;
             $user_one->email = $email;
             $user_one->photo = '';
             $user_one->phone = '';

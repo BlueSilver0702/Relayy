@@ -15,7 +15,7 @@
     if (isset($history)) {
         foreach ($history as $dialog) {
     ?>
-        <a href="<?= isset($d_current)?'#':site_url('chat/channel/'.$dialog['did']) ?>" class="list-group-item <?php echo $dialog['did'] == $d_id && isset($d_current)?"active":"inactive"; ?>" id="<?= $dialog['did']?>" onclick="triggerDialog('<?= $dialog['did']?>')">
+        <a href="<?= isset($d_current)?'#':site_url('chat/channel/'.$dialog['did']) ?>" class="list-group-item <?php echo $dialog['did'] == $d_id && isset($d_current)?"active":"inactive"; ?>" id="<?= $dialog['did']?>" onclick="triggerDialog('<?= $dialog['did']?>', 1)">
             <span class="badge" style="display: none;">0</span>
             <h5 class="list-group-item-heading">
 <?php 

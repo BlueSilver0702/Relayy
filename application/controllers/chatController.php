@@ -2,12 +2,41 @@
 
 class ChatController extends CI_Controller
 {
+	var $cid;
+    var $cname;
+    var $cemail;
+    var $clogin;
+    var $cpassword;
+    var $ctype;
+    var $cphoto;
+    var $cphone;
+    var $cfacebook;
+
 	public function __construct()
 	{
 		parent::__construct();
 
 		$this->load->model('mchat');
 		$this->load->model('muser');
+		$this->load->model('moption');
+
+		$this->cid = gf_cu_id();
+		
+		$this->cname = gf_cu_fname();
+
+		$this->cemail = gf_cu_email();
+
+		$this->clogin = gf_cu_email();
+
+		$this->cpassword = gf_cu_password();
+
+		$this->ctype = gf_cu_type();
+
+		$this->cphoto = gf_cu_photo();
+
+		$this->cphone = gf_cu_phone();
+
+		$this->cfacebook = gf_cu_facebook();
 	}
 
 	public function getChatData()
@@ -48,28 +77,30 @@ class ChatController extends CI_Controller
 	    	
 	    	$chat_data['d_owner'] = $d_owner->fname;
 
+	    	$chat_data['d_noti'] = $this->moption->get($this->cid, 'notify_'.$chat_data['d_id']);
+
 	    	if ($d_owner->id == gf_cu_id()) $chat_data['d_owner'] = "Me";
 		}
     	
 		$chat_data['history'] = $dialog_arr;
 
-		$chat_data['u_id'] = gf_cu_id();
+		$chat_data['u_id'] = $this->cid;
 		
-		$chat_data['u_name'] = gf_cu_fname();
+		$chat_data['u_name'] = $this->cname;
 
-		$chat_data['u_login'] = gf_cu_email();
+		$chat_data['u_login'] = $this->clogin;
 
-		$chat_data['u_email'] = gf_cu_email();
+		$chat_data['u_email'] = $this->cemail;
 
-		$chat_data['u_password'] = gf_cu_password();
+		$chat_data['u_password'] = $this->cpassword;
 
-		$chat_data['u_type'] = gf_cu_type();
+		$chat_data['u_type'] = $this->ctype;
 
-		$chat_data['u_photo'] = gf_cu_photo();
+		$chat_data['u_photo'] = $this->cphoto;
 
-		$chat_data['u_phone'] = gf_cu_phone();
+		$chat_data['u_phone'] = $this->cphone;
 
-		$chat_data['u_facebook'] = gf_cu_facebook();
+		$chat_data['u_facebook'] = $this->cfacebook;
 
 		return $chat_data;
 	}
