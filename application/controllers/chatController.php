@@ -3,13 +3,15 @@
 class ChatController extends CI_Controller
 {
 	var $cid;
-    var $cname;
+	var $cuid;
+    var $cfname;
+    var $clname;
     var $cemail;
     var $clogin;
     var $cpassword;
     var $ctype;
     var $cphoto;
-    var $cphone;
+    var $cbio;
     var $cfacebook;
 
 	public function __construct()
@@ -19,10 +21,15 @@ class ChatController extends CI_Controller
 		$this->load->model('mchat');
 		$this->load->model('muser');
 		$this->load->model('moption');
+        $this->load->library('email');
 
 		$this->cid = gf_cu_id();
+
+		$this->cuid = gf_cu_uid();
 		
-		$this->cname = gf_cu_fname();
+		$this->cfname = gf_cu_fname();
+
+		$this->clname = gf_cu_lname();
 
 		$this->cemail = gf_cu_email();
 
@@ -34,7 +41,7 @@ class ChatController extends CI_Controller
 
 		$this->cphoto = gf_cu_photo();
 
-		$this->cphone = gf_cu_phone();
+		$this->cbio = gf_cu_bio();
 
 		$this->cfacebook = gf_cu_facebook();
 	}
@@ -44,7 +51,7 @@ class ChatController extends CI_Controller
 
 		///////////////////////////
 		
-		$dialog_arr = $this->mchat->getDialogs(gf_cu_id());
+		$dialog_arr = $this->mchat->getDialogs(gf_cu_uid());
 
 		$chat_data = array();
 
@@ -79,14 +86,20 @@ class ChatController extends CI_Controller
 
 	    	$chat_data['d_noti'] = $this->moption->get($this->cid, 'notify_'.$chat_data['d_id']);
 
-	    	if ($d_owner->id == gf_cu_id()) $chat_data['d_owner'] = "Me";
+	    	if ($d_owner->id == gf_cu_uid()) $chat_data['d_owner'] = "Me";
 		}
     	
 		$chat_data['history'] = $dialog_arr;
 
 		$chat_data['u_id'] = $this->cid;
+
+		$chat_data['u_uid'] = $this->cuid;
 		
-		$chat_data['u_name'] = $this->cname;
+		$chat_data['u_name'] = $this->cfname." ".$this->clname;
+
+		$chat_data['u_fname'] = $this->cfname;
+
+		$chat_data['u_lname'] = $this->clname;
 
 		$chat_data['u_login'] = $this->clogin;
 
@@ -98,7 +111,7 @@ class ChatController extends CI_Controller
 
 		$chat_data['u_photo'] = $this->cphoto;
 
-		$chat_data['u_phone'] = $this->cphone;
+		$chat_data['u_bio'] = $this->cbio;
 
 		$chat_data['u_facebook'] = $this->cfacebook;
 
@@ -113,5 +126,24 @@ class ChatController extends CI_Controller
 			
 			return;
 		}
+	}
+
+	public function maintenance()
+	{
+		$this->loginCheck();    	
+
+		///////////////////////////
+    	$chat_data = $this->getChatData();
+
+    	$chat_data['body_class'] = 'maintenance-page';
+
+		$chat_data['page_title'] = 'Maintenance | Relayy';		
+
+    	$this->load->view('templates/header-chat', $chat_data);
+
+		$this->load->view('maintenance');
+
+		$this->load->view('templates/footer-chat', $chat_data);
+
 	}
 }

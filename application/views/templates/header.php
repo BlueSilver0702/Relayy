@@ -7,7 +7,7 @@
       <!--reset styles-->
       <link rel="stylesheet" href="<?= asset_base_url()?>/css/style.css" type="text/css">
       <link rel="stylesheet" href="<?= asset_base_url()?>/libs/bootstrap.min.css" type="text/css">
-      <link rel="shortcut icon" href="<?= asset_base_url()?>/images/favicon.ico">
+      <link rel="shortcut icon" href="<?= asset_base_url()?>/images/favicon.png">
    </head>
    <body class="<?php if(isset($body_class)) echo $body_class; ?>">
         <div id="color_bar"></div>

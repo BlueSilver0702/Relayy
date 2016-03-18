@@ -1,7 +1,7 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
-include_once (dirname(__FILE__) . "/chatController.php");
-include_once (dirname(__FILE__) . "/uploadHandler.php");
+include_once (dirname(__FILE__) . "/ChatController.php");
+include_once (dirname(__FILE__) . "/UploadHandler.php");
 
 class Profile extends ChatController
 {
@@ -15,6 +15,8 @@ class Profile extends ChatController
     	$this->loginCheck();    	
 
     	$chat_data = $this->getChatData();
+    	
+    	//print_r($chat_data);exit;
 
     	$chat_data['body_class'] = 'profile-page';
 
@@ -27,6 +29,28 @@ class Profile extends ChatController
 		$this->load->view('profile', $chat_data);
 
 		$this->load->view('templates/footer-chat', $chat_data);
+	}
+
+	public function user($c_uid)
+	{
+    	$this->loginCheck();    	
+
+    	$c_data = $this->getChatData();
+
+    	$c_data['body_class'] = 'profile-page';
+
+		$c_data['page_title'] = 'Profile | Relayy';
+
+		$user_data = $this->muser->getUserArray($c_uid);
+		// print_r($user);exit;
+    
+    	$this->load->view('templates/header-chat', $c_data);
+		
+		$this->load->view('templates/left-sidebar', $c_data);
+
+		$this->load->view('uprofile', $user_data);
+
+		$this->load->view('templates/footer-chat', $c_data);
 	}
 
 	public function edit()
@@ -55,14 +79,17 @@ class Profile extends ChatController
     	$this->loginCheck();
 
     	$fname = $this->input->post('fname');
+    	$lname = $this->input->post('lname');
         $password = $this->input->post('password');
-        $phone = $this->input->post('phone');
+        $bio = $this->input->post('bio');
         $picture = $this->input->post('picture');
 
-        $object = $this->muser->editUser(gf_cu_id(), $fname, gf_cu_email(), $password, gf_cu_type(), $phone, $picture);
+        $object = $this->muser->editUser($this->cuid, $fname, $lname, $this->cemail, $password, $this->ctype, $bio, $picture);
 
         // print_r($object);exit;
         gf_registerCurrentUser($object);
+
+        $this->email->profile($this->cemail, $fname." ".$lname);
 
 		redirect(site_url('profile/edit'), 'get');
 	}

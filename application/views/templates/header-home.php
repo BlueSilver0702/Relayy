@@ -4,7 +4,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
       <title><?php if(isset($page_title)) echo $page_title; ?></title>
-      <link rel="shortcut icon" href="<?= asset_base_url()?>/images/favicon.ico">
+      <link rel="shortcut icon" href="<?= asset_base_url()?>/images/favicon.png">
 
       <!--reset styles-->
       <link rel="stylesheet" href="<?= asset_base_url()?>/css/style.css" type="text/css">

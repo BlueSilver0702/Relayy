@@ -64,7 +64,7 @@ function buildMetaHtml(jsonData) {
   for (var i=0; i<jsonObj.d_users.length; i++) {
     var d_user = jsonObj.d_users[i];
     if (d_user.photo == "") d_user.photo = site_url + "/assets/images/emp-sm.jpg";
-    retHtml += '<li class="" id="remove-'+d_user.uid+'"><a class=""><img class="avatar avatar_small" src="'+d_user.photo+'">'+d_user.fname+'</a>';
+    retHtml += '<li class="" id="remove-'+d_user.uid+'"><a class="" href="'+site_url+'/profile/user/'+d_user.uid+'"><img class="avatar avatar_small" src="'+d_user.photo+'">'+d_user.fname+'</a>';
    if (jsonObj.d_owner == "Me") {
     retHtml += '<a class="information_remove_user" onclick="removeAction(\''+jsonObj.d_id+'\', \''+d_user.uid+'\')"></a>';
   }

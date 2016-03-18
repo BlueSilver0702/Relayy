@@ -1,6 +1,6 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
-include_once (dirname(__FILE__) . "/chatController.php");
+include_once (dirname(__FILE__) . "/ChatController.php");
 
 class Users extends ChatController
 {
@@ -11,6 +11,8 @@ class Users extends ChatController
 
 	public function index()
 	{
+	$this->maintenance();return;
+	
     	$this->loginCheck();    	
 
     	$chat_data = $this->getChatData();

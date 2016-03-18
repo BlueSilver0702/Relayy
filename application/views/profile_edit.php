@@ -20,15 +20,20 @@
 </div>
 
   </div>
-
   <div class="account-info">
     <div class="row">
-      <div class="col-xs-2 col-xs-offset-3">Full Name:</div>
-
+      <div class="col-xs-2 col-xs-offset-3">First Name:</div>
       <div class="col-xs-5">
-        <input type="text" name="fname" class="form-control" placeholder="Full Name" required="true" value="<?= $u_name?>">
+        <input type="text" name="fname" class="form-control" placeholder="First Name" required="true" value="<?= $u_fname?>">
       </div>
 
+    </div>
+
+    <div class="row">
+      <div class="col-xs-2 col-xs-offset-3">Last Name:</div>
+      <div class="col-xs-5">
+        <input type="text" name="lname" class="form-control" placeholder="Last Name" required="true" value="<?= $u_lname?>">
+      </div>
     </div>
 
     <div class="row">
@@ -51,10 +56,10 @@
     </div>
     <div class="row">
 
-      <div class="col-xs-2 col-xs-offset-3">Phone:</div>
+      <div class="col-xs-2 col-xs-offset-3">Bio:</div>
 
       <div class="col-xs-5">
-        <input type="phone" name="phone" class="form-control" placeholder="Phone Number" required="true" value="<?= $u_phone?>">
+        <textarea name="bio" class="form-control" required="true"><?= $u_bio?></textarea>
       </div>
 
     </div>

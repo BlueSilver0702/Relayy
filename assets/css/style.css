@@ -175,8 +175,9 @@ p.con_text {
 }
 
 .main .facebook {
-    background: url("../images/fb_button.png") 12px center no-repeat;
-    background-color:#3d5b99;
+    background: url("../images/linkedin-icon.png") 12px center no-repeat;
+    background-color:#0077b5;
+    margin-bottom:10px;
 }
 
 .btn_download:hover {

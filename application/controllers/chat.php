@@ -1,6 +1,6 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
-include_once (dirname(__FILE__) . "/chatController.php");
+include_once (dirname(__FILE__) . "/ChatController.php");
 
 class Chat extends ChatController
 {
@@ -11,6 +11,9 @@ class Chat extends ChatController
 
 	public function index()
 	{
+	
+	$this->maintenance();return;
+	
     	$this->loginCheck();    	
 
 		///////////////////////////
@@ -103,7 +106,7 @@ class Chat extends ChatController
 		$this->load->view('templates/footer-chat', $chat_data);
 	}
 
-	public function new()
+	public function add()
 	{
 		$did = $this->input->post('did');
 		

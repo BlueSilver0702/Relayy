@@ -7,28 +7,45 @@ function registerDialogPopup() {
   $("#registerForm").modal("show");
 }
 
-function registerFacebook() {
-	FB.login(function(response) {
+function registerFacebook(uid, email, fname, lname, picture, bio, role) {
 
-	  if (response.status === 'connected') {
-	    
-	    var params = { 'provider': "facebook", 'keys[token]': response.authResponse.accessToken};
- 
-		QB.login(params, function(err, user){
-		  if (user) {
-		    // success
-		    window.location.href = site_url + "auth/facebook_register/" + user.id + "/" + user.login + "/" + user.full_name;
-		  } else  {
-		    // error
-		    alert("fail");
-		  }
-		});
-	  } else if (response.status === 'not_authorized') {
-	    alert("Error: " + response.status);
-	  } else {
-	    alert("Error: " + response.status);
-	  }
-	});
+  var params = { 'login': uid, 'password': uid, 'full_name': fname+" "+lname, 'email': email };
+
+  var filters = {filter: { field: 'email', param: 'eq', value: email }};
+  QB.users.listUsers(filters, function(err, result){
+    if (result && result.items.length> 0) {
+      console.log("----------------linkedin register: old user");
+      var user = result.items[0];
+      // console.log(user.user);return;
+      $("#li_id").val(user.user.id);
+      $("#li_login").val(user.user.login);
+      $("#li_fname").val(fname);
+      $("#li_lname").val(lname);
+      $("#li_email").val(user.user.email);
+      $("#li_photo").val(picture);
+      $("#li_bio").val(bio);
+      $("#linkedin_form").submit();
+    } else if (result && result.items.length == 0) {
+      console.log("----------------linkedin register: new user");
+      QB.users.create(params, function(err, user){
+        if (user) {
+          $("#li_id").val(user.id);
+          $("#li_login").val(user.login);
+          $("#li_fname").val(fname);
+          $("#li_lname").val(lname);
+          $("#li_email").val(user.email);
+          $("#li_photo").val(picture);
+          $("#li_bio").val(bio);
+          $("#linkedin_form").submit();
+        } else  {
+          alert("***********************" + JSON.stringify(err));
+        }
+      }); 
+    } else {
+      console.log(result);
+    }
+  });
+
 }
 
 $(document).ready(function() {
@@ -48,10 +65,11 @@ $(document).ready(function() {
 
     var login = $('#usr_reg_n_lgn').val();
     var password = $('#usr_reg_n_pwd').val();
-    var fullname = $('#usr_reg_n_ful').val();
+    var fname = $('#usr_reg_n_fname').val();
+    var lname = $('#usr_reg_n_lname').val();
     var user_role = $('#user_role').val();
 
-    var params = { 'login': login, 'password': password, 'full_name': fullname, 'email': login };
+    var params = { 'login': login, 'password': password, 'full_name': fname+" "+lname, 'email': login };
 
     QB.users.create(params, function(err, user){
       if (user) {

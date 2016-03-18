@@ -75,13 +75,15 @@ function gf_registerCurrentUser($userObject)
         'logged_in' => true,
         'logged_in_time' => time(),
         'cu_id' => $userObject->id,
+        'cu_uid' => $userObject->uid,
         'cu_fname' => $userObject->fname,
+        'cu_lname' => $userObject->lname,
         'cu_email' => $userObject->email,
         'cu_password' => $userObject->password,
         'cu_type' => $userObject->type,
         'cu_status' => $userObject->status,
         'cu_photo' => $userObject->photo,
-        'cu_phone' => $userObject->phone,
+        'cu_bio' => $userObject->bio,
         'cu_facebook' => $userObject->facebook,
     );                                              
     $CI->session->set_userdata($arr);
@@ -95,13 +97,15 @@ function gf_unregisterCurrentUser()
         'logged_in' => '',
         'logged_in_time' => '',
         'cu_id' => '',
+        'cu_uid' => '',
         'cu_fname' => '',
+        'cu_lname' => '',
         'cu_email' => '',
         'cu_password' => '',
         'cu_type' => '',
         'cu_status' => '',
         'cu_photo' => '',
-        'cu_phone' => '',
+        'cu_bio' => '',
         'cu_facebook' => '',
     );
 
@@ -122,11 +126,13 @@ function gf_isCurrentUser($user_id)
 }
                                                                
 function gf_cu_id(){$CI =& get_instance(); return $CI->session->userdata('cu_id');}
+function gf_cu_uid(){$CI =& get_instance(); return $CI->session->userdata('cu_uid');}
 function gf_cu_password(){$CI =& get_instance(); return $CI->session->userdata('cu_password');}
 function gf_cu_fname(){$CI =& get_instance(); return $CI->session->userdata('cu_fname');}
+function gf_cu_lname(){$CI =& get_instance(); return $CI->session->userdata('cu_lname');}
 function gf_cu_email(){$CI =& get_instance(); return $CI->session->userdata('cu_email');}
 function gf_cu_type(){$CI =& get_instance(); return $CI->session->userdata('cu_type');}
 function gf_cu_status(){$CI =& get_instance(); return $CI->session->userdata('cu_status');}
 function gf_cu_photo(){$CI =& get_instance(); return $CI->session->userdata('cu_photo');}
-function gf_cu_phone(){$CI =& get_instance(); return $CI->session->userdata('cu_phone');}
+function gf_cu_bio(){$CI =& get_instance(); return $CI->session->userdata('cu_bio');}
 function gf_cu_facebook(){$CI =& get_instance(); return $CI->session->userdata('cu_facebook');}

@@ -9,13 +9,15 @@
 class Muser extends CI_Model {
 
     var $id;
+    var $uid;
     var $fname;
+    var $lname;
     var $password;
     var $type;
     var $status;
     var $email;
     var $photo;
-    var $phone;
+    var $bio;
     var $facebook;
 
     public function __construct()
@@ -28,23 +30,25 @@ class Muser extends CI_Model {
     public function insertUser(
         $id,
         $fname,
+        $lname,
         $password,
         $type,
         $status,
         $email,
         $photo,
-        $phone,
+        $bio,
         $facebook)
     {
         $data = array(
             'uid'        => $id,
             'fname'      => $fname,
+            'lname'      => $lname,
             'pwd'        => $password,
             'email'      => $email,
             'photo'      => $photo,
             'status'     => $status,
             'type'       => $type,
-            'phone'       => $phone,
+            'bio'       => $bio,
             'facebook'   => $facebook
         );
 
@@ -83,14 +87,16 @@ class Muser extends CI_Model {
 
             $user_one = new Muser();
         
-            $user_one->id = $user->uid;
+            $user_one->id = $user->id;
+            $user_one->uid = $user->uid;
             $user_one->fname = $user->fname;
+            $user_one->lname = $user->lname;
             $user_one->password = $user->pwd;
             $user_one->type = $user->type;
             $user_one->status = $user->status;
             $user_one->email = $user->email;
             $user_one->photo = $user->photo;
-            $user_one->phone = $user->phone;
+            $user_one->bio = $user->bio;
             $user_one->facebook = $user->facebook;
 
             return $user_one;
@@ -116,14 +122,15 @@ class Muser extends CI_Model {
         return FALSE;
     }
 
-    public function editUser($id, $fname, $email, $password, $type, $phone, $picture)
+    public function editUser($id, $fname, $lname, $email, $password, $type, $bio, $picture)
     {
         $data = array(
             'fname' => $fname,
+            'lname' => $lname,
             'email' => $email,
             'pwd' => $password,
             'type' => $type,
-            'phone' => $phone,
+            'bio' => $bio,
             'photo' => $picture
         );
 
@@ -165,7 +172,7 @@ class Muser extends CI_Model {
     {
 
         //$query = $this->db->select('uid, fname, pwd, type, status, email, photo')
-        $query = $this->db->select('uid, fname, pwd, type, status, email, photo, facebook')
+        $query = $this->db->select('*')
                           ->where('email', $email)
                           ->limit(1)
                           ->get('tbl_user');
@@ -181,13 +188,16 @@ class Muser extends CI_Model {
             {
                 $user_one = new Muser();
             
-                $user_one->id = $user->uid;
+                $user_one->id = $user->id;
+                $user_one->uid = $user->uid;
                 $user_one->fname = $user->fname;
+                $user_one->lname = $user->lname;
                 $user_one->password = $user->pwd;
                 $user_one->type = $user->type;
                 $user_one->status = $user->status;
                 $user_one->email = $user->email;
                 $user_one->photo = $user->photo;
+                $user_one->bio = $user->bio;
                 $user_one->facebook = $user->facebook;
 
                 return $user_one;
@@ -197,27 +207,29 @@ class Muser extends CI_Model {
         return FALSE;
     }
 
-    public function register($id, $fname, $email, $pwd, $type, $facebook) {
+    public function register($id, $fname, $lname, $email, $pwd, $type, $facebook, $photo, $bio) {
 
         $newUser = $this->getUser($id);
 
         if (!$newUser)
         {
-            $newUser = $this->insertUser($id, $fname, $pwd, $type, USER_STATUS_INIT, $email, '', '', $facebook);    
+            $newUser = $this->insertUser($id, $fname, $lname, $pwd, $type, USER_STATUS_INIT, $email, $photo, $bio, $facebook);    
         }
 
         if ($newUser) 
         {
             $user_one = new Muser();
             
-            $user_one->id = $id;
+            $user_one->id = $newUser;
+            $user_one->uid = $id;
             $user_one->fname = $fname;
+            $user_one->lname = $lname;
             $user_one->password = $pwd;
             $user_one->type = $type;
             $user_one->status = USER_STATUS_INIT;
             $user_one->email = $email;
-            $user_one->photo = '';
-            $user_one->phone = '';
+            $user_one->photo = $photo;
+            $user_one->bio = $bio;
             $user_one->facebook = $facebook;
 
             return $user_one;

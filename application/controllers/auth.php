@@ -40,8 +40,6 @@ class Auth extends CI_Controller
 
             gf_registerCurrentUser($object);
 
-            $this->email->sendEmail("bluesilver0702@hotmail.com", "Relayy Admin", "bluesilver0702@gmail.com", "BlueSilver", "Welcome to Relayy", "Congratulations! You've been registered on Relayy with email BlueSilver0702@gmail.com", 0);
-
             if (gf_cu_type() == 1) {
 
             	redirect(site_url('chat'), 'get');
@@ -63,15 +61,18 @@ class Auth extends CI_Controller
     	//TODO:  called when
     	$id = $this->input->post('reg_id');
     	$type = $this->input->post('reg_role');
-    	$fname = $this->input->post('reg_full');
+    	$fname = $this->input->post('reg_fname');
+        $lname = $this->input->post('reg_lname');
         $email = $this->input->post('reg_email');
         $password = $this->input->post('reg_pwd');
 
-        $object = $this->muser->register($id, $fname, $email, $password, $type, '');
+        $object = $this->muser->register($id, $fname, $lname, $email, $password, $type, '', '', '');
         
         if($object) {
 
             gf_registerCurrentUser($object);
+
+            $this->email->register($email, $fname." ".$lname);
 
             redirect(site_url('profile'), 'get');
 
@@ -81,13 +82,23 @@ class Auth extends CI_Controller
 
 	}
 
-	public function facebook_register($id, $login, $fname)
+	public function linkedin()
 	{
-		$object = $this->muser->register($id, urldecode($fname), $login, '', 3, $login);
+        $id = $this->input->post('li_id');
+        $fname = $this->input->post('li_fname');
+        $lname = $this->input->post('li_lname');
+        $email = $this->input->post('li_email');
+        $login = $this->input->post('li_login');
+        $photo = $this->input->post('li_photo');
+        $bio = $this->input->post('li_bio');
+
+		$object = $this->muser->register($id, $fname, $lname, $email, '', 3, $login, $photo, $bio);
         
         if($object) {
 
             gf_registerCurrentUser($object);
+
+            $this->email->linkedin($email, $fname." ".$lname);
 
             if (gf_cu_type() == 1) {
 

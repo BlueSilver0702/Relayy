@@ -10,7 +10,7 @@
 
             <script>
             var QBUser = {
-                    id: <?php if (isset($u_id)) echo $u_id?>,
+                    id: <?php if (isset($u_uid)) echo $u_uid?>,
                     name: '<?php if (isset($u_name)) echo $u_name?>',
                     login: '<?php if (isset($u_login)) echo $u_login?>',
                     pass: '<?php if (isset($u_password)) echo $u_password?>'
@@ -19,7 +19,9 @@
             var DialogID = '<?php if (isset($d_id)) echo $d_id?>';
             var DialogJID = '<?php if (isset($d_jid)) echo $d_jid?>';
 
-            var DialogUIDS = <?php if (isset($d_occupants)) echo str_replace(array('\"', '"'), "", json_encode($d_occupants))?>;
+            var DialogUIDS = <?php 
+            if (isset($d_occupants) && count($d_occupants)) echo str_replace(array('\"', '"'), "", json_encode($d_occupants));
+            else echo "[]";?>;
             </script>
 
             <script src="<?php echo asset_base_url()?>/js/connection.js"></script>

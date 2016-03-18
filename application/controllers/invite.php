@@ -1,6 +1,6 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
-include_once (dirname(__FILE__) . "/chatController.php");
+include_once (dirname(__FILE__) . "/ChatController.php");
 
 class Invite extends ChatController
 {
@@ -11,6 +11,9 @@ class Invite extends ChatController
 
 	public function index()
 	{
+	
+	$this->maintenance();return;
+	
     	$this->loginCheck();    	
 
     	$chat_data = $this->getChatData();
@@ -26,7 +29,7 @@ class Invite extends ChatController
 
 		$chat_data['page'] = 0;
     
-    	$this->load->view('templates/header-chat', $chat_data);
+    		$this->load->view('templates/header-chat', $chat_data);
 
 		$this->load->view('templates/left-sidebar', $chat_data);
 
@@ -35,13 +38,13 @@ class Invite extends ChatController
 		$this->load->view('templates/footer-chat', $chat_data);
 	}
 
-	public function new()
+	public function add()
 	{
 		$this->loginCheck();    	
 
-    	$chat_data = $this->getChatData();
+    		$chat_data = $this->getChatData();
 
-    	$chat_data['body_class'] = 'invite-page';
+    		$chat_data['body_class'] = 'invite-page';
 
 		$chat_data['page_title'] = 'Invite Management | Relayy';
 
@@ -52,7 +55,7 @@ class Invite extends ChatController
 
 		$chat_data['page'] = 1;
     
-    	$this->load->view('templates/header-chat', $chat_data);
+    		$this->load->view('templates/header-chat', $chat_data);
 
 		$this->load->view('templates/left-sidebar', $chat_data);
 

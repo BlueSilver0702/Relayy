@@ -45,7 +45,7 @@
 	      <ul>
 <?php   foreach ($d_users as $user) {?>
 			<li class="" id="remove-<?= $user['uid']?>">
-	          <a class="">
+	          <a class="" href="<?= site_url("profile/user/".$user['uid'])?>">
 	            <img class="avatar avatar_small" src="<?= strlen($user['photo'])>0?$user['photo']:asset_base_url().'/images/emp-sm.jpg'?>">
 	            <?= $user['fname']?>
 	          </a>

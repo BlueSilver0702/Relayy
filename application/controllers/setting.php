@@ -1,6 +1,6 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
-include_once (dirname(__FILE__) . "/chatController.php");
+include_once (dirname(__FILE__) . "/ChatController.php");
 
 class Setting extends ChatController
 {
@@ -13,6 +13,8 @@ class Setting extends ChatController
 	{
     	$this->loginCheck();  
 
+    	$set_data['setval'] = intval($this->moption->get($this->cid, 'notification'));
+
     	$chat_data = $this->getChatData();  	
 
     	$chat_data['body_class'] = 'setting-page';
@@ -23,8 +25,17 @@ class Setting extends ChatController
 
 		$this->load->view('templates/left-sidebar', $chat_data);
 
-		$this->load->view('setting');
+		$this->load->view('setting', $set_data);
 
 		$this->load->view('templates/footer-chat', $chat_data);
+	}
+
+	public function save()
+	{
+		$setvalue = $this->input->post('setvalue');
+
+		$this->moption->update($this->cid, "notification", $setvalue);
+
+		redirect(site_url('setting'), 'get');
 	}
 }

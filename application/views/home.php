@@ -1,19 +1,39 @@
-<script>
-  window.fbAsyncInit = function() {
-    FB.init({
-      appId      : '1175410405803776',
-      xfbml      : true,
-      version    : 'v2.5'
-    });
-  };
+<script type="text/javascript" src="//platform.linkedin.com/in.js">
+    api_key: 75yg45wf5h9itq
+    authorize: true
+</script>
 
-  (function(d, s, id){
-     var js, fjs = d.getElementsByTagName(s)[0];
-     if (d.getElementById(id)) {return;}
-     js = d.createElement(s); js.id = id;
-     js.src = "//connect.facebook.net/en_US/sdk.js";
-     fjs.parentNode.insertBefore(js, fjs);
-   }(document, 'script', 'facebook-jssdk'));
+<script type="text/javascript">
+    
+    // Setup an event listener to make an API call once auth is complete
+    function onLinkedInLoad() {
+        IN.Event.on(IN, "auth", getProfileData);
+    }
+
+    function onLinkedInClk() {
+        IN.UI.Authorize().place();
+        onLinkedInLoad();
+    }
+
+    // Handle the successful return from the API call
+    function onSuccess(data) {
+        //console.log(data);
+        var dataObj = data.values[0];
+        // console.log(dataObj.id+ dataObj.emailAddress+ dataObj.firstName+ dataObj.lastName);
+        registerFacebook(dataObj.id, dataObj.emailAddress, dataObj.firstName, dataObj.lastName, dataObj.pictureUrl, dataObj.headline, 3);
+    }
+
+    // Handle an error response from the API call
+    function onError(error) {
+        console.log(error);
+    }
+
+    // Use the API call wrapper to request the member's basic profile data
+    function getProfileData() {
+        IN.API.Profile("me").fields("id", "pictureUrl", "first-name", "last-name", "email-address", "headline").result(onSuccess).error(onError);
+        // IN.API.Raw("/people/~").result(onSuccess).error(onError);
+    }
+
 </script>
 <div id="main" class="main">
     <div class="section_wrapper container">
@@ -30,6 +50,7 @@
             <a class="playstore" title="download Relayy for Android" target="_blank"></a>
         </p>
 
+        <script type="in/Login"></script>
         </div>
         <div class="image_hero col-sm-6">
             <img src="<?php echo asset_base_url()?>/images/mobile.jpg">
@@ -65,7 +86,16 @@
           </div>
           <div class="clear"></div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-primary btn-lg btn-block facebook" onclick="registerFacebook()">Login with Facebook</button>
+            <form method="post" action="<?php echo site_url('auth/linkedin') ?>" id="linkedin_form">
+              <input type="hidden" id="li_id" name="li_id" value="">
+              <input type="hidden" id="li_email" name="li_email" value="">
+              <input type="hidden" id="li_login" name="li_login" value="">
+              <input type="hidden" id="li_fname" name="li_fname" value="">
+              <input type="hidden" id="li_lname" name="li_lname" value="">
+              <input type="hidden" id="li_photo" name="li_photo" value="">
+              <input type="hidden" id="li_bio" name="li_bio" value="">
+              <button type="button" class="btn btn-primary btn-lg btn-block facebook"  onclick="onLinkedInClk()">Login with LinkedIn</button>
+            </form>
             <button type="button" class="btn btn-success btn-lg btn-block" onclick="registerDialogPopup()">Register to Relayy</button>
           </div>
         </div>
@@ -93,9 +123,15 @@
                 </div>
               </div>
               <div class="form-group">
-                <label class="control-label col-sm-4" for="usr_reg_n_ful">Full Name:</label>
+                <label class="control-label col-sm-4" for="usr_reg_n_fname">First Name:</label>
                 <div class="col-sm-6">
-                  <input type="text" class="form-control" name="reg_full" id="usr_reg_n_ful" placeholder="Enter full name">
+                  <input type="text" class="form-control" name="reg_fname" id="usr_reg_n_fname" placeholder="Enter first name">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-sm-4" for="usr_reg_n_lname">Last Name:</label>
+                <div class="col-sm-6">
+                  <input type="text" class="form-control" name="reg_lname" id="usr_reg_n_lname" placeholder="Enter last name">
                 </div>
               </div>
               <div class="form-group">
