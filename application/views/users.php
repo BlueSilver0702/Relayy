@@ -1,4 +1,17 @@
 <div class="user-manage">
+
+	<div class="input-group" style="position:absolute;right:30px;width:350px;">
+      <input id="invite_txt" type="text" class="form-control" aria-label="..." placeholder="Email to invite">
+      <div class="input-group-btn">
+        <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-send" aria-hidden="true"></span>&nbsp;&nbsp;Invite as <span class="caret"></span></button>
+        <ul class="dropdown-menu dropdown-menu-right">
+          <li><a onclick="sendInvite(1)">Admin</a></li>
+          <li><a onclick="sendInvite(2)">Advisor</a></li>
+          <li><a onclick="sendInvite(3)">Startup</a></li>
+        </ul>
+      </div><!-- /btn-group -->
+    </div><!-- /input-group -->
+
 	<ul class="nav nav-tabs">
 	  <li <?php echo $page==0?'class="active"':''?>>
 	    <a href="<?= site_url('users')?>">All</a>
@@ -35,9 +48,9 @@
 	    <div class="col-sm-1"><a class="btn btn-warning" href="<?= site_url('users')?>/action/<?= $user['uid']."/".$page?>">Deactive</a></div>
 <?php } else if ($user['status'] == 2) {?>
 		<div class="col-sm-1 col-sm-offset-1"><span class="text-primary">Invited</span></div>
-	    <div class="col-sm-1"><a class="btn btn-primary" href="<?= site_url('users')?>/action/<?= $user['uid']."/".$page?>">Invite</a></div>
+	    <div class="col-sm-1"><a class="btn btn-primary" href="#" disabled="disabled">Invite</a></div>
 <?php }?>
-		<div class="col-sm-1 col-sm-offset-1"><a class="btn btn-danger" href="<?= site_url('users')?>/delete/<?= $user['uid']?>">Delete</a></div>
+		<div class="col-sm-1 col-sm-offset-1"><a class="btn btn-danger" onclick="delAction(this, '<?= $user['email']?>')" data-act="<?= site_url('users')?>/delete/<?= $user['uid']."/".$page?>">Delete</a></div>
 	  </div>
 <?php		
 	}

@@ -6,11 +6,12 @@
             <script src="<?php echo asset_base_url()?>/libs/bootstrap.min.js" type="text/javascript"></script>
 
             <script src="<?php echo asset_base_url()?>/libs/quickblox.min.js"></script>
+            <script src="<?php echo asset_base_url()?>/js/bootstrap-dialog.min.js" type="text/javascript"></script>
             <script src="<?php echo asset_base_url()?>/js/config.js"></script>
 
             <script>
             var QBUser = {
-                    id: <?php if (isset($u_uid)) echo $u_uid?>,
+                    id: <?php if (isset($u_id)) echo $u_id?>,
                     name: '<?php if (isset($u_name)) echo $u_name?>',
                     login: '<?php if (isset($u_login)) echo $u_login?>',
                     pass: '<?php if (isset($u_password)) echo $u_password?>'
@@ -62,6 +63,66 @@ $(function () {
 });
 </script>
 <?php  }
+if ($body_class == "users-page") {?>
+<script>
+function delAction(obj, email) {
+    var delObj = $(obj);
+    
+    BootstrapDialog.confirm({
+        title: 'Confirm',
+        message: 'Are you sure to delete this user: '+email+' ?',
+        type: BootstrapDialog.TYPE_DANGER,
+        closable: true,
+        draggable: true,
+        btnCancelLabel: 'Cancel',
+        btnOKLabel: 'Delete',
+        btnOKClass: 'btn-danger',
+        callback: function(result) {
+            if(result) {
+                location.href = delObj.data("act");
+            }
+        }
+    });
+}
+
+function sendInvite(userType) {
+    var sendEmail = $("#invite_txt").val();
+    var roleTxt = "";
+    if (userType == 1) roleTxt = "Admin";
+    else if (userType == 2) roleTxt = "Advisor";
+    else if (userType == 3) roleTxt = "Startup";
+
+    BootstrapDialog.confirm({
+        title: 'Confirm',
+        message: 'Are you sure to send invite email: '+sendEmail+' as '+roleTxt+' ?',
+        type: BootstrapDialog.TYPE_INFO,
+        closable: true,
+        draggable: true,
+        btnCancelLabel: 'Cancel',
+        btnOKLabel: 'Invite',
+        btnOKClass: 'btn-info',
+        // btnOKIcon : 'glyphicon glyphicon-check',
+        // buttons: [{
+        //     id: 'btn-ok',   
+        //     icon: 'glyphicon glyphicon-check',       
+        //     label: 'OK',
+        //     cssClass: 'btn-primary', 
+        //     autospin: false,
+        //     action: function(dialogRef){    
+        //         dialogRef.close();
+        //     }
+        // }],
+        callback: function(result) {
+            if(result) {
+                // location.href = delObj.data("act");
+            }
+        }
+    });
+}
+
+</script>
+<?php 
+}
 ?>
     </body>
 </html>

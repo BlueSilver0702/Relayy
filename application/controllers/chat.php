@@ -79,7 +79,7 @@ class Chat extends ChatController
 			}
 		}
 
-		$d_owner = $this->muser->getUser($chat_data['d_occupants'][0]);
+		$d_owner = $this->muser->get($chat_data['d_occupants'][0]);
 	    	
     	$chat_data['d_owner'] = $d_owner->fname;
 
@@ -171,7 +171,7 @@ class Chat extends ChatController
 
 		    	$ret_arr['d_users'] = $d_users;
 
-		    	$d_owner = $this->muser->getUser($d_occupants[0]);
+		    	$d_owner = $this->muser->get($d_occupants[0]);
 
 		    	if ($d_owner->id == $this->cid) $ret_arr['d_owner'] = "Me";
 		    	else $ret_arr['d_owner'] = $d_owner->fname;

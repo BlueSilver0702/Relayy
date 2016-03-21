@@ -54,3 +54,4 @@ $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
 $route['users/action/(:any)/(:num)'] = 'users/action/$1/$2';
+$route['users/delete/(:any)/(:num)'] = 'users/delete/$1/$2';

@@ -27,7 +27,7 @@ class Muser extends CI_Model {
         $this->load->database();
     }
 
-    public function insertUser(
+    public function add(
         $id,
         $fname,
         $lname,
@@ -74,7 +74,7 @@ class Muser extends CI_Model {
 
     }
 
-    public function getUser($user_id)
+    public function get($user_id)
     {
         $query = $this->db->select('*')
                           ->where('uid', $user_id)
@@ -122,7 +122,7 @@ class Muser extends CI_Model {
         return FALSE;
     }
 
-    public function editUser($id, $fname, $lname, $email, $password, $type, $bio, $picture)
+    public function edit($id, $fname, $lname, $email, $password, $type, $bio, $picture)
     {
         $data = array(
             'fname' => $fname,
@@ -136,12 +136,12 @@ class Muser extends CI_Model {
 
         $this->db->update('tbl_user', $data, array('uid' => $id));
 
-        return $this->getUser($id);
+        return $this->get($id);
     }
 
     public function changeStatus($user_id)
     {
-        $user = $this->getUser($user_id);
+        $user = $this->get($user_id);
 
         if ($user->status == USER_STATUS_INIT) {
             $data = array(
@@ -158,12 +158,15 @@ class Muser extends CI_Model {
         }
     }
 
-    public static function deleteUser($user_id)
+    public function delete($user_id)
     {
+        $this->db->where('uid', $user_id);
+        $this->db->delete('tbl_user'); 
 
+        return "success";
     }
 
-    public static function resetPassword($emailAddress, $password)
+    public function resetPassword($emailAddress, $password)
     {
 
     }
@@ -209,11 +212,11 @@ class Muser extends CI_Model {
 
     public function register($id, $fname, $lname, $email, $pwd, $type, $facebook, $photo, $bio) {
 
-        $newUser = $this->getUser($id);
+        $newUser = $this->get($id);
 
         if (!$newUser)
         {
-            $newUser = $this->insertUser($id, $fname, $lname, $pwd, $type, USER_STATUS_INIT, $email, $photo, $bio, $facebook);    
+            $newUser = $this->add($id, $fname, $lname, $pwd, $type, USER_STATUS_INIT, $email, $photo, $bio, $facebook);    
         }
 
         if ($newUser) 

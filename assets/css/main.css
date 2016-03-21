@@ -377,6 +377,6 @@ body {
     color: #1393d5;
 }
 
-.user-manage ul li:first-child {
+.user-manage ul.nav-tabs li:first-child {
     margin-left:10px;
 }

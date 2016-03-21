@@ -8,6 +8,7 @@
       <!--reset styles-->
       <link rel="stylesheet" href="<?= asset_base_url()?>/libs/bootstrap.min.css" type="text/css">
       <link rel="stylesheet" href="<?= asset_base_url()?>/css/chat.css" type="text/css">
+      <link rel="stylesheet" href="<?= asset_base_url()?>/css/bootstrap-dialog.min.css" type="text/css">
       <link rel="stylesheet" href="<?= asset_base_url()?>/css/main.css" type="text/css">
 
 <?php 

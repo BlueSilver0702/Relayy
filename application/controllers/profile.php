@@ -84,7 +84,7 @@ class Profile extends ChatController
         $bio = $this->input->post('bio');
         $picture = $this->input->post('picture');
 
-        $object = $this->muser->editUser($this->cuid, $fname, $lname, $this->cemail, $password, $this->ctype, $bio, $picture);
+        $object = $this->muser->edit($this->cid, $fname, $lname, $this->cemail, $password, $this->ctype, $bio, $picture);
 
         // print_r($object);exit;
         gf_registerCurrentUser($object);

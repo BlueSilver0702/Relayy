@@ -74,8 +74,7 @@ function gf_registerCurrentUser($userObject)
     $arr = array(
         'logged_in' => true,
         'logged_in_time' => time(),
-        'cu_id' => $userObject->id,
-        'cu_uid' => $userObject->uid,
+        'cu_id' => $userObject->uid,
         'cu_fname' => $userObject->fname,
         'cu_lname' => $userObject->lname,
         'cu_email' => $userObject->email,
@@ -97,7 +96,6 @@ function gf_unregisterCurrentUser()
         'logged_in' => '',
         'logged_in_time' => '',
         'cu_id' => '',
-        'cu_uid' => '',
         'cu_fname' => '',
         'cu_lname' => '',
         'cu_email' => '',
@@ -126,7 +124,6 @@ function gf_isCurrentUser($user_id)
 }
                                                                
 function gf_cu_id(){$CI =& get_instance(); return $CI->session->userdata('cu_id');}
-function gf_cu_uid(){$CI =& get_instance(); return $CI->session->userdata('cu_uid');}
 function gf_cu_password(){$CI =& get_instance(); return $CI->session->userdata('cu_password');}
 function gf_cu_fname(){$CI =& get_instance(); return $CI->session->userdata('cu_fname');}
 function gf_cu_lname(){$CI =& get_instance(); return $CI->session->userdata('cu_lname');}

@@ -11,7 +11,7 @@ class Users extends ChatController
 
 	public function index()
 	{
-	$this->maintenance();return;
+	//$this->maintenance();return;
 	
     	$this->loginCheck();    	
 
@@ -89,6 +89,51 @@ class Users extends ChatController
 		$this->load->view('templates/footer-chat', $chat_data);
 	}
 
+	public function invited() 
+	{
+		$this->loginCheck();    	
+
+		$chat_data = $this->getChatData();
+
+    	$chat_data['body_class'] = 'users-page';
+
+		$chat_data['page_title'] = 'User Management | Relayy';
+
+		$data['user_name'] = gf_cu_fname();
+
+		$chat_data['users'] = $this->muser->getUserlist(2);
+
+		$chat_data['current'] = gf_cu_id();
+
+		$chat_data['page'] = 3;
+    
+    	$this->load->view('templates/header-chat', $chat_data);
+		
+		$this->load->view('templates/left-sidebar', $chat_data);
+
+		$this->load->view('users');
+
+		$this->load->view('templates/footer-chat', $chat_data);
+	}
+
+	public function delete($uid, $page) 
+	{
+		exit;
+		$this->loginCheck();    	
+
+		$this->muser->delete($uid);
+
+		if ($page == 0) {
+			redirect(site_url('users'), 'get');
+		} else if ($page == 1) {
+			redirect(site_url('users/pending'), 'get');
+		} else if ($page == 2) {
+			redirect(site_url('users/activated'), 'get');
+		} else {
+			redirect(site_url('users/activated'), 'get');
+		}
+	}
+
 	public function action($uid, $page) 
 	{
 		$this->loginCheck();
@@ -100,7 +145,7 @@ class Users extends ChatController
 		} else if ($page == 1) {
 			redirect(site_url('users/pending'), 'get');
 		} else {
-			redirect(site_url('users/activated'), 'get');
+			redirect(site_url('users/invited'), 'get');
 		}
 	}
 
