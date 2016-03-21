@@ -84,6 +84,8 @@ class Profile extends ChatController
         $bio = $this->input->post('bio');
         $picture = $this->input->post('picture');
 
+        if ($this->cstatus == 2) $this->muser->approve($this->cid);
+        
         $object = $this->muser->edit($this->cid, $fname, $lname, $this->cemail, $password, $this->ctype, $bio, $picture);
 
         // print_r($object);exit;

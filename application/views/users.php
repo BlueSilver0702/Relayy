@@ -1,7 +1,7 @@
 <div class="user-manage">
 
 	<div class="input-group" style="position:absolute;right:30px;width:350px;">
-      <input id="invite_txt" type="text" class="form-control" aria-label="..." placeholder="Email to invite">
+      <input id="invite_txt" type="text" class="form-control" placeholder="Email to invite">
       <div class="input-group-btn">
         <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-send" aria-hidden="true"></span>&nbsp;&nbsp;Invite as <span class="caret"></span></button>
         <ul class="dropdown-menu dropdown-menu-right">

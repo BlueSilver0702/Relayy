@@ -1,5 +1,16 @@
-<div class="user-profile">
+<div class="user-profile" <?php if ($u_status != 1) echo 'style="margin-top:78px;"';?>>
 
+<?php 
+  if ($u_status == 2) {?>
+  <div class="alert alert-info">
+    <strong>Congratulations!</strong><br> You've been registered and activated automatically. Please fill your profile details.
+  </div>
+<?php } else if ($u_status != 1) {?>
+  <div class="alert alert-warning">
+    <strong>Sorry!</strong> Your account is not approved by admin. Please wait for admin's action.
+  </div>
+<?php }
+?>
   <div class="avatar text-center">
 
     <div class="upload-image user-type">

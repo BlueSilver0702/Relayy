@@ -380,3 +380,7 @@ body {
 .user-manage ul.nav-tabs li:first-child {
     margin-left:10px;
 }
+
+.dropdown-menu a {
+    cursor: pointer;
+}

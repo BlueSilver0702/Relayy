@@ -92,7 +92,8 @@ defined('USER_TYPE_EXPERT')       OR define('USER_TYPE_EXPERT',  3);
 defined('USER_STATUS_INIT')       OR define('USER_STATUS_INIT',    0);
 defined('USER_STATUS_LIVE')       OR define('USER_STATUS_LIVE',       1);
 defined('USER_STATUS_INVITE')     OR define('USER_STATUS_INVITE',    2);
-defined('USER_STATUS_INVITED')    OR define('USER_STATUS_INVITED',    3);
+defined('USER_STATUS_INVITE_ACCEPT')     OR define('USER_STATUS_INVITE_ACCEPT',    3);
+defined('USER_STATUS_INVITED')    OR define('USER_STATUS_INVITED',    4);
 
 
 defined('CHAT_TYPE_PRIVATE')      OR define('CHAT_TYPE_PRIVATE', 1);

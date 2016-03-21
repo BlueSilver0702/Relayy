@@ -75,13 +75,15 @@ a:visited, a:link, a:active {
 }
 
 .footer_wrapper {
-    position: static;
+    position: fixed;
     z-index: 1;
-    margin: o auto;
+    margin: 0 auto;
     font-size: 12px;
     line-height: 1.3333;
     font-weight: 400;
-    clear:both;
+    clear: both;
+    bottom: 0;
+    width: 100%;
 }
 
 .footer_wrapper:before, .footer_wrapper:after {
@@ -128,6 +130,18 @@ a:visited, a:link, a:active {
     max-width: 540px;*/
     text-align: center;
     padding: 120px 0px 0;
+}
+
+.invite-page .text_hero {
+    padding-top:100px;
+}
+
+.invite-page .section_wrapper {
+    max-width:500px;
+}
+
+.invite-page form {
+    padding: 110px 0;
 }
 
 p.hi_logo {

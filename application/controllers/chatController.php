@@ -9,6 +9,7 @@ class ChatController extends CI_Controller
     var $clogin;
     var $cpassword;
     var $ctype;
+    var $cstatus;
     var $cphoto;
     var $cbio;
     var $cfacebook;
@@ -35,6 +36,8 @@ class ChatController extends CI_Controller
 		$this->cpassword = gf_cu_password();
 
 		$this->ctype = gf_cu_type();
+
+		$this->cstatus = gf_cu_status();
 
 		$this->cphoto = gf_cu_photo();
 
@@ -104,6 +107,8 @@ class ChatController extends CI_Controller
 
 		$chat_data['u_type'] = $this->ctype;
 
+		$chat_data['u_status'] = $this->cstatus;
+
 		$chat_data['u_photo'] = $this->cphoto;
 
 		$chat_data['u_bio'] = $this->cbio;
@@ -139,6 +144,16 @@ class ChatController extends CI_Controller
 		$this->load->view('maintenance');
 
 		$this->load->view('templates/footer-chat', $chat_data);
+
+	}
+
+	public function inviteUserLink($id, $email)
+	{
+		return site_url('invite/user/'.$id."/".urlencode($email));
+	}
+
+	public function inviteChatLink($id, $email, $did)
+	{
 
 	}
 }

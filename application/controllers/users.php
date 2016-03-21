@@ -149,6 +149,25 @@ class Users extends ChatController
 		}
 	}
 
+	public function invite($type, $email, $id, $page) 
+	{
+		$this->loginCheck();
+
+		$emailAddress = urldecode($email);
+
+		$newID = $this->muser->add($id, "", "", "", $type, USER_STATUS_INVITE, $emailAddress, "", "", "");
+
+		$this->email->inviteUser($this->cemail, $this->cfname." ".$this->clname, $this->inviteUserLink($id, $emailAddress), $emailAddress);
+
+		if ($page == 0) {
+			redirect(site_url('users'), 'get');
+		} else if ($page == 1) {
+			redirect(site_url('users/pending'), 'get');
+		} else {
+			redirect(site_url('users/invited'), 'get');
+		}
+	}
+
 	private function roleCheck() {
 		if (gf_cu_type() != 1) 
 		{

@@ -56,7 +56,7 @@ class Muser extends CI_Model {
 
         $id = $this->db->insert_id();
 
-        return (isset($id)) ? $id : FALSE;
+        return $id ? $id : FALSE;
     }
 
     public function getUserlist($status = USER_STATUS_INIT)
@@ -156,6 +156,16 @@ class Muser extends CI_Model {
 
             $this->db->update('tbl_user', $data, array('uid' => $user_id));            
         }
+    }
+
+    public function approve($user_id) {
+        $user = $this->get($user_id);
+
+        $data = array(
+            'status' => USER_STATUS_LIVE
+        );
+
+        $this->db->update('tbl_user', $data, array('uid' => $user_id));                
     }
 
     public function delete($user_id)

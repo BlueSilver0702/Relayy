@@ -28,8 +28,10 @@
           <input type="text" placeholder="search contact" class="search-box" name="search">
         </form>
         <div id="icon-list" class="pull-right">
+<?php if ($u_status < 2) {?>
           <a class="menu-chat <?= $body_class=='chat-page'?'current':''?>" href="<?php echo site_url('chat')?>" title="Chat Room"><span class="glyphicon glyphicon-comment"></span></a>
-<?php if ($u_type == 1) { ?>
+<?php }
+      if ($u_type == 1 && $u_status < 2) { ?>
           <a class="menu-invite <?= $body_class=='invite-page'?'current':''?>" href="<?php echo site_url('invite')?>" title="Invite Management"><span class="glyphicon glyphicon-send"></span></a>
           <a class="menu-users <?= $body_class=='users-page'?'current':''?>" href="<?php echo site_url('users')?>" title="User Management"><span class="glyphicon glyphicon-user"></span></a>
           <a class="menu-allow <?= $body_class=='allow-page'?'current':''?>" href="<?php echo site_url('allow')?>" title="Chat Management"><span class="glyphicon glyphicon-flag"></span></a>

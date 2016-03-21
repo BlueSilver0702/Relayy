@@ -1,6 +1,16 @@
+<div class="user-profile" <?php if ($u_status != 1) echo 'style="margin-top:78px;"';?>>
 
-
-<div class="user-profile">
+<?php 
+  if ($u_status == 2) {?>
+  <div class="alert alert-info">
+    <strong>Congratulations!</strong><br> You've been registered and activated automatically. Please fill your profile details.
+  </div>
+<?php } else if ($u_status != 1) {?>
+  <div class="alert alert-warning">
+    <strong>Sorry!</strong> Your account is not approved by admin. Please wait for admin's action.
+  </div>
+<?php }
+?>
 
   <form method="post" action="<?php echo site_url('profile/save')?>">
 
@@ -24,7 +34,7 @@
     <div class="row">
       <div class="col-xs-2 col-xs-offset-3">First Name:</div>
       <div class="col-xs-5">
-        <input type="text" name="fname" class="form-control" placeholder="First Name" required="true" value="<?= $u_fname?>">
+        <input type="text" name="fname" class="form-control" placeholder="First Name" required="true" value="<?= $u_fname?>" autocomplete="off"/>
       </div>
 
     </div>
@@ -32,7 +42,7 @@
     <div class="row">
       <div class="col-xs-2 col-xs-offset-3">Last Name:</div>
       <div class="col-xs-5">
-        <input type="text" name="lname" class="form-control" placeholder="Last Name" required="true" value="<?= $u_lname?>">
+        <input type="text" name="lname" class="form-control" placeholder="Last Name" required="true" value="<?= $u_lname?>" autocomplete="off"/>
       </div>
     </div>
 
@@ -41,7 +51,7 @@
       <div class="col-xs-2 col-xs-offset-3">Email:</div>
 
       <div class="col-xs-5">
-        <input type="email" class="form-control" placeholder="Email" required="true" value="<?= $u_email?>" disabled="disabled">
+        <input type="email" class="form-control" placeholder="Email" required="true" value="<?= $u_email?>" disabled="disabled"/>
       </div>
 
     </div>
@@ -50,7 +60,7 @@
       <div class="col-xs-2 col-xs-offset-3">Password:</div>
 
       <div class="col-xs-5">
-        <input type="password" name="password" class="form-control new-password" placeholder="New Password" required="true" value="<?= $u_password?>">
+        <input type="password" name="password" class="form-control new-password" placeholder="New Password" required="true" value="<?= $u_password?>" autocomplete="off"/>
       </div>
 
     </div>

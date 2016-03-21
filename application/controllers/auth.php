@@ -42,7 +42,7 @@ class Auth extends CI_Controller
 
             if (gf_cu_type() == 1) {
 
-            	redirect(site_url('chat'), 'get');
+            	redirect(site_url('users'), 'get');
 
             } else {
 

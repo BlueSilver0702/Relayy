@@ -87,36 +87,60 @@ function delAction(obj, email) {
 
 function sendInvite(userType) {
     var sendEmail = $("#invite_txt").val();
+    if (sendEmail == '') {
+        BootstrapDialog.alert({
+            title: 'WARNING',
+            message: 'Please input email address to send!',
+            type: BootstrapDialog.TYPE_WARNING,
+            closable: true,
+            draggable: true,
+            buttonLabel: 'Cancel'
+        });
+        return;     
+    }
     var roleTxt = "";
     if (userType == 1) roleTxt = "Admin";
     else if (userType == 2) roleTxt = "Advisor";
     else if (userType == 3) roleTxt = "Startup";
 
-    BootstrapDialog.confirm({
-        title: 'Confirm',
+    BootstrapDialog.show({
+        title: 'You send invite!',
         message: 'Are you sure to send invite email: '+sendEmail+' as '+roleTxt+' ?',
         type: BootstrapDialog.TYPE_INFO,
-        closable: true,
-        draggable: true,
-        btnCancelLabel: 'Cancel',
-        btnOKLabel: 'Invite',
-        btnOKClass: 'btn-info',
-        // btnOKIcon : 'glyphicon glyphicon-check',
-        // buttons: [{
-        //     id: 'btn-ok',   
-        //     icon: 'glyphicon glyphicon-check',       
-        //     label: 'OK',
-        //     cssClass: 'btn-primary', 
-        //     autospin: false,
-        //     action: function(dialogRef){    
-        //         dialogRef.close();
-        //     }
-        // }],
-        callback: function(result) {
-            if(result) {
-                // location.href = delObj.data("act");
+        buttons: [{
+            icon: 'glyphicon glyphicon-send',
+            label: ' Send Invite',
+            cssClass: 'btn-info',
+            autospin: true,
+            action: function(dialogRef){
+                dialogRef.enableButtons(false);
+                dialogRef.setClosable(false);
+                $("#invite_txt").val('');
+
+                var params = { 'login': sendEmail, 'password': 'password_relayy', 'email': sendEmail };
+                QB.users.create(params, function(err, user){
+                  console.log("new user: "+ user);
+                  if (user) {
+                    location.href = site_url + "users/invite/"+ userType + "/" + encodeURIComponent(sendEmail) + "/"+ user.id + "/<?php echo isset($page)?$page:'0';?>";  
+                  } else  {
+                    BootstrapDialog.alert({
+                        title: 'Error',
+                        message: JSON.stringify(err),
+                        type: BootstrapDialog.TYPE_DANGER,
+                        closable: true,
+                        draggable: true,
+                        buttonLabel: 'Cancel'
+                    });
+
+                  }
+                });
             }
-        }
+        }, {
+            label: 'Cancel',
+            action: function(dialogRef){
+                dialogRef.close();
+            }
+        }]
     });
 }
 
