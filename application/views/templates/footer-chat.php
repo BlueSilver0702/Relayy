@@ -146,7 +146,55 @@ function sendInvite(userType) {
 
 </script>
 <?php 
+} else if ($body_class == "allow-page") {?>
+<script>
+function delAction(obj, did, dname) {
+    var delObj = $(obj);
+    
+    BootstrapDialog.confirm({
+        title: 'Confirm',
+        message: 'Are you sure to delete this chat room: '+dname+' ?',
+        type: BootstrapDialog.TYPE_DANGER,
+        closable: true,
+        draggable: true,
+        btnCancelLabel: 'Cancel',
+        btnOKLabel: 'Delete',
+        btnOKClass: 'btn-danger',
+        callback: function(result) {
+            if(result) {
+                location.href = delObj.data("act");
+            }
+        }
+    });
 }
+
+function createChat(type) {
+    var title = "Create New ";
+    if (type == 1) title += "1:1 Chat";
+    else title += "WorkGroup";
+    BootstrapDialog.show({
+        type: BootstrapDialog.TYPE_PRIMARY,
+        title: title,
+        message: 'What to do next?',
+        buttons: [{
+            label: 'Cancel',
+            action: function(dialogRef){
+                dialogRef.close();
+            }
+        }, {
+            label: 'Create Chat',
+            cssClass: 'btn-primary',
+            action: function(){
+                // You can also use BootstrapDialog.closeAll() to close all dialogs.
+                $.each(BootstrapDialog.dialogs, function(id, dialog){
+                    dialog.close();
+                });
+            }
+        }]
+    });  
+}
+</script>
+<?php }
 ?>
     </body>
 </html>

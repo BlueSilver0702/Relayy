@@ -46,7 +46,8 @@
     </div>
   </div>
 
-  <div class="misc text-center" style="border-bottom:none">
+  <div class="misc text-center">
+    <a href="<?php echo site_url('profile/useredit/'.$uid)?>" class="btn btn-secondary text-danger">Edit User</a>
   </div>
 
   <div class="social">

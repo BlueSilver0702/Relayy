@@ -50,7 +50,6 @@
             <a class="playstore" title="download Relayy for Android" target="_blank"></a>
         </p>
 
-        <script type="in/Login"></script>
         </div>
         <div class="image_hero col-sm-6">
             <img src="<?php echo asset_base_url()?>/images/mobile.jpg">

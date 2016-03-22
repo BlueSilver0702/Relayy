@@ -53,6 +53,29 @@ class Profile extends ChatController
 		$this->load->view('templates/footer-chat', $c_data);
 	}
 
+	public function useredit($c_uid)
+	{
+    	$this->loginCheck();    	
+
+    	$c_data = $this->getChatData();
+
+    	$c_data['body_class'] = 'profile-page';
+
+		$c_data['page_title'] = 'Edit User Profile | Relayy';
+
+		$user_data = $this->muser->getUserArray($c_uid);	
+
+		//print_r($user_data);exit;
+    
+    	$this->load->view('templates/header-chat', $c_data);
+		
+		$this->load->view('templates/left-sidebar', $c_data);
+
+		$this->load->view('ueditprofile', $user_data);
+
+		$this->load->view('templates/footer-chat', $c_data);
+	}
+
 	public function edit()
 	{
 		$this->loginCheck();    
@@ -94,6 +117,26 @@ class Profile extends ChatController
         $this->email->profile($this->cemail, $fname." ".$lname);
 
 		redirect(site_url('profile/edit'), 'get');
+	}
+
+	public function saveuser()
+	{
+		$this->loginCheck();
+
+		$userid = $this->input->post('uid');
+		$userObj = $this->muser->get($userid);
+
+    	$fname = $this->input->post('fname');
+    	$lname = $this->input->post('lname');
+        $password = $this->input->post('password');
+        $bio = $this->input->post('bio');
+        $role = $this->input->post('reg_role');
+        
+        $object = $this->muser->edit($userid, $fname, $lname, $userObj->email, $password, $role, $bio, $userObj->picture);
+
+        // $this->email->profile($object->email, $fname." ".$lname);
+
+		redirect(site_url('users'), 'get');	
 	}
 
 	public function upload()

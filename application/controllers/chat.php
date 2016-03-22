@@ -85,7 +85,7 @@ class Chat extends ChatController
 
     	if ($d_owner->id == gf_cu_id()) $chat_data['d_owner'] = "Me";
 
-		if (!$find) redirect(site_url('chat'), 'get');
+		if (!$find && $this->ctype != 1) redirect(site_url('chat'), 'get');
 
     	///////////////////////////
 
@@ -120,7 +120,7 @@ class Chat extends ChatController
 
         $djid = $this->input->post('djid');
 
-        $this->mchat->addDialog($did, $dname, $dusers, $dmessage, $dtype, $djid);
+        $this->mchat->add($did, $dname, $dusers, $dmessage, $dtype, $djid);
 
         exit;
 	}
@@ -192,7 +192,7 @@ class Chat extends ChatController
 		
 		$did = $this->input->post('did');
 
-        echo $this->mchat->deleteDialog($did);
+        echo $this->mchat->delete($did);
 
         exit;	
 	}
@@ -201,7 +201,7 @@ class Chat extends ChatController
 		
 		$did = $this->input->post('did');
 
-		$dialog = $this->mchat->getDialog($did);
+		$dialog = $this->mchat->get($did);
 
 		$new_occupants = array();
 
@@ -213,7 +213,7 @@ class Chat extends ChatController
 
 		$dialog->occupants = json_encode($new_occupants);
 
-		echo $this->mchat->updateDialog($dialog);
+		echo $this->mchat->update($dialog);
 
         exit;	
 	}
@@ -223,7 +223,7 @@ class Chat extends ChatController
 		$did = $this->input->post('did');
 		$uid = $this->input->post('uid');
 
-		$dialog = $this->mchat->getDialog($did);
+		$dialog = $this->mchat->get($did);
 
 		$new_occupants = array();
 
@@ -235,7 +235,7 @@ class Chat extends ChatController
 
 		$dialog->occupants = json_encode($new_occupants);
 
-		echo $this->mchat->updateDialog($dialog);
+		echo $this->mchat->update($dialog);
 
         exit;	
 	}

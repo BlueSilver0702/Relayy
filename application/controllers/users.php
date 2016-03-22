@@ -13,7 +13,9 @@ class Users extends ChatController
 	{
 	//$this->maintenance();return;
 	
-    	$this->loginCheck();    	
+    	$this->loginCheck();
+
+    	$this->roleCheck();    	
 
     	$chat_data = $this->getChatData();
 
@@ -23,7 +25,6 @@ class Users extends ChatController
 
 		$chat_data['users'] = $this->muser->getUserlist(100);
 
-		// print_r($chat_data['users']);exit;
 		$chat_data['current'] = gf_cu_id();
 
 		$chat_data['page'] = 0;
@@ -40,6 +41,8 @@ class Users extends ChatController
 	public function pending() 
 	{
 		$this->loginCheck(); 
+
+		$this->roleCheck();
 
 		$chat_data = $this->getChatData();   	
 
@@ -64,7 +67,9 @@ class Users extends ChatController
 
 	public function activated() 
 	{
-		$this->loginCheck();    	
+		$this->loginCheck();  
+
+		$this->roleCheck();  	
 
 		$chat_data = $this->getChatData();
 
@@ -91,7 +96,9 @@ class Users extends ChatController
 
 	public function invited() 
 	{
-		$this->loginCheck();    	
+		$this->loginCheck();   
+
+		$this->roleCheck(); 	
 
 		$chat_data = $this->getChatData();
 
@@ -118,10 +125,14 @@ class Users extends ChatController
 
 	public function delete($uid, $page) 
 	{
-		exit;
-		$this->loginCheck();    	
+		$this->loginCheck();
 
+		$this->roleCheck();    	
+
+		$userObj = $this->muser->get($uid);
 		$this->muser->delete($uid);
+
+		$this->email->removeUser($this->cemail, $this->cfname." ".$this->clname, $userObj->email);
 
 		if ($page == 0) {
 			redirect(site_url('users'), 'get');
@@ -130,7 +141,7 @@ class Users extends ChatController
 		} else if ($page == 2) {
 			redirect(site_url('users/activated'), 'get');
 		} else {
-			redirect(site_url('users/activated'), 'get');
+			redirect(site_url('users/invited'), 'get');
 		}
 	}
 
@@ -138,12 +149,19 @@ class Users extends ChatController
 	{
 		$this->loginCheck();
 
-		$this->muser->changeStatus($uid);
+		$this->roleCheck();
+
+		$userObj = $this->muser->changeStatus($uid);
+
+		if ($userObj->type == 1) $this->email->approveUser($this->cemail, $this->cfname." ".$this->clname, $userObj->email);
+		else $this->email->deproveUser($this->cemail, $this->cfname." ".$this->clname, $userObj->email);
 
 		if ($page == 0) {
 			redirect(site_url('users'), 'get');
 		} else if ($page == 1) {
 			redirect(site_url('users/pending'), 'get');
+		} else if ($page == 2) {
+			redirect(site_url('users/activated'), 'get');
 		} else {
 			redirect(site_url('users/invited'), 'get');
 		}
@@ -152,6 +170,8 @@ class Users extends ChatController
 	public function invite($type, $email, $id, $page) 
 	{
 		$this->loginCheck();
+
+		$this->roleCheck();
 
 		$emailAddress = urldecode($email);
 
@@ -163,6 +183,8 @@ class Users extends ChatController
 			redirect(site_url('users'), 'get');
 		} else if ($page == 1) {
 			redirect(site_url('users/pending'), 'get');
+		} else if ($page == 2) {
+			redirect(site_url('users/activated'), 'get');
 		} else {
 			redirect(site_url('users/invited'), 'get');
 		}

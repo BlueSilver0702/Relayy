@@ -37,7 +37,7 @@
 	  <div class="row">
 	  	<div class="col-sm-1"><img src="<?= strlen($user['photo'])>0?$user['photo']:asset_base_url().'/images/emp-sm.jpg'?>" width="38"></div>
 	    <div class="col-sm-2"><span><?= $user['fname']." ".$user['lname']?></span></div>
-	    <div class="col-sm-3"><span><?= $user['email']?></span></div>
+	    <div class="col-sm-3"><a href="<?= site_url('profile/user/'.$user['uid'])?>"><?= $user['email']?></a></div>
 	    <div class="col-sm-1"><span><?= $utype?></span></div>
 
 <?php if ($user['status'] == 0) {?>

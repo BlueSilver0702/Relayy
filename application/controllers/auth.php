@@ -94,6 +94,7 @@ class Auth extends CI_Controller
 
 		$object = $this->muser->register($id, $fname, $lname, $email, '', 3, $login, $photo, $bio);
         
+        // print_r($object);exit;
         if($object) {
 
             gf_registerCurrentUser($object);

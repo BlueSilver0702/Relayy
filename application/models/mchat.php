@@ -24,7 +24,7 @@ class Mchat extends CI_Model {
         $this->load->database();
     }
 
-    public function addDialog($id, $name, $occupants, $message, $type, $jid)
+    public function add($id, $name, $occupants, $message, $type, $jid)
     {
         $data = array(
             'did'        => $id,
@@ -52,7 +52,16 @@ class Mchat extends CI_Model {
         return $query->result_array();
     }
 
-    public function getDialog($did)
+    public function getDialogList()
+    {
+        $query = $this->db->select('*')
+                      ->order_by("time", "desc")
+                      ->get('tbl_chat');
+
+        return $query->result_array();
+    }
+
+    public function get($did)
     {
         $query = $this->db->select('*')
                           ->where('did', $did)
@@ -81,7 +90,7 @@ class Mchat extends CI_Model {
         return FALSE;
     }
 
-    public function deleteDialog($did) 
+    public function delete($did) 
     {
         $this->db->where('did', $did);
         $this->db->delete('tbl_chat'); 
@@ -89,7 +98,7 @@ class Mchat extends CI_Model {
         return "success";
     }
 
-    public function updateDialog($dialogObj)
+    public function update($dialogObj)
     {
         $data = array(
             'name'      => $dialogObj->name,
@@ -105,13 +114,24 @@ class Mchat extends CI_Model {
         return "success";
     }
 
-    public function updateChat($id, $message)
+    public function changeStatus($did)
     {
+        $chat = $this->get($did);
 
-    }
+        if ($chat->status == CHAT_STATUS_INIT) {
+            $data = array(
+                'status' => CHAT_STATUS_LIVE
+            );
 
-    public function updateStatus()
-    {
+            $this->db->update('tbl_chat', $data, array('did' => $did));
+            return $this->get($did);
+        } else {
+            $data = array(
+                'status' => CHAT_STATUS_INIT
+            );
 
+            $this->db->update('tbl_chat', $data, array('did' => $did));
+            return $this->get($did);
+        }
     }
 }

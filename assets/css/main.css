@@ -41,6 +41,13 @@
 	color: white;
 }
 
+.user-content .row a {
+  width:100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 #user-info {
 	padding: 0 20px;
 }
@@ -176,9 +183,10 @@ body {
 	padding: 90px 30px 0;
 }
 
-.user-manage .row span {
+.user-manage .row span, .user-manage .row a {
 	padding: 7px 12px;
 	display:inline-block;
+    text-decoration: none;
 }
 
 .user-content .row {

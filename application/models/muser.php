@@ -149,12 +149,16 @@ class Muser extends CI_Model {
             );
 
             $this->db->update('tbl_user', $data, array('uid' => $user_id));            
+
+            return $this->get($user_id);
         } else {
             $data = array(
                 'status' => USER_STATUS_INIT
             );
 
-            $this->db->update('tbl_user', $data, array('uid' => $user_id));            
+            $this->db->update('tbl_user', $data, array('uid' => $user_id));
+
+            return $this->get($user_id);
         }
     }
 
@@ -165,7 +169,8 @@ class Muser extends CI_Model {
             'status' => USER_STATUS_LIVE
         );
 
-        $this->db->update('tbl_user', $data, array('uid' => $user_id));                
+        $this->db->update('tbl_user', $data, array('uid' => $user_id));
+        return $this->get($user_id);                
     }
 
     public function delete($user_id)
@@ -233,13 +238,13 @@ class Muser extends CI_Model {
         {
             $user_one = new Muser();
             
-            $user_one->id = $newUser;
+            $user_one->id = $newUser->id;
             $user_one->uid = $id;
             $user_one->fname = $fname;
             $user_one->lname = $lname;
-            $user_one->password = $pwd;
+            $user_one->password = $newUser->password;
             $user_one->type = $type;
-            $user_one->status = USER_STATUS_INIT;
+            $user_one->status = $newUser->status;
             $user_one->email = $email;
             $user_one->photo = $photo;
             $user_one->bio = $bio;

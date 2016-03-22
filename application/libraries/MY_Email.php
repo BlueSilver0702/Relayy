@@ -210,6 +210,34 @@ $mailContent .= '               <tr>
         );   
     }
 
+    public function deproveUser($adminEmail, $adminName, $toEmail)
+    {
+        $this->sendEmail(
+            $this->senderEmail, 
+            $this->senderName, 
+            $toEmail, 
+            "Your account has been denied!",
+            "Your account has been denied by $adminName!",
+            "If you have questions, please contact this email: ". $adminEmail ." !"
+        );   
+    }
+
+    public function deproveChat($adminEmail, $adminName, $toEmail, $toName, $chatTitle)
+    {
+        $title = '';
+        if ($toName == '') $title = "Hi! ".$adminName." denied this chat: ".$chatTitle.".";
+        else $title = "Hi, $toName! ".$adminName." denied chat: ".$chatTitle.".";
+
+        $this->sendEmail(
+            $this->senderEmail, 
+            $this->senderName, 
+            $toEmail, 
+            "Your chat room has been denied!",
+            $title,
+            "If you have questions, please contact this email: ". $adminEmail ." !"
+        );   
+    }
+
     public function removeUser($adminEmail, $adminName, $toEmail)
     {
         $this->sendEmail(

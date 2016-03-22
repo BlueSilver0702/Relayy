@@ -154,6 +154,6 @@ class ChatController extends CI_Controller
 
 	public function inviteChatLink($id, $email, $did)
 	{
-
+		return site_url('invite/chat/'.$id."/".urlencode($email)."/".$did);
 	}
 }
