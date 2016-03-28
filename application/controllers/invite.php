@@ -1,7 +1,5 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed');
 
-include_once (dirname(__FILE__) . "/ChatController.php");
-
 class Invite extends CI_Controller
 {
 	public function __construct()
@@ -27,7 +25,11 @@ class Invite extends CI_Controller
 			return;	
 		}
 
+        $email = urldecode($email);
+        
 		$user = $this->muser->get($uid);
+        
+        if ($user->email != $email) show_error("Sorry, You are not allowed to register!", 500, "Invite Error");
 		
     	$data['body_class'] = 'invite-page';
 
@@ -54,15 +56,20 @@ class Invite extends CI_Controller
 
 	public function accept() {
 
-		$uid = $this->input->post('reg_id');
+		$id = $this->input->post('reg_id');
+        
+        $uid = $this->input->post('reg_uid');
 
         $password = $this->input->post('reg_pwd');
 
-        $user = $this->muser->get($uid);
+        $user = $this->muser->edit($id, array(
+            TBL_USER_PWD => $password,
+            TBL_USER_UID => $uid
+        ));
+        
+        if (!$user) show_error("An Error has occurred while registering!", 500, "Register Error");
 
-        $this->muser->edit($user->uid, $user->fname, $user->lname, $user->email, $password, $user->type, $user->bio, $user->picture);
-
-		$object = $this->muser->login($user->email, $password);
+		$object = $this->muser->login($user->{TBL_USER_EMAIL}, $password);
         
         if($object) {
 

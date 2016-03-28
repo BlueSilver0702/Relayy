@@ -1,7 +1,7 @@
 <div class="user-profile">
 
   <form method="post" action="<?php echo site_url('profile/saveuser')?>">
-  <input type="hidden" name="uid" value="<?= $uid?>">
+  <input type="hidden" name="uid" value="<?= $id?>">
   <div class="avatar text-center">
 
     <div class="upload-image user-type">

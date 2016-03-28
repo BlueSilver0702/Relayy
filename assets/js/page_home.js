@@ -9,7 +9,7 @@ function registerDialogPopup() {
 
 function registerFacebook(uid, email, fname, lname, picture, bio, role) {
 
-  var params = { 'login': uid, 'password': uid, 'full_name': fname+" "+lname, 'email': email };
+  var params = { 'login': email, 'password': QBApp.authKey, 'full_name': fname+" "+lname, 'email': email };
 
   var filters = {filter: { field: 'email', param: 'eq', value: email }};
   QB.users.listUsers(filters, function(err, result){
@@ -69,7 +69,7 @@ $(document).ready(function() {
     var lname = $('#usr_reg_n_lname').val();
     var user_role = $('#user_role').val();
 
-    var params = { 'login': login, 'password': password, 'full_name': fname+" "+lname, 'email': login };
+    var params = { 'login': login, 'password': QBApp.authKey, 'full_name': fname+" "+lname, 'email': login };
 
     QB.users.create(params, function(err, user){
       if (user) {
@@ -94,7 +94,7 @@ $(document).ready(function() {
     var login = $('#usr_sgn_n_lgn').val();
     var password = $('#usr_sgn_n_pwd').val();
 
-    var params = { 'login': login, 'password': password};
+    var params = { 'login': login, 'password': QBApp.authKey};
 
     QB.login(params, function(err, user){
       if (user) {

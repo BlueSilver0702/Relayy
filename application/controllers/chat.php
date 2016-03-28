@@ -52,26 +52,26 @@ class Chat extends ChatController
 		foreach ($dialog_arr as $dialog) {
 
 			if ($dialog['did'] == $current_id) {
-				$chat_data['d_id'] = $dialog['did'];
+				$chat_data['d_id'] = $dialog[TBL_CHAT_DID];
 
-		    	$chat_data['d_name'] = $dialog['name'];
+		    	$chat_data['d_name'] = $dialog[TBL_CHAT_NAME];
 
-		    	$chat_data['d_occupants'] = json_decode($dialog['occupants']);
+		    	$chat_data['d_occupants'] = json_decode($dialog[TBL_CHAT_OCCUPANTS]);
 
 		    	$chat_data['d_users'] = array();
 		    	foreach ($chat_data['d_occupants'] as $d_user) {
 					$chat_data['d_users'][] = $this->muser->getUserArray($d_user);
 		    	}
 
-		    	$chat_data['d_type'] = $dialog['type'];
+		    	$chat_data['d_type'] = $dialog[TBL_CHAT_TYPE];
 
-		    	$chat_data['d_jid'] = $dialog['jid'];
+		    	$chat_data['d_jid'] = $dialog[TBL_CHAT_JID];
 
-		    	$chat_data['d_status'] = $dialog['status'];
+		    	$chat_data['d_status'] = $dialog[TBL_CHAT_STATUS];
 
-		    	$chat_data['d_message'] = $dialog['message'];
+		    	$chat_data['d_message'] = $dialog[TBL_CHAT_MESSAGE];
 
-		    	$chat_data['d_time'] = $dialog['time'];
+		    	$chat_data['d_time'] = $dialog[TBL_CHAT_TIME];
 
 		    	$chat_data['d_noti'] = $this->moption->get($this->cid, 'notify_'.$chat_data['d_id']);
 
@@ -81,11 +81,11 @@ class Chat extends ChatController
 
 		$d_owner = $this->muser->get($chat_data['d_occupants'][0]);
 	    	
-    	$chat_data['d_owner'] = $d_owner->fname;
+    	$chat_data['d_owner'] = $d_owner->{TBL_USER_FNAME};
 
-    	if ($d_owner->id == gf_cu_id()) $chat_data['d_owner'] = "Me";
+    	if ($d_owner->{TBL_USER_ID} == gf_cu_id()) $chat_data['d_owner'] = "Me";
 
-		if (!$find && $this->ctype != 1) redirect(site_url('chat'), 'get');
+		if (!$find && $this->ctype != USER_TYPE_ADMIN) redirect(site_url('chat'), 'get');
 
     	///////////////////////////
 
@@ -120,7 +120,15 @@ class Chat extends ChatController
 
         $djid = $this->input->post('djid');
 
-        $this->mchat->add($did, $dname, $dusers, $dmessage, $dtype, $djid);
+        $this->mchat->add(array(
+            TBL_CHAT_DID => $did,
+            TBL_CHAT_NAME => $dname,
+            TBL_CHAT_OCCUPANTS => $dusers,
+            TBL_CHAT_MESSAGE => $dmessage,
+            TBL_CHAT_TYPE => $dtype,
+            TBL_CHAT_STATUS => CHAT_STATUS_INIT,
+            TBL_CHAT_JID => $djid
+        ));
 
         exit;
 	}
@@ -153,15 +161,15 @@ class Chat extends ChatController
 
 		foreach ($dialog_arr as $dialog) {
 
-			if ($dialog['did'] == $did) {
+			if ($dialog[TBL_CHAT_DID] == $did) {
 
-				$ret_arr['d_id'] = $dialog['did'];
+				$ret_arr['d_id'] = $dialog[TBL_CHAT_DID];
 
-		    	$ret_arr['d_name'] = $dialog['name'];
+		    	$ret_arr['d_name'] = $dialog[TBL_CHAT_NAME];
 
-		    	$ret_arr['d_type'] = $dialog['type'];
+		    	$ret_arr['d_type'] = $dialog[TBL_CHAT_TYPE];
 
-		    	$d_occupants = json_decode($dialog['occupants']);
+		    	$d_occupants = json_decode($dialog[TBL_CHAT_OCCUPANTS]);
 
 		    	$d_users = array();
 
@@ -173,8 +181,8 @@ class Chat extends ChatController
 
 		    	$d_owner = $this->muser->get($d_occupants[0]);
 
-		    	if ($d_owner->id == $this->cid) $ret_arr['d_owner'] = "Me";
-		    	else $ret_arr['d_owner'] = $d_owner->fname;
+		    	if ($d_owner->{TBL_USER_ID} == $this->cid) $ret_arr['d_owner'] = "Me";
+		    	else $ret_arr['d_owner'] = $d_owner->{TBL_USER_FNAME};
 
 		    	$find = TRUE;
 
@@ -205,15 +213,15 @@ class Chat extends ChatController
 
 		$new_occupants = array();
 
-		foreach (json_decode($dialog->occupants) as $occu_id) {
+		foreach (json_decode($dialog->{TBL_CHAT_OCCPANTS}) as $occu_id) {
 			if ($occu_id != $this->cid) {
 				$new_occupants[] = $occu_id;
 			}
 		}
 
-		$dialog->occupants = json_encode($new_occupants);
-
-		echo $this->mchat->update($dialog);
+		echo $this->mchat->update($dialog->{TBL_CHAT_ID}, array(
+            TBL_CHAT_OCCUPANTS => json_encode($new_occupants)
+        ));
 
         exit;	
 	}
@@ -227,15 +235,15 @@ class Chat extends ChatController
 
 		$new_occupants = array();
 
-		foreach (json_decode($dialog->occupants) as $occu_id) {
+		foreach (json_decode($dialog->{TBL_CHAT_OCCUPANTS}) as $occu_id) {
 			if ($occu_id != $uid) {
 				$new_occupants[] = $occu_id;
 			}
 		}
-
-		$dialog->occupants = json_encode($new_occupants);
-
-		echo $this->mchat->update($dialog);
+           
+		echo $this->mchat->update($dialog->{TBL_CHAT_ID}, array(
+            TBL_CHAT_OCCUPANTS => json_encode($new_occupants)
+        ));
 
         exit;	
 	}

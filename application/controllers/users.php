@@ -23,7 +23,7 @@ class Users extends ChatController
 
 		$chat_data['page_title'] = 'User Management | Relayy';
 
-		$chat_data['users'] = $this->muser->getUserlist(100);
+		$chat_data['users'] = $this->muser->getUserlist(USER_STATUS_ALL);
 
 		$chat_data['current'] = gf_cu_id();
 
@@ -50,7 +50,7 @@ class Users extends ChatController
 
 		$chat_data['page_title'] = 'User Management | Relayy';
 
-		$chat_data['users'] = $this->muser->getUserlist(0);
+		$chat_data['users'] = $this->muser->getUserlist();
 
 		$chat_data['current'] = gf_cu_id();
 
@@ -79,7 +79,7 @@ class Users extends ChatController
 
 		$data['user_name'] = gf_cu_fname();
 
-		$chat_data['users'] = $this->muser->getUserlist(1);
+		$chat_data['users'] = $this->muser->getUserlist(USER_STATUS_LIVE);
 
 		$chat_data['current'] = gf_cu_id();
 
@@ -108,7 +108,7 @@ class Users extends ChatController
 
 		$data['user_name'] = gf_cu_fname();
 
-		$chat_data['users'] = $this->muser->getUserlist(2);
+		$chat_data['users'] = $this->muser->getUserlist(USER_STATUS_INVITE);
 
 		$chat_data['current'] = gf_cu_id();
 
@@ -132,7 +132,7 @@ class Users extends ChatController
 		$userObj = $this->muser->get($uid);
 		$this->muser->delete($uid);
 
-		$this->email->removeUser($this->cemail, $this->cfname." ".$this->clname, $userObj->email);
+		$this->email->removeUser($this->cemail, $this->cfname." ".$this->clname, $userObj->{TBL_USER_EMAIL});
 
 		if ($page == 0) {
 			redirect(site_url('users'), 'get');
@@ -153,8 +153,8 @@ class Users extends ChatController
 
 		$userObj = $this->muser->changeStatus($uid);
 
-		if ($userObj->type == 1) $this->email->approveUser($this->cemail, $this->cfname." ".$this->clname, $userObj->email);
-		else $this->email->deproveUser($this->cemail, $this->cfname." ".$this->clname, $userObj->email);
+		if ($userObj->{TBL_USER_TYPE} == USER_TYPE_ADMIN) $this->email->approveUser($this->cemail, $this->cfname." ".$this->clname, $userObj->{TBL_USER_EMAIL});
+		else $this->email->deproveUser($this->cemail, $this->cfname." ".$this->clname, $userObj->{TBL_USER_EMAIL});
 
 		if ($page == 0) {
 			redirect(site_url('users'), 'get');
@@ -167,7 +167,7 @@ class Users extends ChatController
 		}
 	}
 
-	public function invite($type, $email, $id, $page) 
+	public function invite($type, $email, $page) 
 	{
 		$this->loginCheck();
 
@@ -175,9 +175,13 @@ class Users extends ChatController
 
 		$emailAddress = urldecode($email);
 
-		$newID = $this->muser->add($id, "", "", "", $type, USER_STATUS_INVITE, $emailAddress, "", "", "");
+		$newID = $this->muser->add(array(
+            TBL_USER_TYPE => $type,
+            TBL_USER_STATUS => USER_STATUS_INVITE,
+            TBL_USER_EMAIL => strtolower($emailAddress)
+        ));
 
-		$this->email->inviteUser($this->cemail, $this->cfname." ".$this->clname, $this->inviteUserLink($id, $emailAddress), $emailAddress);
+		$this->email->inviteUser($this->cemail, $this->cfname." ".$this->clname, $this->inviteUserLink($newID, $emailAddress), $emailAddress);
 
 		if ($page == 0) {
 			redirect(site_url('users'), 'get');
@@ -191,7 +195,7 @@ class Users extends ChatController
 	}
 
 	private function roleCheck() {
-		if (gf_cu_type() != 1) 
+		if (gf_cu_type() != USER_TYPE_ADMIN) 
 		{
 			redirect(site_url('profile'), 'get');
 		}

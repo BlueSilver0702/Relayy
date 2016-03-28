@@ -55,7 +55,7 @@ $route['translate_uri_dashes'] = FALSE;
 
 $route['users/action/(:any)/(:num)'] = 'users/action/$1/$2';
 $route['users/delete/(:any)/(:num)'] = 'users/delete/$1/$2';
-$route['users/invite/(:num)/(:any)/(:any)/(:num)'] = 'users/invite/$1/$2/$3/$4';
+$route['users/invite/(:num)/(:any)/(:num)'] = 'users/invite/$1/$2/$3';
 
 $route['invite/user/(:any)/(:any)'] = 'invite/user/$1/$2';
 $route['invite/chat/(:any)/(:any)/(:any)'] = 'invite/chat/$1/$2/$3';

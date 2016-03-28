@@ -6,6 +6,7 @@
             <p class="hi_icos"></p>
             <form class="form-horizontal" method="post" action="<?php echo site_url('invite/accept') ?>" id="register_form">
               <input type="hidden" name="reg_id" value="<?= $current_id?>" id="user_id">
+              <input type="hidden" name="reg_uid" value="" id="user_uid">
               <div class="form-group">
                 <label class="col-sm-4 control-label">User Role:</label>
                 <div class="col-sm-6 selectContainer">
@@ -36,7 +37,7 @@ if ($current_type == 1) {
               </div>
               <div class="form-group" style="margin-bottom:0">
                 <div class="col-sm-offset-4 col-sm-6">
-                  <input type="submit" class="btn btn-primary btn-block" value="Register">
+                  <input type="button" id="invite_accept" class="btn btn-primary btn-block" value="Register">
                 </div>
               </div>
             </form>

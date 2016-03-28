@@ -27,9 +27,9 @@ class Allow extends ChatController
 		$chat_data['chats'] = $this->mchat->getDialoglist();
 
 		foreach ($chat_data['chats'] as &$chat) {
-			foreach (json_decode($chat['occupants']) as $occupant) {
+			foreach (json_decode($chat[TBL_CHAT_OCCUPANTS]) as $occupant) {
 				$userObj = $this->muser->get($occupant);
-				$chat['emails'][] = $userObj->email;
+				$chat['emails'][] = $userObj->{TBL_USER_EMAIL};
 			}		
 		}
 
@@ -59,9 +59,9 @@ class Allow extends ChatController
 		$chat_data['chats'] = $this->mchat->getDialoglist();
 
 		foreach ($chat_data['chats'] as &$chat) {
-			foreach (json_decode($chat['occupants']) as $occupant) {
+			foreach (json_decode($chat[TBL_CHAT_OCCUPANTS]) as $occupant) {
 				$userObj = $this->muser->get($occupant);
-				$chat['emails'][] = $userObj->email;
+				$chat['emails'][] = $userObj->{TBL_USER_EMAIL};
 			}		
 		}
 
@@ -91,9 +91,9 @@ class Allow extends ChatController
 		$chat_data['chats'] = $this->mchat->getDialoglist();
 
 		foreach ($chat_data['chats'] as &$chat) {
-			foreach (json_decode($chat['occupants']) as $occupant) {
+			foreach (json_decode($chat[TBL_CHAT_OCCUPANTS]) as $occupant) {
 				$userObj = $this->muser->get($occupant);
-				$chat['emails'][] = $userObj->email;
+				$chat['emails'][] = $userObj->{TBL_USER_EMAIL};
 			}		
 		}
 
@@ -117,9 +117,9 @@ class Allow extends ChatController
 		$chatObj = $this->mchat->get($did);
 		$this->mchat->delete($did);
 
-		foreach ($chatObj->occupants as $user_id) {
+		foreach ($chatObj->{TBL_CHAT_OCCUPANTS} as $user_id) {
 			$userObj = $this->muser->get($user_id);
-			$this->email->removeChat($this->cemail, $this->cfname." ".$this->clname, $userObj->email, $userObj->fname, $chatObj->name);		
+			$this->email->removeChat($this->cemail, $this->cfname." ".$this->clname, $userObj->{TBL_USER_EMAIL}, $userObj->{TBL_USER_FNAME}, $chatObj->{TBL_CHAT_NAME});		
 		}
 
 		if ($page == 0) {
@@ -138,10 +138,10 @@ class Allow extends ChatController
 		$this->roleCheck();
 
 		$chatObj = $this->mchat->changeStatus($did);
-		foreach ($chatObj->occupants as $user_id) {
+		foreach ($chatObj->{TBL_CHAT_OCCUPANTS} as $user_id) {
 			$userObj = $this->muser->get($user_id);
-			if ($chatObj->type == 1) $this->email->approveChat($this->cemail, $this->cfname." ".$this->clname, $userObj->email, $userObj->fname, $this->inviteChatLink($user_id, $userObj->email, $chatObj->did), $chatObj->name);
-			else $this->email->deproveChat($this->cemail, $this->cfname." ".$this->clname, $userObj->email, $userObj->fname, $chatObj->name);
+			if ($chatObj->{TBL_CHAT_TYPE} == CHAT_TYPE_PRIVATE) $this->email->approveChat($this->cemail, $this->cfname." ".$this->clname, $userObj->{TBL_USER_EMAIL}, $userObj->{TBL_USER_FNAME}, $this->inviteChatLink($user_id, $userObj->{TBL_USER_EMAIL}, $chatObj->{TBL_CHAT_DID}), $chatObj->{TBL_CHAT_NAME});
+			else $this->email->deproveChat($this->cemail, $this->cfname." ".$this->clname, $userObj->{TBL_USER_EMAIL}, $userObj->{TBL_USER_FNAME}, $chatObj->{TBL_CHAT_NAME});
 		}
 
 		if ($page == 0) {
@@ -153,7 +153,71 @@ class Allow extends ChatController
 		}
 	}
 
-	private function roleCheck() {
+	public function users()
+	{
+		$email = $this->input->post('email');
+		$userList = $this->muser->getUserlist(100);
+
+		if ($email == '') {echo json_encode($userList);exit;}
+		$is_new = FALSE;
+		foreach ($userList as $user) {
+			if ($user[TBL_USER_EMAIL] == $email) {
+				$is_new = TRUE;
+				echo json_encode(array($user)); exit;
+			}
+		}
+		if (!$is_new) echo json_encode(array());exit;
+	}
+
+	public function newChat()
+	{
+		$did = $this->input->post('did');
+		$jid = $this->input->post('jid');
+        $dname = $this->input->post('dname');
+        $ddetail = $this->input->post('ddesc');
+        $dtype = $this->input->post('type');
+		$occupants = $this->input->post('occupants');
+        
+        $r_occupants = array($this->cid);
+        
+        foreach ($occupants as $occupant) {
+            if (in_array($occupant[1], $r_occupants)) continue;
+            if ($occupants[1] == "") {
+                $data_arr = array(
+                        TBL_USER_TYPE => USER_TYPE_EXPERT,
+                        TBL_USER_STATUS => USER_STATUS_INVITE,
+                        TBL_USER_EMAIL => strtolower($occupants[0])
+                    );
+                $new_id = $this->muser->add($data_arr);
+                if (!$new_id) {echo "error";exit;}
+                $this->email->inviteUser($this->cemail, $this->cfname." ".$this->clname, $this->inviteUserLink($new_id, $occupants[0]), $occupants[0]);
+            } else {
+                $r_occupants[] = $occupant[1];
+            }    
+        }                  
+        
+		$newChat = $this->mchat->add(array(
+				TBL_CHAT_DID => $did,
+				TBL_CHAT_NAME => $dname,
+				TBL_CHAT_OCCUPANTS => json_encode($r_occupants),
+				TBL_CHAT_TYPE => $dtype,
+				TBL_CHAT_STATUS => CHAT_STATUS_LIVE,
+				TBL_CHAT_JID => $jid
+			));
+
+        if ($newChat) {
+            for ($i = 0; $i < count($r_occupants); $i++) {
+                $user_email = $occupants[$i][0];
+                $this->email->inviteChat($this->cemail, $this->cfname." ".$this->clname, $this->inviteChatLink($r_occupants[$i], $user_email, $did), $user_email, $dname, $ddetail);
+            }
+            echo "success";
+        }
+        else echo "error";
+		exit;
+	}
+
+	private function roleCheck()
+	{
 		if (gf_cu_type() != 1) 
 		{
 			redirect(site_url('profile'), 'get');

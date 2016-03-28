@@ -5,7 +5,7 @@ include_once (dirname(__FILE__) . "/UploadHandler.php");
 
 class Profile extends ChatController
 {
-	public function __construct()
+	public function __construct()            
 	{
 		parent::__construct();
 	}
@@ -27,11 +27,11 @@ class Profile extends ChatController
 		$this->load->view('templates/left-sidebar', $chat_data);
 
 		$this->load->view('profile', $chat_data);
-
+                                             
 		$this->load->view('templates/footer-chat', $chat_data);
 	}
 
-	public function user($c_uid)
+	public function user($c_id)
 	{
     	$this->loginCheck();    	
 
@@ -41,7 +41,7 @@ class Profile extends ChatController
 
 		$c_data['page_title'] = 'Profile | Relayy';
 
-		$user_data = $this->muser->getUserArray($c_uid);
+		$user_data = $this->muser->getUserArray($c_id);
 		// print_r($user);exit;
     
     	$this->load->view('templates/header-chat', $c_data);
@@ -53,7 +53,7 @@ class Profile extends ChatController
 		$this->load->view('templates/footer-chat', $c_data);
 	}
 
-	public function useredit($c_uid)
+	public function useredit($c_id)
 	{
     	$this->loginCheck();    	
 
@@ -63,7 +63,7 @@ class Profile extends ChatController
 
 		$c_data['page_title'] = 'Edit User Profile | Relayy';
 
-		$user_data = $this->muser->getUserArray($c_uid);	
+		$user_data = $this->muser->getUserArray($c_id);	
 
 		//print_r($user_data);exit;
     
@@ -107,9 +107,15 @@ class Profile extends ChatController
         $bio = $this->input->post('bio');
         $picture = $this->input->post('picture');
 
-        if ($this->cstatus == 2) $this->muser->approve($this->cid);
+        if ($this->cstatus == USER_STATUS_INVITE) $this->muser->approve($this->cid);
         
-        $object = $this->muser->edit($this->cid, $fname, $lname, $this->cemail, $password, $this->ctype, $bio, $picture);
+        $object = $this->muser->edit($this->cid, array(
+        		TBL_USER_FNAME => $fname,
+        		TBL_USER_LNAME => $lname,
+        		TBL_USER_PWD   => $password,
+        		TBL_USER_BIO   => $bio,
+        		TBL_USER_PHOTO => $picture
+        	));
 
         // print_r($object);exit;
         gf_registerCurrentUser($object);
@@ -132,9 +138,15 @@ class Profile extends ChatController
         $bio = $this->input->post('bio');
         $role = $this->input->post('reg_role');
         
-        $object = $this->muser->edit($userid, $fname, $lname, $userObj->email, $password, $role, $bio, $userObj->picture);
+        $object = $this->muser->edit($userid, array(
+        		TBL_USER_FNAME => $fname,
+        		TBL_USER_LNAME => $lname,
+        		TBL_USER_PWD   => $password,
+                TBL_USER_TYPE  => $role,
+                TBL_USER_BIO   => $bio
+        	));
 
-        // $this->email->profile($object->email, $fname." ".$lname);
+        $this->email->profile($object->email, $fname." ".$lname);
 
 		redirect(site_url('users'), 'get');	
 	}

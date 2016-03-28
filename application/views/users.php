@@ -37,20 +37,20 @@
 	  <div class="row">
 	  	<div class="col-sm-1"><img src="<?= strlen($user['photo'])>0?$user['photo']:asset_base_url().'/images/emp-sm.jpg'?>" width="38"></div>
 	    <div class="col-sm-2"><span><?= $user['fname']." ".$user['lname']?></span></div>
-	    <div class="col-sm-3"><a href="<?= site_url('profile/user/'.$user['uid'])?>"><?= $user['email']?></a></div>
-	    <div class="col-sm-1"><span><?= $utype?></span></div>
+	    <div class="col-sm-3"><a href="<?= site_url('profile/user/'.$user['id'])?>"><?= $user['email']?></a></div>
+	    <div class="col-sm-2"><span><?= $utype?></span></div>
 
 <?php if ($user['status'] == 0) {?>
 	    <div class="col-sm-1 col-sm-offset-1"><span class="text-warning">Pending</span></div>
-	    <div class="col-sm-1"><a class="btn btn-success" href="<?= site_url('users')?>/action/<?= $user['uid']."/".$page?>">Active</a></div>
+	    <div class="col-sm-1"><a class="btn btn-success btn-sm" href="<?= site_url('users')?>/action/<?= $user['id']."/".$page?>">Active</a></div>
 <?php } else if ($user['status'] == 1) {?>
 		<div class="col-sm-1 col-sm-offset-1"><span class="text-success">Activated</span></div>
-	    <div class="col-sm-1"><a class="btn btn-warning" href="<?= site_url('users')?>/action/<?= $user['uid']."/".$page?>">Deactive</a></div>
+	    <div class="col-sm-1"><a class="btn btn-warning btn-sm" href="<?= site_url('users')?>/action/<?= $user['id']."/".$page?>">Deactive</a></div>
 <?php } else if ($user['status'] == 2) {?>
 		<div class="col-sm-1 col-sm-offset-1"><span class="text-primary">Invited</span></div>
-	    <div class="col-sm-1"><a class="btn btn-primary" href="#" disabled="disabled">Invite</a></div>
+	    <div class="col-sm-1"><a class="btn btn-primary btn-sm" href="#" disabled="disabled">Invite</a></div>
 <?php }?>
-		<div class="col-sm-1 col-sm-offset-1"><a class="btn btn-danger" onclick="delAction(this, '<?= $user['email']?>')" data-act="<?= site_url('users')?>/delete/<?= $user['uid']."/".$page?>">Delete</a></div>
+		<div class="col-sm-1"><a class="btn btn-danger btn-sm" onclick="delAction(this, '<?= $user['email']?>')" data-act="<?= site_url('users')?>/delete/<?= $user['id']."/".$page?>">Delete</a></div>
 	  </div>
 <?php		
 	}

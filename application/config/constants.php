@@ -93,6 +93,7 @@ defined('USER_STATUS_INIT')       OR define('USER_STATUS_INIT',    0);
 defined('USER_STATUS_LIVE')       OR define('USER_STATUS_LIVE',       1);
 defined('USER_STATUS_INVITE')     OR define('USER_STATUS_INVITE',    2);
 defined('USER_STATUS_INVITED')    OR define('USER_STATUS_INVITED',    3);
+defined('USER_STATUS_ALL')        OR define('USER_STATUS_ALL',      100);
 
 
 defined('CHAT_TYPE_PRIVATE')      OR define('CHAT_TYPE_PRIVATE', 1);
@@ -101,3 +102,35 @@ defined('CHAT_TYPE_WELCOME')      OR define('CHAT_TYPE_WELCOME', 3);
 
 defined('CHAT_STATUS_INIT')       OR define('CHAT_STATUS_INIT',    0);
 defined('CHAT_STATUS_LIVE')       OR define('CHAT_STATUS_LIVE',    1);
+
+defined('TBL_USER_ID')            OR define('TBL_USER_ID',      'id');
+defined('TBL_USER_UID')           OR define('TBL_USER_UID',     'uid');
+defined('TBL_USER_FNAME')         OR define('TBL_USER_FNAME',   'fname');
+defined('TBL_USER_LNAME')         OR define('TBL_USER_LNAME',   'lname');
+defined('TBL_USER_EMAIL')         OR define('TBL_USER_EMAIL',   'email');
+defined('TBL_USER_PWD')           OR define('TBL_USER_PWD',     'pwd');
+defined('TBL_USER_TYPE')          OR define('TBL_USER_TYPE',    'type');
+defined('TBL_USER_STATUS')        OR define('TBL_USER_STATUS',  'status');
+defined('TBL_USER_BIO')           OR define('TBL_USER_BIO',     'bio');
+defined('TBL_USER_PHOTO')         OR define('TBL_USER_PHOTO',   'photo');
+defined('TBL_USER_FACEBOOK')         OR define('TBL_USER_FACEBOOK',   'facebook');
+
+defined('TBL_CHAT_ID')            OR define('TBL_CHAT_ID',          'id');
+defined('TBL_CHAT_DID')           OR define('TBL_CHAT_DID',         'did');
+defined('TBL_CHAT_NAME')          OR define('TBL_CHAT_NAME',        'name');
+defined('TBL_CHAT_OCCUPANTS')     OR define('TBL_CHAT_OCCUPANTS',   'occupants');
+defined('TBL_CHAT_TYPE')          OR define('TBL_CHAT_TYPE',        'type');
+defined('TBL_CHAT_STATUS')        OR define('TBL_CHAT_STATUS',      'status');
+defined('TBL_CHAT_JID')           OR define('TBL_CHAT_JID',         'jid');
+defined('TBL_CHAT_SENDER')        OR define('TBL_CHAT_SENDER',      'sender');
+defined('TBL_CHAT_MESSAGE')       OR define('TBL_CHAT_MESSAGE',     'message');
+defined('TBL_CHAT_TIME')          OR define('TBL_CHAT_TIME',        'time');
+
+defined('TBL_OPTION_ID')          OR define('TBL_OPTION_ID',        'id');
+defined('TBL_OPTION_UID')         OR define('TBL_OPTION_UID',       'uid');
+defined('TBL_OPTION_KEY')         OR define('TBL_OPTION_KEY',       'meta_key');
+defined('TBL_OPTION_VALUE')       OR define('TBL_OPTION_VALUE',     'meta_value');
+
+defined('TBL_NAME_USER')		  OR define('TBL_NAME_USER',     'tbl_user');
+defined('TBL_NAME_CHAT')		  OR define('TBL_NAME_CHAT',     'tbl_chat');
+defined('TBL_NAME_OPTION')		  OR define('TBL_NAME_OPTION',   'tbl_option');

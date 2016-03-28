@@ -8,15 +8,6 @@
 
 class Mchat extends CI_Model {
 
-    var $id;
-    var $name;
-    var $occupants;
-    var $type;
-    var $jid;
-    var $status;
-    var $message;
-    var $time;
-
     public function __construct()
     {
         parent::__construct();
@@ -24,30 +15,21 @@ class Mchat extends CI_Model {
         $this->load->database();
     }
 
-    public function add($id, $name, $occupants, $message, $type, $jid)
+    public function add($data_arr)
     {
-        $data = array(
-            'did'        => $id,
-            'name'      => $name,
-            'occupants'        => json_encode($occupants),
-            'message'      => $message,
-            'type'      => $type,
-            'jid'       => $jid
-        );
-
-        $this->db->insert('tbl_chat', $data);
+        $this->db->insert(TBL_NAME_CHAT, $data_arr);
 
         $nid = $this->db->insert_id();
 
         return (isset($nid)) ? $nid : FALSE;
     }
 
-    public function getDialogs($uid)
+    public function getDialogs($like_uid)
     {
         $query = $this->db->select('*')
-                      ->like('occupants', $uid."", 'both')
-                      ->order_by("time", "desc")
-                      ->get('tbl_chat');
+                      ->like(TBL_CHAT_OCCUPANTS, $like_uid, 'both')
+                      ->order_by(TBL_CHAT_TIME, "desc")
+                      ->get(TBL_NAME_CHAT);
 
         return $query->result_array();
     }
@@ -55,82 +37,60 @@ class Mchat extends CI_Model {
     public function getDialogList()
     {
         $query = $this->db->select('*')
-                      ->order_by("time", "desc")
-                      ->get('tbl_chat');
+                      ->order_by(TBL_CHAT_TIME, "desc")
+                      ->get(TBL_NAME_CHAT);
 
         return $query->result_array();
     }
 
-    public function get($did)
+    public function get($where_did)
     {
         $query = $this->db->select('*')
-                          ->where('did', $did)
+                          ->where(TBL_CHAT_DID, $where_did)
                           ->limit(1)
-                          ->get('tbl_chat');
+                          ->get(TBL_NAME_CHAT);
 
         if ($query->num_rows() === 1)
         {
             $dialog = $query->row();
-
-            $dialog_one = new Mchat();
-        
-            $dialog_one->id = $dialog->did;
-            $dialog_one->name = $dialog->name;
-            $dialog_one->occupants = $dialog->occupants;
-            $dialog_one->type = $dialog->type;
-            $dialog_one->jid = $dialog->jid;
-            $dialog_one->status = $dialog->status;
-            $dialog_one->message = $dialog->message;
-            $dialog_one->time = $dialog->time;
-
-            return $dialog_one;
-
+            return $dialog;
         }
 
         return FALSE;
     }
 
-    public function delete($did) 
+    public function delete($where_did) 
     {
-        $this->db->where('did', $did);
-        $this->db->delete('tbl_chat'); 
+        $this->db->where(TBL_CHAT_DID, $where_did);
+        $this->db->delete(TBL_NAME_CHAT); 
 
         return "success";
     }
 
-    public function update($dialogObj)
+    public function update($where_did, $data_arr)
     {
-        $data = array(
-            'name'      => $dialogObj->name,
-            'occupants' => $dialogObj->occupants,
-            'message'   => $dialogObj->message,
-            'type'      => $dialogObj->type,
-            'status'    => $dialogObj->status,
-            'jid'       => $dialogObj->jid
-        );
-
-        $this->db->update('tbl_chat', $data, array('did' => $dialogObj->id));
+        $this->db->update(TBL_NAME_CHAT, $data_arr, array(TBL_CHAT_DID => $where_did));
 
         return "success";
     }
 
-    public function changeStatus($did)
+    public function changeStatus($where_did)
     {
-        $chat = $this->get($did);
+        $chat = $this->get($where_did);
 
-        if ($chat->status == CHAT_STATUS_INIT) {
+        if ($chat->{TBL_CHAT_STATUS} == CHAT_STATUS_INIT) {
             $data = array(
-                'status' => CHAT_STATUS_LIVE
+                TBL_CHAT_STATUS => CHAT_STATUS_LIVE
             );
 
-            $this->db->update('tbl_chat', $data, array('did' => $did));
+            $this->db->update(TBL_NAME_CHAT, $data, array(TBL_CHAT_DID => $did));
             return $this->get($did);
         } else {
             $data = array(
-                'status' => CHAT_STATUS_INIT
+                TBL_CHAT_STATUS => CHAT_STATUS_INIT
             );
 
-            $this->db->update('tbl_chat', $data, array('did' => $did));
+            $this->db->update(TBL_NAME_CHAT, $data, array(TBL_CHAT_DID => $did));
             return $this->get($did);
         }
     }

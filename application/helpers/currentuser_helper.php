@@ -74,16 +74,17 @@ function gf_registerCurrentUser($userObject)
     $arr = array(
         'logged_in' => true,
         'logged_in_time' => time(),
-        'cu_id' => $userObject->uid,
-        'cu_fname' => $userObject->fname,
-        'cu_lname' => $userObject->lname,
-        'cu_email' => $userObject->email,
-        'cu_password' => $userObject->password,
-        'cu_type' => $userObject->type,
-        'cu_status' => $userObject->status,
-        'cu_photo' => $userObject->photo,
-        'cu_bio' => $userObject->bio,
-        'cu_facebook' => $userObject->facebook,
+        'cu_id' => intval($userObject->{TBL_USER_ID}),
+        'cu_uid'   => $userObject->{TBL_USER_UID},
+        'cu_fname' => $userObject->{TBL_USER_FNAME},
+        'cu_lname' => $userObject->{TBL_USER_LNAME},
+        'cu_email' => $userObject->{TBL_USER_EMAIL},
+        'cu_password' => $userObject->{TBL_USER_PWD},
+        'cu_type' => $userObject->{TBL_USER_TYPE},
+        'cu_status' => $userObject->{TBL_USER_STATUS},
+        'cu_photo' => $userObject->{TBL_USER_PHOTO},
+        'cu_bio' => $userObject->{TBL_USER_BIO},
+        'cu_facebook' => $userObject->{TBL_USER_FACEBOOK},
     );                                              
     $CI->session->set_userdata($arr);
 }
@@ -96,6 +97,7 @@ function gf_unregisterCurrentUser()
         'logged_in' => '',
         'logged_in_time' => '',
         'cu_id' => '',
+        'cu_uid' => '',
         'cu_fname' => '',
         'cu_lname' => '',
         'cu_email' => '',
@@ -124,6 +126,7 @@ function gf_isCurrentUser($user_id)
 }
                                                                
 function gf_cu_id(){$CI =& get_instance(); return $CI->session->userdata('cu_id');}
+function gf_cu_uid(){$CI =& get_instance(); return $CI->session->userdata('cu_uid');}
 function gf_cu_password(){$CI =& get_instance(); return $CI->session->userdata('cu_password');}
 function gf_cu_fname(){$CI =& get_instance(); return $CI->session->userdata('cu_fname');}
 function gf_cu_lname(){$CI =& get_instance(); return $CI->session->userdata('cu_lname');}

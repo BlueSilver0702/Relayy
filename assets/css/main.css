@@ -197,7 +197,9 @@ body {
 }
 
 .user-content .row .btn {
-	width:86px;
+	min-width:64px;
+    max-width:80px;
+    padding: 7px 0;
 }
 
 .user-content .row img {
@@ -391,4 +393,100 @@ body {
 
 .dropdown-menu a {
     cursor: pointer;
+}
+
+/********************* allow-page ********************/
+.d-label {
+    display: block;
+    padding: 10px 0;
+    font-weight: 100;
+}
+
+.d-label > span {
+    display: block;
+    padding: 5px 10px;
+
+}
+
+.d-label input {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+.allow-page .bootstrap-dialog.type-primary .modal-body {
+    padding:0;
+}
+
+#channel_edit ul {
+    padding: 10px;
+    min-height: 30px;
+    list-style: none;
+}
+
+#channel_edit ul#contacts {
+    height: 300px;
+    overflow-y:scroll;
+}
+
+#channel_edit ul#contacts li {
+    overflow: hidden;
+    padding-bottom: 5px;
+    margin-bottom: 5px;
+    border-bottom: 1px solid #eee;
+}
+
+#channel_edit ul#contacts li .avatar {
+    float: left;
+    margin-right: 10px;
+}
+
+#channel_edit ul#contacts span.glyphicon {
+    top:12px;
+    display:none;
+}
+
+#channel_edit ul#contacts li.selected span.glyphicon {
+    display:block;
+}
+
+img.avatar.avatar_small {
+    width: 35px;
+    height: 35px;
+    -webkit-border-radius: 25px;
+    -moz-border-radius: 25px;
+    border-radius: 25px;
+    margin-right: 10px;
+    overflow: hidden;
+}
+
+#channel_edit ul#contacts li .contacts_name {
+    font-weight: bold;
+}
+
+#channel_edit ul#contacts li > span {
+    display: block;
+}
+
+#channel_edit ul#contacts li .contacts_email {
+    color: #999;
+    font-size: 13px;
+}
+
+#channel_edit ul#selected li {
+    display: inline-block;
+    background: #d3eaff;
+    color: #337ab7;
+    padding: 3px 5px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
+
+#channel_edit ul#selected a.x {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    margin-left: 10px;
 }

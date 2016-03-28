@@ -5,7 +5,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
       <title><?php if(isset($page_title)) echo $page_title; ?></title>
       <link rel="shortcut icon" href="<?= asset_base_url()?>/images/favicon.png">
-      <!--reset styles-->
+
       <link rel="stylesheet" href="<?= asset_base_url()?>/libs/bootstrap.min.css" type="text/css">
       <link rel="stylesheet" href="<?= asset_base_url()?>/css/chat.css" type="text/css">
       <link rel="stylesheet" href="<?= asset_base_url()?>/css/bootstrap-dialog.min.css" type="text/css">

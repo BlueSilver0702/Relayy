@@ -8,18 +8,6 @@
 
 class Muser extends CI_Model {
 
-    var $id;
-    var $uid;
-    var $fname;
-    var $lname;
-    var $password;
-    var $type;
-    var $status;
-    var $email;
-    var $photo;
-    var $bio;
-    var $facebook;
-
     public function __construct()
     {
         parent::__construct();
@@ -27,32 +15,32 @@ class Muser extends CI_Model {
         $this->load->database();
     }
 
-    public function add(
-        $id,
-        $fname,
-        $lname,
-        $password,
-        $type,
-        $status,
-        $email,
-        $photo,
-        $bio,
-        $facebook)
+    public function add( $data_arr )
     {
-        $data = array(
-            'uid'        => $id,
-            'fname'      => $fname,
-            'lname'      => $lname,
-            'pwd'        => $password,
-            'email'      => $email,
-            'photo'      => $photo,
-            'status'     => $status,
-            'type'       => $type,
-            'bio'       => $bio,
-            'facebook'   => $facebook
-        );
+        // $data = array(
+        //     'uid'        => $uid,
+        //     'fname'      => $fname,
+        //     'lname'      => $lname,
+        //     'pwd'        => $password,
+        //     'email'      => $email,
+        //     'photo'      => $photo,
+        //     'status'     => $status,
+        //     'type'       => $type,
+        //     'bio'       => $bio,
+        //     'facebook'   => $facebook
+        // );
+        
+        $query = $this->db->select(TBL_USER_ID)
+                          ->where(TBL_USER_EMAIL, $data_arr[TBL_USER_EMAIL])
+                          ->limit(1)
+                          ->get(TBL_NAME_USER);
+        
+        if ($query->num_rows() === 1) {
+            $user = $query->row();
+            return $user->{TBL_USER_ID};
+        }
 
-        $this->db->insert('tbl_user', $data);
+        $this->db->insert(TBL_NAME_USER, $data_arr);
 
         $id = $this->db->insert_id();
 
@@ -61,57 +49,41 @@ class Muser extends CI_Model {
 
     public function getUserlist($status = USER_STATUS_INIT)
     {
-        if ($status == 100) {
+        if ($status == USER_STATUS_ALL) {
             $query = $this->db->select('*')
-                          ->get('tbl_user');
+                          ->get(TBL_NAME_USER);
         } else {
             $query = $this->db->select('*')
-                          ->where('status', $status)
-                          ->get('tbl_user');
+                          ->where(TBL_USER_STATUS, $status)
+                          ->get(TBL_NAME_USER);
         }
 
         return $query->result_array();
 
     }
 
-    public function get($user_id)
+    public function get($where_id)
     {
         $query = $this->db->select('*')
-                          ->where('uid', $user_id)
+                          ->where(TBL_USER_ID, $where_id)
                           ->limit(1)
-                          ->get('tbl_user');
+                          ->get(TBL_NAME_USER);
 
         if ($query->num_rows() === 1)
         {
             $user = $query->row();
-
-            $user_one = new Muser();
-        
-            $user_one->id = $user->id;
-            $user_one->uid = $user->uid;
-            $user_one->fname = $user->fname;
-            $user_one->lname = $user->lname;
-            $user_one->password = $user->pwd;
-            $user_one->type = $user->type;
-            $user_one->status = $user->status;
-            $user_one->email = $user->email;
-            $user_one->photo = $user->photo;
-            $user_one->bio = $user->bio;
-            $user_one->facebook = $user->facebook;
-
-            return $user_one;
-
+            return $user;
         }
 
         return FALSE;
     }
 
-    public function getUserArray($user_id)
+    public function getUserArray($where_id)
     {
         $query = $this->db->select('*')
-                          ->where('uid', $user_id)
+                          ->where(TBL_USER_ID, $where_id)
                           ->limit(1)
-                          ->get('tbl_user');
+                          ->get(TBL_NAME_USER);
 
         if ($query->num_rows() === 1)
         {
@@ -122,61 +94,49 @@ class Muser extends CI_Model {
         return FALSE;
     }
 
-    public function edit($id, $fname, $lname, $email, $password, $type, $bio, $picture)
+    public function edit($where_id, $data_arr)
     {
-        $data = array(
-            'fname' => $fname,
-            'lname' => $lname,
-            'email' => $email,
-            'pwd' => $password,
-            'type' => $type,
-            'bio' => $bio,
-            'photo' => $picture
-        );
+        $this->db->update(TBL_NAME_USER, $data_arr, array(TBL_USER_ID => $where_id));
 
-        $this->db->update('tbl_user', $data, array('uid' => $id));
-
-        return $this->get($id);
+        return $this->get($where_id);
     }
 
-    public function changeStatus($user_id)
+    public function changeStatus($where_id)
     {
-        $user = $this->get($user_id);
+        $user = $this->get($where_id);
 
         if ($user->status == USER_STATUS_INIT) {
             $data = array(
-                'status' => USER_STATUS_LIVE
+                TBL_USER_STATUS => USER_STATUS_LIVE
             );
 
-            $this->db->update('tbl_user', $data, array('uid' => $user_id));            
+            $this->db->update(TBL_NAME_USER, $data, array(TBL_USER_ID => $where_id));            
 
-            return $this->get($user_id);
+            return $this->get($where_id);
         } else {
             $data = array(
-                'status' => USER_STATUS_INIT
+                TBL_USER_STATUS => USER_STATUS_INIT
             );
 
-            $this->db->update('tbl_user', $data, array('uid' => $user_id));
+            $this->db->update(TBL_NAME_USER, $data, array(TBL_USER_ID => $where_id));
 
-            return $this->get($user_id);
+            return $this->get($where_id);
         }
     }
 
-    public function approve($user_id) {
-        $user = $this->get($user_id);
-
+    public function approve($where_id) {
         $data = array(
-            'status' => USER_STATUS_LIVE
+            TBL_USER_STATUS => USER_STATUS_LIVE
         );
 
-        $this->db->update('tbl_user', $data, array('uid' => $user_id));
-        return $this->get($user_id);                
+        $this->db->update(TBL_NAME_USER, $data, array(TBL_USER_ID => $where_id));
+        return $this->get($where_id);                
     }
 
-    public function delete($user_id)
+    public function delete($where_id)
     {
-        $this->db->where('uid', $user_id);
-        $this->db->delete('tbl_user'); 
+        $this->db->where(TBL_USER_ID, $where_id);
+        $this->db->delete(TBL_NAME_USER);
 
         return "success";
     }
@@ -191,66 +151,38 @@ class Muser extends CI_Model {
 
         //$query = $this->db->select('uid, fname, pwd, type, status, email, photo')
         $query = $this->db->select('*')
-                          ->where('email', $email)
+                          ->where(TBL_USER_EMAIL, $email)
                           ->limit(1)
-                          ->get('tbl_user');
+                          ->get(TBL_NAME_USER);
 
         if ($query->num_rows() === 1)
         {
             $user = $query->row();
 
-            $pwd = $user->pwd;
+            $pwd = $user->{TBL_USER_PWD};
 
-
-            if ($password == $pwd)
-            {
-                $user_one = new Muser();
-            
-                $user_one->id = $user->id;
-                $user_one->uid = $user->uid;
-                $user_one->fname = $user->fname;
-                $user_one->lname = $user->lname;
-                $user_one->password = $user->pwd;
-                $user_one->type = $user->type;
-                $user_one->status = $user->status;
-                $user_one->email = $user->email;
-                $user_one->photo = $user->photo;
-                $user_one->bio = $user->bio;
-                $user_one->facebook = $user->facebook;
-
-                return $user_one;
-            }
+            if ($password == $pwd) return $user;
         }
 
         return FALSE;
     }
 
-    public function register($id, $fname, $lname, $email, $pwd, $type, $facebook, $photo, $bio) {
+    public function register($data_arr) {
 
-        $newUser = $this->get($id);
+        $query = $this->db->select('*')
+                          ->where(TBL_USER_UID, $data_arr[TBL_USER_UID])
+                          ->limit(1)
+                          ->get(TBL_NAME_USER);
 
-        if (!$newUser)
-        {
-            $newUser = $this->add($id, $fname, $lname, $pwd, $type, USER_STATUS_INIT, $email, $photo, $bio, $facebook);    
-        }
+        if ($query->num_rows() >= 1) {
+            $newUser = $query->row();
 
-        if ($newUser) 
-        {
-            $user_one = new Muser();
-            
-            $user_one->id = $newUser->id;
-            $user_one->uid = $id;
-            $user_one->fname = $fname;
-            $user_one->lname = $lname;
-            $user_one->password = $newUser->password;
-            $user_one->type = $type;
-            $user_one->status = $newUser->status;
-            $user_one->email = $email;
-            $user_one->photo = $photo;
-            $user_one->bio = $bio;
-            $user_one->facebook = $facebook;
-
-            return $user_one;
+            return $newUser;
+        } else {
+            $data_arr[TBL_USER_STATUS] = USER_STATUS_INIT;
+            $data_arr[TBL_USER_TYPE] = USER_TYPE_EXPERT;
+            $newUser = $this->add($data_arr);
+            return $this->get($newUser);
         }
 
         return FALSE;

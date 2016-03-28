@@ -20,7 +20,7 @@ function connectToChat(user) {
 
   // Create session and connect to chat
   //
-  QB.createSession({login: user.login, password: user.pass}, function(err, res) {
+  QB.createSession({login: user.email, password: QBApp.authKey}, function(err, res) {
     if (res) {
       // save session token
       token = res.token;
@@ -28,7 +28,7 @@ function connectToChat(user) {
       user.id = res.user_id;
       mergeUsers([{user: user}]);
 
-      QB.chat.connect({userId: user.id, password: user.pass}, function(err, roster) {
+      QB.chat.connect({userId: user.email, password: QBApp.authKey}, function(err, roster) {
         if (err) {
           console.log(err);
         } else {

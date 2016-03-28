@@ -3,6 +3,7 @@
 class ChatController extends CI_Controller
 {
 	var $cid;
+	var $cuid;
     var $cfname;
     var $clname;
     var $cemail;
@@ -24,6 +25,8 @@ class ChatController extends CI_Controller
         $this->load->library('email');
 
 		$this->cid = gf_cu_id();
+
+		$this->cuid = gf_cu_uid();
 		
 		$this->cfname = gf_cu_fname();
 
@@ -56,11 +59,11 @@ class ChatController extends CI_Controller
 		$chat_data = array();
 
 		if (count($dialog_arr) > 0) {
-			$chat_data['d_id'] = $dialog_arr[0]['did'];
+			$chat_data['d_id'] = $dialog_arr[0][TBL_CHAT_DID];
 
-	    	$chat_data['d_name'] = $dialog_arr[0]['name'];
+	    	$chat_data['d_name'] = $dialog_arr[0][TBL_CHAT_NAME];
 
-	    	$chat_data['d_occupants'] = json_decode($dialog_arr[0]['occupants']);
+	    	$chat_data['d_occupants'] = json_decode($dialog_arr[0][TBL_CHAT_OCCUPANTS]);
 
 	    	$chat_data['d_users'] = array();
 
@@ -68,30 +71,32 @@ class ChatController extends CI_Controller
 				$chat_data['d_users'][] = $this->muser->getUserArray($d_user);
 	    	}
 
-	    	$chat_data['d_type'] = $dialog_arr[0]['type'];
+	    	$chat_data['d_type'] = $dialog_arr[0][TBL_CHAT_TYPE];
 
-	    	$chat_data['d_jid'] = $dialog_arr[0]['jid'];
+	    	$chat_data['d_jid'] = $dialog_arr[0][TBL_CHAT_JID];
 
-	    	$chat_data['d_status'] = $dialog_arr[0]['status'];
+	    	$chat_data['d_status'] = $dialog_arr[0][TBL_CHAT_STATUS];
 
-	    	$chat_data['d_message'] = $dialog_arr[0]['message'];
+	    	$chat_data['d_message'] = $dialog_arr[0][TBL_CHAT_MESSAGE];
 
-	    	$chat_data['d_time'] = $dialog_arr[0]['time'];
+	    	$chat_data['d_time'] = $dialog_arr[0][TBL_CHAT_TIME];
 
-	    	$occupants_arr = json_decode($dialog_arr[0]['occupants']);
+	    	$occupants_arr = json_decode($dialog_arr[0][TBL_CHAT_OCCUPANTS]);
 	    	
 	    	$d_owner = $this->muser->get($occupants_arr[0]);
 	    	
-	    	$chat_data['d_owner'] = $d_owner->fname;
+	    	$chat_data['d_owner'] = $d_owner->{TBL_USER_FNAME};
 
 	    	$chat_data['d_noti'] = $this->moption->get($this->cid, 'notify_'.$chat_data['d_id']);
 
-	    	if ($d_owner->id == gf_cu_id()) $chat_data['d_owner'] = "Me";
+	    	if ($d_owner->{TBL_USER_ID} == gf_cu_id()) $chat_data['d_owner'] = "Me";
 		}
     	
 		$chat_data['history'] = $dialog_arr;
 
 		$chat_data['u_id'] = $this->cid;
+
+		$chat_data['u_uid'] = $this->cuid;
 		
 		$chat_data['u_name'] = $this->cfname." ".$this->clname;
 

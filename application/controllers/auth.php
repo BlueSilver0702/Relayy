@@ -34,7 +34,7 @@ class Auth extends CI_Controller
         $email = $this->input->post('sgn_email');
         $password = $this->input->post('sgn_pwd');
 
-        $object = $this->muser->login($email, $password);
+        $object = $this->muser->login(strtolower($email), $password);
         
         if($object) {
 
@@ -66,13 +66,22 @@ class Auth extends CI_Controller
         $email = $this->input->post('reg_email');
         $password = $this->input->post('reg_pwd');
 
-        $object = $this->muser->register($id, $fname, $lname, $email, $password, $type, '', '', '');
+        $object = $this->muser->register(
+                array(
+                    TBL_USER_UID => $id,
+                    TBL_USER_TYPE => $type,
+                    TBL_USER_FNAME => $fname,
+                    TBL_USER_LNAME => $lname,
+                    TBL_USER_EMAIL => strtolower($email),
+                    TBL_USER_PWD => $password
+                    )
+            );
         
         if($object) {
 
             gf_registerCurrentUser($object);
 
-            $this->email->register($email, $fname." ".$lname);
+            $this->email->register(strtolower($email), $fname." ".$lname);
 
             redirect(site_url('profile'), 'get');
 
@@ -92,14 +101,24 @@ class Auth extends CI_Controller
         $photo = $this->input->post('li_photo');
         $bio = $this->input->post('li_bio');
 
-		$object = $this->muser->register($id, $fname, $lname, $email, '', 3, $login, $photo, $bio);
+		$object = $this->muser->register(
+                array(
+                    TBL_USER_UID => $id,
+                    TBL_USER_FNAME => $fname,
+                    TBL_USER_LNAME => $lname,
+                    TBL_USER_EMAIL => strtolower($email),
+                    TBL_USER_FACEBOOK => $login,
+                    TBL_USER_PHOTO => $photo,
+                    TBL_USER_BIO   => $bio
+                    )
+            );
         
         // print_r($object);exit;
         if($object) {
 
             gf_registerCurrentUser($object);
 
-            $this->email->linkedin($email, $fname." ".$lname);
+            $this->email->linkedin(strtolower($email), $fname." ".$lname);
 
             if (gf_cu_type() == 1) {
 
@@ -120,12 +139,6 @@ class Auth extends CI_Controller
 	{
 		gf_unregisterCurrentUser();
 
-		// $CI =& get_instance();
-
-  //   	$cu_id = $CI->session->userdata('cu_email');
-
-		// $abc = "hello".$cu_id;
-		// show_error($abc, 400, "Hello, World");
 		redirect(site_url('home'), 'get');
 
 	}

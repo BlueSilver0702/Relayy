@@ -166,11 +166,9 @@ $mailContent .= '               <tr>
         );   
     }
 
-    public function inviteChat($inviterEmail, $inviterName, $inviteLink, $toEmail, $toName, $chatTitle)
+    public function inviteChat($inviterEmail, $inviterName, $inviteLink, $toEmail, $chatTitle, $chatDetail = '')
     {
-        $title = '';
-        if ($toName == '') $title = "Hi! ".$inviterName." sent you invite to chat: ".$chatTitle.".";
-        else $title = "Hi, $toName! ".$inviterName." sent you invite to chat: ".$chatTitle.".";
+        $title = "Hi! ".$inviterName." sent you invite to chat: ".$chatTitle.".";
 
         $this->sendEmail(
             $this->senderEmail, 
@@ -178,9 +176,9 @@ $mailContent .= '               <tr>
             $toEmail, 
             "You are invited to a new chat!",
             $title,
-            "Please open following link and register your details!<br> $inviteLink <br><br> If you have questions, please contact this email: ". $inviterEmail ." !"
+            "Please open following link and register your details!<br> $inviteLink <br>$chatDetail<br> If you have questions, please contact this email: ". $inviterEmail ." !"
         );   
-    }
+    } 
 
     public function approveUser($adminEmail, $adminName, $toEmail)
     {

@@ -18,12 +18,12 @@ class Moption extends CI_Model {
     public function add($uid, $key, $value)
     {
         $data = array(
-            'uid'      => $uid,
-            'meta_key'        => $key,
-            'meta_value'      => $value
+            TBL_OPTION_UID      => $uid,
+            TBL_OPTION_KEY      => $key,
+            TBL_OPTION_VALUE    => $value
         );
 
-        $this->db->insert('tbl_option', $data);
+        $this->db->insert(TBL_NAME_OPTION, $data);
 
         $nid = $this->db->insert_id();
 
@@ -33,15 +33,15 @@ class Moption extends CI_Model {
     public function get($uid, $key)
     {
         $query = $this->db->select('*')
-                          ->where(array('uid' => $uid, 'meta_key' => $key))
+                          ->where(array(TBL_OPTION_UID => $uid, TBL_OPTION_KEY => $key))
                           ->limit(1)
-                          ->get('tbl_option');
+                          ->get(TBL_NAME_OPTION);
 
         if ($query->num_rows() === 1)
         {
             $dialog = $query->row();
 
-            return $dialog->meta_value;
+            return $dialog->{TBL_OPTION_VALUE};
 
         }
 
@@ -51,10 +51,10 @@ class Moption extends CI_Model {
     public function update($uid, $key, $value)
     {
         $data = array(
-            'meta_value' => $value
+            TBL_OPTION_VALUE => $value
         );
 
-        $this->db->update('tbl_option', $data, array('uid' => $uid, 'meta_key' => $key));
+        $this->db->update(TBL_NAME_OPTION, $data, array(TBL_OPTION_UID => $uid, TBL_OPTION_KEY => $key));
 
         $result = $this->get($uid, $key);
         if ($result == FALSE) {
