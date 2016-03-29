@@ -59,3 +59,5 @@ $route['users/invite/(:num)/(:any)/(:num)'] = 'users/invite/$1/$2/$3';
 
 $route['invite/user/(:any)/(:any)'] = 'invite/user/$1/$2';
 $route['invite/chat/(:any)/(:any)/(:any)'] = 'invite/chat/$1/$2/$3';
+
+$route['home/channel/(:any)/(:any)'] = 'home/channel/$1/$2';

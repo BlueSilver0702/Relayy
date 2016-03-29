@@ -100,9 +100,20 @@ function retrieveChatDialogs() {
 function retrieveDialog() {
 
   // join room
-  // QB.chat.muc.join(DialogJID, function() {
-    console.log("Joined dialog "+DialogID);
+  DialogJIDS.forEach(function(item, i, arr) {
+    //var dialogId = item._id;
+//    dialogs[dialogId] = item;
 
+    // join room
+      QB.chat.muc.join(item, function() {
+         console.log("Joined dialog "+item);
+      });
+
+//    item.occupants_ids.map(function(userId) {
+//      occupantsIds.push(userId);
+//    });
+  });
+                                            
     updateDialogsUsersStorage(DialogUIDS, function(){
       // show dialogs
       //
@@ -188,22 +199,37 @@ function leaveAction(did) {
   }
 }
 
-function removeAction(did, uid) {
-  if (confirm("Are you sure you want remove this user?")) {
-    var currentObj = $("#remove-"+uid);
-    $.ajax({
-     url: site_url + 'chat/remove',
-     data: {
-        did: did,
-        uid: uid
-     },
-     success: function(data) {
-        console.log(data);
-        currentObj.remove();
-     },
-     type: 'POST'
+function removeAction(did, uid, name) {  
+  BootstrapDialog.show({
+        message: "Are you sure you want remove this user " + name + " ?",
+        type: BootstrapDialog.TYPE_DANGER,
+        buttons: [{
+            label: 'Delete',
+            cssClass: 'btn-danger',
+            autospin: true,
+            action: function(dialogRef){
+                var currentObj = $("#remove-"+uid);
+                $.ajax({
+                 url: site_url + 'chat/remove',
+                 data: {
+                    did: did,
+                    uid: uid
+                 },
+                 success: function(data) {
+                    console.log(data);
+                    currentObj.remove();    
+                    dialogRef.close();
+                 },
+                 type: 'POST'
+                });            
+            }
+        }, {
+            label: 'Cancel',
+            action: function(dialogRef){
+                dialogRef.close();
+            }
+        }]
     });
-  }
 }
 
 function showOrUpdateDialogInUI(itemRes, updateHtml) {
@@ -299,6 +325,7 @@ function triggerDialog(dialogId, ajaxFlag){
   var filters = {"_id": dialogId};
  
   QB.chat.dialog.list(filters, function(err, resDialogs) {
+
     if (err) {
       console.log(err);
     } else {
@@ -749,4 +776,24 @@ function onDialogDelete(dialogId) {
       }
     });
   // }
+}
+
+function searchDialogs(object) {
+    var searchStr = $(object).val();
+    $("#dialogs-list .list-group-item").each(function(){
+        var aObject = $(this);
+//        console.log("#"+$(this).find(".d_title").text());
+        
+        if ($(this).find(".d_title").text().search(searchStr) == -1) {
+            aObject.hide();
+        } else {
+            aObject.show();
+        }
+    });
+}
+
+function searchInit() {
+    $("#dialogs-list .list-group-item").each(function(){
+        $(this).show(); 
+    });
 }

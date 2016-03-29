@@ -7,6 +7,7 @@
             <form class="form-horizontal" method="post" action="<?php echo site_url('invite/accept') ?>" id="register_form">
               <input type="hidden" name="reg_id" value="<?= $current_id?>" id="user_id">
               <input type="hidden" name="reg_uid" value="" id="user_uid">
+              <input type="hidden" name="reg_did" value="<?= $current_did?>" id="user_did">
               <div class="form-group">
                 <label class="col-sm-4 control-label">User Role:</label>
                 <div class="col-sm-6 selectContainer">

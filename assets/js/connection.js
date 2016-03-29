@@ -28,13 +28,11 @@ function connectToChat(user) {
       user.id = res.user_id;
       mergeUsers([{user: user}]);
 
-      QB.chat.connect({userId: user.email, password: QBApp.authKey}, function(err, roster) {
+      QB.chat.connect({userId: user.id, password: QBApp.authKey}, function(err, roster) {
         if (err) {
           console.log(err);
         } else {
           console.log(roster);
-          // load chat dialogs
-          //
 //          retrieveChatDialogs();
 
           retrieveDialog();

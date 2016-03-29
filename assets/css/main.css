@@ -490,3 +490,32 @@ img.avatar.avatar_small {
     height: 12px;
     margin-left: 10px;
 }
+
+#dialogs-list img {
+    border: 2px solid rgba(255,255,255,0.4);
+    margin: 5px 0px 0 -10px;
+    webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+    transition: all 200ms ease;
+}
+
+#dialogs-list .active img {
+    margin-left:0;
+}
+
+#dialogs-list img:first-child {
+    margin-left:0px!important;
+}
+
+#dialogs-list .list-group-item:hover img {
+    margin-left:0px;
+}
+
+#dialogs-list .list-group-item {
+    font-size: 12px;
+}
+
+#dialogs-list .list-group-item.active .list-group-item-text {
+    color: #777!important;
+}

@@ -1,4 +1,3 @@
-
         </div>
             <script src="<?php echo asset_base_url()?>/libs/jquery.min.js" type="text/javascript"></script>
             <script src="<?php echo asset_base_url()?>/libs/jquery.nicescroll.min.js" type="text/javascript"></script>
@@ -18,10 +17,25 @@
             var site_url = '<?= site_url()?>';
             var DialogID = '<?php if (isset($d_id)) echo $d_id?>';
             var DialogJID = '<?php if (isset($d_jid)) echo $d_jid?>';
-
-            var DialogUIDS = <?php 
-            if (isset($d_occupants) && count($d_occupants)) echo str_replace(array('\"', '"'), "", json_encode($d_occupants));
-            else echo "[]";?>;
+<?php
+            $djids = array();
+            $duids = array();
+            foreach ($history as $dialog) {
+                $djids[] = $dialog[TBL_CHAT_JID];
+            }      
+            
+            foreach ($d_users as $duser) {
+                $nameArr = explode("@", $duser[TBL_USER_EMAIL]);
+                $fname = $nameArr[0];
+                $duids[] = array("id"=>$duser[TBL_USER_UID], "sid"=>$duser[TBL_USER_ID], "photo"=>$duser[TBL_USER_PHOTO]?$duser[TBL_USER_PHOTO]:asset_base_url()."/images/emp-sm.jpg", "name"=>$duser[TBL_USER_FNAME]?$duser[TBL_USER_FNAME].$duser[TBL_USER_LNAME]:$fname);
+            }
+//            foreach ($d_users as $duser) {
+//                $duids[] = $duser[TBL_USER_UID];
+//            }
+?>
+            var DialogUIDS = <?= json_encode($duids)?>;
+            
+            var DialogJIDS = <?= json_encode($djids)?>;
             </script>
 
             <script src="<?php echo asset_base_url()?>/js/connection.js"></script>
@@ -185,23 +199,23 @@ function createChat(type) {
                     name: "Private"
                   };
 
-//                  QB.chat.dialog.create(params, function(err, createdDialog) {
-//                    if (err) {
-//                      console.log(err);
-//                      alert(err);
-//                    } else {
-                        var dialogId = "abcd";
+                  QB.chat.dialog.create(params, function(err, createdDialog) {
+                    if (err) {
+                      console.log(err);
+                      alert(err);
+                    } else {
                         var occupants = [];
-//                                          
+                        occupants.push([$("#selected li").data("email"), $("#selected li").data("uid")]);
+                                  
                         $.ajax({
                            url: site_url + 'allow/newChat',
                            data: {
-                              did: dialogId,
-                              jid: "",
+                              did: createdDialog._id,
+                              jid: createdDialog.xmpp_room_jid,
                               type: <?= CHAT_TYPE_PRIVATE?>,
                               dname: 'Private',
                               ddesc: '',
-                              occupants: occupants.push([$("#selected li").data("email"), $("#selected li").data("uid")])
+                              occupants: occupants
                            },
                            success: function(data) {
                               if (data == "success")
@@ -211,8 +225,8 @@ function createChat(type) {
                            },
                            type: 'POST'
                         });
-//                    }
-//                  });
+                    }
+                  });
                 }
             }]
         });
@@ -263,8 +277,6 @@ function createChat(type) {
                       console.log(err);
                       alert(err);
                     } else {
-                      var dialogId = createdDialog._id;
-
                       var occupants = [];
                       $("#selected li").each(function(){
                         occupants.push([$(this).data("email"), $(this).data("uid")]);
@@ -273,7 +285,7 @@ function createChat(type) {
                       $.ajax({
                            url: site_url + 'allow/newChat',
                            data: {
-                              did: dialogId,
+                              did: createdDialog._id,
                               jid: createdDialog.xmpp_room_jid,
                               type: <?= CHAT_TYPE_GROUP?>,
                               dname: $("#groupname").val(),

@@ -43,14 +43,21 @@
 	      </h5>
 	      
 	      <ul>
-<?php   foreach ($d_users as $user) {?>
-			<li class="" id="remove-<?= $user['uid']?>">
-	          <a class="" href="<?= site_url("profile/user/".$user['uid'])?>">
+<?php   foreach ($d_users as $user) {
+$username = '';
+if ($user['fname']) $username = $user['fname'];
+else {
+    $str_arr = explode("@", $user['email']);
+    $username = $str_arr[0];
+}
+?>
+			<li class="" id="remove-<?= $user['id']?>">
+	          <a class="" href="<?= site_url("profile/user/".$user['id'])?>">
 	            <img class="avatar avatar_small" src="<?= strlen($user['photo'])>0?$user['photo']:asset_base_url().'/images/emp-sm.jpg'?>">
-	            <?= $user['fname']?>
+<?= $username ?>
 	          </a>
 <?php if ($d_owner == "Me") {?>
-	          <a class="information_remove_user" onclick="removeAction('<?= $d_id?>', '<?= $user['uid']?>')"></a>
+	          <a class="information_remove_user" onclick="removeAction('<?= $d_id?>', '<?= $user['id']?>', '<?= $username?>')"></a>
 <?php }?>
 	          <span class="">
 	            <lastseen data-user-id="4513703"><span class="lastseen">offline</span></lastseen>

@@ -63,10 +63,18 @@ function buildMetaHtml(jsonData) {
     retHtml += '</h5><ul>';
   for (var i=0; i<jsonObj.d_users.length; i++) {
     var d_user = jsonObj.d_users[i];
+    var username = '';
+    if (d_user.fname) {
+        username = d_user.fname;
+    } else {
+        var strArr = d_user.email.split("@");
+        username = strArr[0];
+    }
     if (d_user.photo == "") d_user.photo = site_url + "/assets/images/emp-sm.jpg";
-    retHtml += '<li class="" id="remove-'+d_user.uid+'"><a class="" href="'+site_url+'/profile/user/'+d_user.uid+'"><img class="avatar avatar_small" src="'+d_user.photo+'">'+d_user.fname+'</a>';
+    retHtml += '<li class="" id="remove-'+d_user.id+'"><a class="" href="'+site_url+'/profile/user/'+d_user.id+'"><img class="avatar avatar_small" src="'+d_user.photo+'">' + username+'</a>';;
+    
    if (jsonObj.d_owner == "Me") {
-    retHtml += '<a class="information_remove_user" onclick="removeAction(\''+jsonObj.d_id+'\', \''+d_user.uid+'\')"></a>';
+    retHtml += '<a class="information_remove_user" onclick="removeAction(\''+jsonObj.d_id+'\', \''+d_user.id+'\', \''+username+'\')"></a>';
   }
     retHtml += '<span class=""><lastseen data-user-id="4513703"><span class="lastseen">offline</span></lastseen></span></li>';
   }

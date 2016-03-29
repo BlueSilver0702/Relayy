@@ -56,7 +56,7 @@
         </div>
     </div>
 
-    <div id="loginForm" class="modal fade" role="dialog">
+    <div id="loginForm" class="modal fade <?= isset($email)?"show":""?>" role="dialog">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -64,10 +64,13 @@
           </div>
           <div class="modal-body">
             <form class="form-horizontal" method="post" action="<?php echo site_url('auth/login') ?>" id="login_form">
+    <?php if (isset($did)){
+        echo "<input type='hidden' name='did' value='$did'>";
+    } ?>
               <div class="form-group">
                 <label class="control-label col-sm-4" for="usr_sgn_n_lgn">Login Email:</label>
                 <div class="col-sm-6">
-                  <input type="email" class="form-control" name="sgn_email" id="usr_sgn_n_lgn" placeholder="Enter email">
+                  <input type="email" class="form-control" name="sgn_email" id="usr_sgn_n_lgn" placeholder="Enter email" value="<?= isset($email)?$email:""?>" <?= isset($email)?"readonly":""?>>
                 </div>
               </div>
               <div class="form-group">

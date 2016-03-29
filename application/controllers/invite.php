@@ -29,7 +29,7 @@ class Invite extends CI_Controller
         
 		$user = $this->muser->get($uid);
         
-        if ($user->email != $email) show_error("Sorry, You are not allowed to register!", 500, "Invite Error");
+        if ($user->{TBL_USER_EMAIL} != $email) show_error("Sorry, You are not allowed to register!", 500, "Invite Error");
 		
     	$data['body_class'] = 'invite-page';
 
@@ -41,7 +41,7 @@ class Invite extends CI_Controller
 
     	$data['current_email'] = urldecode($email);
 
-    	$data['current_type'] = $user->type;
+    	$data['current_type'] = $user->{TBL_USER_TYPE};
     
     	$this->load->view('templates/header-home', $data);
 		
@@ -51,20 +51,60 @@ class Invite extends CI_Controller
 	}
 
 	public function chat($uid, $email, $did) {
+        if ( gf_isLogin() )
+        {
+            redirect(site_url('profile'), 'get');
+            
+            return;    
+        }
 
+        $n_email = urldecode($email);
+        
+        $user = $this->muser->get($uid);
+        
+        if ($user->{TBL_USER_EMAIL} != $n_email) show_error("Sorry, You are not allowed to register!", 500, "Invite Error");
+        
+        if ($user->{TBL_USER_STATUS} == USER_STATUS_INVITE || $user->{TBL_USER_STATUS} == USER_STATUS_INVITED) {
+            $data['body_class'] = 'invite-page';
+
+            $data['page_title'] = 'Welcome! Relayy';
+
+            $data['current_section'] = 'invite';
+
+            $data['current_id'] = $uid;
+
+            $data['current_email'] = urldecode($n_email);
+            
+            $data['current_did'] = urldecode($did);
+
+            $data['current_type'] = $user->{TBL_USER_TYPE};
+        
+            $this->load->view('templates/header-home', $data);
+            
+            $this->load->view('invite', $data);
+
+            $this->load->view('templates/footer', $data);    
+        } else {
+            redirect(site_url('home/channel/'.$email."/".$did), 'get');
+        }
 	}
 
 	public function accept() {
 
 		$id = $this->input->post('reg_id');
         
+        $did = $this->input->post('reg_did');
+        
         $uid = $this->input->post('reg_uid');
 
         $password = $this->input->post('reg_pwd');
+        
+//        echo $id.$did.$password.$uid; exit;
 
         $user = $this->muser->edit($id, array(
             TBL_USER_PWD => $password,
-            TBL_USER_UID => $uid
+            TBL_USER_UID => $uid,
+            TBL_USER_STATUS => USER_STATUS_LIVE
         ));
         
         if (!$user) show_error("An Error has occurred while registering!", 500, "Register Error");
@@ -75,7 +115,11 @@ class Invite extends CI_Controller
 
             gf_registerCurrentUser($object);
 
-            redirect(site_url('profile/edit'), 'get');
+            if ($did) {
+                redirect(site_url('chat/channel/'.$did), 'get');
+            } else {
+                redirect(site_url('profile/edit'), 'get');    
+            }
 
         } else {
 

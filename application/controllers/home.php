@@ -57,29 +57,33 @@ class Home extends CI_Controller
 		$this->load->view('templates/footer', $data);	
 	}
 
-	// public function channel($did)
-	// {
-	// 	if ( gf_isLogin() )
-	// 	{
-	// 		redirect(site_url('chat/channel/'.$did), 'get');
+	 public function channel($email, $did)
+	 {
+	 	if ( gf_isLogin() )
+	 	{
+	 		redirect(site_url('chat/channel/'.$did), 'get');
 			
-	// 		return;	
-	// 	}
+	 		return;	
+	 	}
 
-	// 	$data['body_class'] = 'home';
+	 	$data['body_class'] = 'home';
 
-	// 	$data['page_title'] = 'Welcome! Relayy';
+	 	$data['page_title'] = 'Welcome! Relayy';
 
- //    	$data['current_section'] = 'home';
+     	$data['current_section'] = 'home';
 
- //    	$data['js_home'] = 2;
+     	$data['js_home'] = 2;
+        
+        $data['email'] = urldecode($email);
+        
+        $data['did'] = $did;
     
- //    	$this->load->view('templates/header-home');
+    	$this->load->view('templates/header-home');
 		
-	// 	$this->load->view('home');
+	 	$this->load->view('home', $data);
 
-	// 	$this->load->view('templates/footer', $data);	
-	// }
+	 	$this->load->view('templates/footer', $data);	
+	 }
 
 	public function logout()
 	{

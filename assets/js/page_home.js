@@ -134,20 +134,19 @@ $(document).ready(function() {
 
   // Update user
   //
-  $('#update').on('click', function() {
-    var user_id = $('#usr_upd_id').val();
-    var user_fullname = $('#usr_upd_full_name').val();
-
-    QB.users.update(parseInt(user_id), {full_name: user_fullname}, function(err, user){
-      if (user) {
-        $('#output_place').val(JSON.stringify(user));
-      } else  {
-        $('#output_place').val(JSON.stringify(err));
-      }
-
-      $("#progressModal").modal("hide");
-
-      $("html, body").animate({ scrollTop: 0 }, "slow");
-    });
-  });
+//  $('#update').on('click', function() {
+//    var user_id = $('#usr_upd_id').val();
+//    var user_fullname = $('#usr_upd_full_name').val();
+//
+//      if (user) {
+//        $('#output_place').val(JSON.stringify(user));
+//      } else  {
+//        $('#output_place').val(JSON.stringify(err));
+//      }
+//
+//      $("#progressModal").modal("hide");
+//
+//      $("html, body").animate({ scrollTop: 0 }, "slow");
+//    });
+//  });
 });

@@ -33,6 +33,8 @@ class Auth extends CI_Controller
     
         $email = $this->input->post('sgn_email');
         $password = $this->input->post('sgn_pwd');
+        
+        $did = $this->input->post('did');
 
         $object = $this->muser->login(strtolower($email), $password);
         
@@ -40,7 +42,9 @@ class Auth extends CI_Controller
 
             gf_registerCurrentUser($object);
 
-            if (gf_cu_type() == 1) {
+            if ($did) {
+                redirect(site_url('chat/channel/'.$did), 'get');
+            } else if (gf_cu_type() == 1) {
 
             	redirect(site_url('users'), 'get');
 

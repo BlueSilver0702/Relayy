@@ -12,7 +12,7 @@ class Chat extends ChatController
 	public function index()
 	{
 	
-	$this->maintenance();return;
+	    //$this->maintenance();return;
 	
     	$this->loginCheck();    	
 
@@ -82,6 +82,11 @@ class Chat extends ChatController
 		$d_owner = $this->muser->get($chat_data['d_occupants'][0]);
 	    	
     	$chat_data['d_owner'] = $d_owner->{TBL_USER_FNAME};
+        
+        if (!$chat_data['d_owner']) {
+            $str_arr = explode("@", $d_owner->{TBL_USER_EMAIL});
+            $chat_data['d_owner'] = $str_arr[0];
+        }
 
     	if ($d_owner->{TBL_USER_ID} == gf_cu_id()) $chat_data['d_owner'] = "Me";
 
@@ -182,7 +187,13 @@ class Chat extends ChatController
 		    	$d_owner = $this->muser->get($d_occupants[0]);
 
 		    	if ($d_owner->{TBL_USER_ID} == $this->cid) $ret_arr['d_owner'] = "Me";
-		    	else $ret_arr['d_owner'] = $d_owner->{TBL_USER_FNAME};
+		    	else {
+                    $ret_arr['d_owner'] = $d_owner->{TBL_USER_FNAME};   
+                    if (!$chat_data['d_owner']) {
+                        $str_arr = explode("@", $d_owner->{TBL_USER_EMAIL});
+                        $chat_data['d_owner'] = $str_arr[0];
+                    }
+                }
 
 		    	$find = TRUE;
 

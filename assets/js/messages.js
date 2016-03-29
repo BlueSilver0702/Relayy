@@ -177,6 +177,7 @@ function clickSendAttachments(inputFile) {
 
 // send text or attachment
 function sendMessage(text, attachmentFileId) {
+    
   var msg = {
     type: currentDialog.type === 3 ? 'chat' : 'groupchat',
     body: text,
@@ -202,6 +203,8 @@ function sendMessage(text, attachmentFileId) {
       showMessage(currentUser.id, msg, attachmentFileId);
     }
   } else {
+    console.log("### current dialog");
+    console.log(resultStanza); 
     QB.chat.send(currentDialog.xmpp_room_jid, msg);
   }
 

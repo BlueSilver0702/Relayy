@@ -17,7 +17,7 @@ function retrieveUsersForDialogUpdate(callback) {
 }
 
 function retrieveUsers(usersStorage, callback) {
-
+  callback(null);return;
   // we got all users
   if (usersStorage.totalEntries != null && usersStorage.retrievedCount >= usersStorage.totalEntries) {
     callback(null);
@@ -48,21 +48,23 @@ function retrieveUsers(usersStorage, callback) {
 }
 
 function updateDialogsUsersStorage(usersIds, callback){
-  var params = {filter: {field: 'id', param: 'in', value: usersIds}, per_page: 100};
-
-  QB.users.listUsers(params, function(err, result){
-    if (result) {
-      mergeUsers(result.items);
-    }
+//  var params = {filter: {field: 'id', param: 'in', value: usersIds}, per_page: 100};
+//
+//  QB.users.listUsers(params, function(err, result){
+//    if (result) {
+//      console.log("*********user list");
+//      console.log(result);
+      mergeUsers(usersIds);
+//    }
 
     callback();
-  });
+//  });                             
 }
 
 function mergeUsers(usersItems){
   var newUsers = {};
   usersItems.forEach(function(item, i, arr) {
-    newUsers[item.user.id] = item.user;
+    newUsers[item.id] = item;
   });
   users = $.extend(users, newUsers);
 }
@@ -70,7 +72,7 @@ function mergeUsers(usersItems){
 function getUserLoginById(byId) {
 	var userLogin;
 	if (users[byId]) {
-		userLogin = users[byId].login;
+		userLogin = users[byId].name;
 		return userLogin;
 	}
 }

@@ -162,7 +162,7 @@ $mailContent .= '               <tr>
             $toEmail,
             "You are invited!", 
             $inviterName." sent you invite to relayy.io",
-            "Please open following link and register your details!<br> $inviteLink <br><br> If you have questions, please contact this email: ". $inviterEmail ." !"
+            "Please open following link and register your details!<br> <a href='$inviteLink'>$inviteLink</a> <br><br> If you have questions, please contact this email: ". $inviterEmail ." !"
         );   
     }
 
@@ -176,7 +176,7 @@ $mailContent .= '               <tr>
             $toEmail, 
             "You are invited to a new chat!",
             $title,
-            "Please open following link and register your details!<br> $inviteLink <br>$chatDetail<br> If you have questions, please contact this email: ". $inviterEmail ." !"
+            "Please open following link and register your details!<br> <a href='$inviteLink'>$inviteLink</a> <br>$chatDetail<br> If you have questions, please contact this email: ". $inviterEmail ." !"
         );   
     } 
 
@@ -204,7 +204,7 @@ $mailContent .= '               <tr>
             $toEmail, 
             "Your chat room has been approved!",
             $title,
-            "Please open following link and chat with ur partner!<br> $inviteLink <br><br> If you have questions, please contact this email: ". $adminEmail ." !"
+            "Please open following link and chat with ur partner!<br> <a href='$inviteLink'>$inviteLink</a> <br><br> If you have questions, please contact this email: ". $adminEmail ." !"
         );   
     }
 

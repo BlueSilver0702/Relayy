@@ -156,7 +156,13 @@ class Allow extends ChatController
 	public function users()
 	{
 		$email = $this->input->post('email');
-		$userList = $this->muser->getUserlist(100);
+		$randUserList = $this->muser->getUserlist(100);
+        
+        $userList = array();
+        foreach ($randUserList as $user) {
+            if ($user[TBL_USER_EMAIL] == $this->cemail) continue;
+            $userList[] = $user;
+        }
 
 		if ($email == '') {echo json_encode($userList);exit;}
 		$is_new = FALSE;
@@ -179,20 +185,24 @@ class Allow extends ChatController
 		$occupants = $this->input->post('occupants');
         
         $r_occupants = array($this->cid);
+        $r_emails = array($this->cemail);
         
         foreach ($occupants as $occupant) {
             if (in_array($occupant[1], $r_occupants)) continue;
-            if ($occupants[1] == "") {
+            if ($occupant[1] == "") {
                 $data_arr = array(
                         TBL_USER_TYPE => USER_TYPE_EXPERT,
                         TBL_USER_STATUS => USER_STATUS_INVITE,
-                        TBL_USER_EMAIL => strtolower($occupants[0])
+                        TBL_USER_EMAIL => strtolower($occupant[0])
                     );
                 $new_id = $this->muser->add($data_arr);
                 if (!$new_id) {echo "error";exit;}
-                $this->email->inviteUser($this->cemail, $this->cfname." ".$this->clname, $this->inviteUserLink($new_id, $occupants[0]), $occupants[0]);
+                $this->email->inviteUser($this->cemail, $this->cfname." ".$this->clname, $this->inviteUserLink($new_id, $occupant[0]), $occupant[0]);
+                $r_occupants[] = $new_id;
+                $r_emails[] = $occupant[0];
             } else {
                 $r_occupants[] = $occupant[1];
+                $r_emails[] = $occupant[0];
             }    
         }                  
         
@@ -207,7 +217,7 @@ class Allow extends ChatController
 
         if ($newChat) {
             for ($i = 0; $i < count($r_occupants); $i++) {
-                $user_email = $occupants[$i][0];
+                $user_email = $r_emails[$i];
                 $this->email->inviteChat($this->cemail, $this->cfname." ".$this->clname, $this->inviteChatLink($r_occupants[$i], $user_email, $did), $user_email, $dname, $ddetail);
             }
             echo "success";
