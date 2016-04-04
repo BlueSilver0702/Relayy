@@ -12,11 +12,11 @@
     </div>
     <div class="list-group nice-scroll" id="dialogs-list" tabindex="0" style="overflow: hidden; outline: none;">
 <?php 
-    if (isset($history)) {
+    if (isset($history) && $u_status == USER_STATUS_LIVE) {
         foreach ($history as $dialog) {
     ?>
-        <a href="<?= isset($d_current)?'#':site_url('chat/channel/'.$dialog['did']) ?>" class="list-group-item <?php echo $dialog['did'] == $d_id && isset($d_current)?"active":"inactive"; ?>" id="<?= $dialog['did']?>" onclick="triggerDialog('<?= $dialog['did']?>', 1)">
-            <span class="pull-right"><?= $dialog[TBL_CHAT_TIME]?></span>
+        <a href="<?= isset($d_current)?'#':site_url('chat/channel/'.$dialog['did']) ?>" class="list-group-item <?php echo $dialog['did'] == $d_id && isset($d_current)?"active":"inactive"; ?> <?= $dialog[TBL_CHAT_STATUS]==CHAT_STATUS_INIT?"deactive":""?>" id="<?= $dialog['did']?>" onclick="triggerDialog('<?= $dialog['did']?>', 1)">
+            <span class="send-time pull-right"><?= $dialog[TBL_CHAT_TIME]?></span>
             <span class="badge" style="display: none;">0</span>
             <h5 class="list-group-item-heading"><span><strong class="d_title"><?= $dialog['name']?></strong></span></h5>
             <p class="list-group-item-text last-message text-muted"><?= $dialog['h_message']?></p>

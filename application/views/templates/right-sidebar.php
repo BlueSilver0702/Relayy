@@ -1,4 +1,5 @@
 <div class="pull-right" id="r-side">
+<?php if ($d_current != 0) {?>
   <div class="col-md-12 owner" id="information">
     <div id="information_holder">
 	    <h4>
@@ -38,14 +39,14 @@
 	      <h5 class="">
 	        <?= count($d_occupants);?> Members
 <?php if ($d_owner == "Me" && $d_type == 2) {?>
-	        <a class="" onclick="showDialogInfoPopup()">+ Add Members</a>
+	        <a class="" onclick="addMember('<?= $d_id?>')">+ Add Members</a>
 <?php }?>
 	      </h5>
 	      
 	      <ul>
 <?php   foreach ($d_users as $user) {
 $username = '';
-if ($user['fname']) $username = $user['fname'];
+if ($user['fname']) $username = $user['fname']." ".$user['lname'];
 else {
     $str_arr = explode("@", $user['email']);
     $username = $str_arr[0];
@@ -71,4 +72,5 @@ else {
     
     </div>
   </div>
+<?php } ?>
 </div>

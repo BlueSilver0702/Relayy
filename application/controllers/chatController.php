@@ -53,6 +53,8 @@ class ChatController extends CI_Controller
 	{   	
 
 		$dialog_arr = $this->mchat->getDialogs(gf_cu_id());
+        
+        //print_r($dialog_arr);exit;
 
 		$chat_data = array();
 
@@ -88,7 +90,9 @@ class ChatController extends CI_Controller
 	    	$chat_data['d_noti'] = $this->moption->get($this->cid, 'notify_'.$chat_data['d_id']);
 
 	    	if ($d_owner->{TBL_USER_ID} == gf_cu_id()) $chat_data['d_owner'] = "Me";
-		}
+		} else {
+            $chat_data['d_id'] = 0;
+        }
     	
         foreach ($dialog_arr as &$dialog) {
             foreach (json_decode($dialog[TBL_CHAT_OCCUPANTS]) as $occupant) {
@@ -99,12 +103,12 @@ class ChatController extends CI_Controller
             }
             if ($dialog[TBL_CHAT_SENDER]) {
                 $sender = $this->muser->get($dialog[TBL_CHAT_SENDER]);
-                $dialog['h_message'] = $sender->{TBL_USER_FNAME} . ": " . $dialog[TBL_CHAT_MESSAGE];
+                $dialog['h_message'] = $sender->{TBL_USER_FNAME}." ".$sender->{TBL_USER_LNAME}. ": " . $dialog[TBL_CHAT_MESSAGE];
             } else {
                 if ($dialog[TBL_CHAT_TYPE] == CHAT_TYPE_PRIVATE)
-                    $dialog['h_message'] = $dialog['d_users'][0][TBL_USER_FNAME].": Created a new 1:1 chat";
+                    $dialog['h_message'] = $dialog['d_users'][0][TBL_USER_FNAME]." ".$dialog['d_users'][0][TBL_USER_LNAME].": Created a new 1:1 chat";
                 else
-                    $dialog['h_message'] = $dialog['d_users'][0][TBL_USER_FNAME].": Created a new Group chat"; 
+                    $dialog['h_message'] = $dialog['d_users'][0][TBL_USER_FNAME]." ".$dialog['d_users'][0][TBL_USER_LNAME].": Created a new Group chat"; 
             }
             
             $dialog[TBL_CHAT_TIME] = $this->timeAgo($dialog[TBL_CHAT_TIME]);

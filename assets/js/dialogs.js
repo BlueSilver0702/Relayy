@@ -1,4 +1,3 @@
-
 var dialogs = {};
 var currentDType = 2;
 
@@ -121,7 +120,25 @@ function retrieveDialog() {
 
       //  and trigger the 1st dialog
       //
-      triggerDialog(DialogID);
+      if (DialogStatus) {
+        triggerDialog(DialogID);  
+      } else {
+        if ($('body').hasClass("chat-page") && DialogJID) {
+       BootstrapDialog.alert({
+                title: 'Alert',
+                message: 'This Chat Room is not approved by admin!',
+                type: BootstrapDialog.TYPE_WARNING,
+                closable: true,
+                draggable: true,
+                buttonLabel: 'Cancel'
+            });  
+       $("#attach_btn").prop('disabled', true);
+       $("#message_text").prop('disabled', true);
+       $("#send_btn").prop('disabled', true);
+        }
+        
+      }
+        
 
       // hide login form
       // $("#loginForm").modal("hide");
@@ -247,13 +264,13 @@ function showOrUpdateDialogInUI(itemRes, updateHtml) {
   }
 
   if (updateHtml === true) {
-  	var updatedDialogHtml = buildDialogHtml(dialogId, dialogUnreadMessagesCount, dialogIcon, dialogName, dialogLastMessage);
-  	$('#dialogs-list').prepend(updatedDialogHtml);
-  	$('.list-group-item.active .badge').text(0).hide(0);
-	} else {
+      var updatedDialogHtml = buildDialogHtml(dialogId, dialogUnreadMessagesCount, dialogIcon, dialogName, dialogLastMessage);
+      $('#dialogs-list').prepend(updatedDialogHtml);
+      $('.list-group-item.active .badge').text(0).hide(0);
+    } else {
     var dialogHtml = buildDialogHtml(dialogId, dialogUnreadMessagesCount, dialogIcon, dialogName, dialogLastMessage);
     $('#dialogs-list').append(dialogHtml);
-	}
+    }
 }
 
 // add photo to dialogs
@@ -271,7 +288,7 @@ function getDialogIcon (dialogType) {
       dialogIcon = groupPhoto;
       break;
     case 3:
-    	dialogIcon = privatPhoto;
+        dialogIcon = privatPhoto;
       break;
     default:
       dialogIcon = defaultPhoto;
@@ -281,7 +298,7 @@ function getDialogIcon (dialogType) {
 }
 
 // show unread message count and new last message
-function updateDialogsList(dialogId, text){
+function updateDialogsList(dialogId, text, senderTime){
 
   // update unread message count
   var badgeCount = $('#'+dialogId+' .badge').html();
@@ -289,6 +306,28 @@ function updateDialogsList(dialogId, text){
 
   // update last message
   $('#'+dialogId+' .list-group-item-text').text(text);
+  $('#'+dialogId+' .send-time').text(senderTime);
+  var firstObj = $('#dialogs-list').children('.list-group-item:first');
+  if (dialogId != firstObj.attr('id')) {
+    //  alert(parentObj.attr('id'));
+    $('#'+dialogId).insertBefore(firstObj);    
+  }
+}
+
+function updateDialogsDB(dialogId, senderID, text){
+    $.ajax({
+        url: site_url + 'chat/msgUpdate',
+        data: {
+            did: dialogId,
+            sender: senderID,
+            msg: text
+        },
+        success: function(data) {
+            console.log("update-dialog-db: ");
+            console.log(data);
+        },
+        type: 'POST'
+    });            
 }
 
 // Choose dialog

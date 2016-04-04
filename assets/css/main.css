@@ -416,8 +416,12 @@ body {
     border: 1px solid #ddd;
 }
 
-.allow-page .bootstrap-dialog.type-primary .modal-body {
+.allow-page .bootstrap-dialog.type-primary .modal-body, .chat-page .bootstrap-dialog.type-primary .modal-body {
     padding:0;
+}
+
+#dialogs-list .list-group-item .badge {
+    clear:both;
 }
 
 #channel_edit ul {
@@ -518,4 +522,16 @@ img.avatar.avatar_small {
 
 #dialogs-list .list-group-item.active .list-group-item-text {
     color: #777!important;
+}
+
+.sender-pic {
+    margin-right:10px;
+}
+
+#main_block .pre-scrollable {
+    max-height: 600px!important;
+}
+
+#l-side .list-group-item.deactive {
+    border-left: 4px solid #eea236!important;
 }

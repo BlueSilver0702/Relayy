@@ -25,7 +25,7 @@
         </div>
         <form class="pull-right search" method="post" action="<?php echo site_url('search')?>">
           <span class="glyphicon glyphicon-search"></span>
-          <input type="text" placeholder="search contact" class="search-box" name="search">
+          <input type="text" placeholder="search contact" class="search-box" name="search" value="<?= isset($search)?$search:""?>">
         </form>
         <div id="icon-list" class="pull-right">
 <?php if ($u_status < 2) {?>

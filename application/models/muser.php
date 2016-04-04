@@ -61,6 +61,19 @@ class Muser extends CI_Model {
         return $query->result_array();
 
     }
+    
+    public function searchUserlist($searchText = "")
+    {
+        $query = $this->db->select('*')
+                      ->or_like(TBL_USER_FNAME, $searchText, 'both')
+                      ->or_like(TBL_USER_LNAME, $searchText, 'both')
+                      ->or_like(TBL_USER_EMAIL, $searchText, 'both')
+                      ->where(TBL_USER_STATUS, USER_STATUS_LIVE)
+                      ->get(TBL_NAME_USER);
+
+        return $query->result_array();
+
+    }
 
     public function get($where_id)
     {

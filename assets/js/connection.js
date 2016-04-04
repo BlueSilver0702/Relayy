@@ -25,8 +25,8 @@ function connectToChat(user) {
       // save session token
       token = res.token;
 
-      user.id = res.user_id;
-      mergeUsers([{user: user}]);
+      //user.id = res.user_id;
+      //mergeUsers([{user: user}]);
 
       QB.chat.connect({userId: user.id, password: QBApp.authKey}, function(err, roster) {
         if (err) {

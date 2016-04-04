@@ -259,5 +259,137 @@ class Chat extends ChatController
         exit;	
 	}
 
+    public function msgUpdate() {
+        $did = $this->input->post('did');
+        $uid = $this->input->post('sender');
+        $msg = $this->input->post('msg');
+           
+        echo $this->mchat->update($did, array(
+            TBL_CHAT_SENDER => $uid,
+            TBL_CHAT_MESSAGE => $msg,
+            TBL_CHAT_TIME => date('Y-m-d H:i:s')
+        ));
 
+        exit;
+    }
+    
+    public function users()
+    {
+        $email = $this->input->post('email');
+        $randUserList = $this->muser->getUserlist(100);
+        
+        $userList = array();
+        foreach ($randUserList as $user) {
+            if ($user[TBL_USER_EMAIL] == $this->cemail) continue;
+            $userList[] = $user;
+        }
+
+        if ($email == '') {echo json_encode($userList);exit;}
+        $is_new = FALSE;
+        foreach ($userList as $user) {
+            if ($user[TBL_USER_EMAIL] == $email) {
+                $is_new = TRUE;
+                echo json_encode(array($user)); exit;
+            }
+        }
+        if (!$is_new) echo json_encode(array());exit;
+    }
+
+    public function newChat()
+    {
+        $did = $this->input->post('did');
+        $jid = $this->input->post('jid');
+        $dname = $this->input->post('dname');
+        $ddetail = $this->input->post('ddesc');
+        $dtype = $this->input->post('type');
+        $occupants = $this->input->post('occupants');
+        
+        $r_occupants = array($this->cid);
+        $r_emails = array($this->cemail);
+        
+        foreach ($occupants as $occupant) {
+            if (in_array($occupant[1], $r_occupants)) continue;
+            if ($occupant[1] == "") {
+                $data_arr = array(
+                        TBL_USER_TYPE => USER_TYPE_EXPERT,
+                        TBL_USER_STATUS => $this->ctype!=USER_TYPE_EXPERT?USER_STATUS_INVITE:USER_STATUS_INIT,
+                        TBL_USER_EMAIL => strtolower($occupant[0])
+                    );
+                $new_id = $this->muser->add($data_arr);
+                if (!$new_id) {echo "error";exit;}
+                $this->email->inviteUser($this->cemail, $this->cfname." ".$this->clname, $this->inviteUserLink($new_id, $occupant[0]), $occupant[0]);
+                $r_occupants[] = $new_id;
+                $r_emails[] = $occupant[0];
+            } else {
+                $r_occupants[] = $occupant[1];
+                $r_emails[] = $occupant[0];
+            }    
+        }                  
+        
+        $newChat = $this->mchat->add(array(
+                TBL_CHAT_DID => $did,
+                TBL_CHAT_NAME => $dname,
+                TBL_CHAT_OCCUPANTS => json_encode($r_occupants),
+                TBL_CHAT_TYPE => $dtype,
+                TBL_CHAT_STATUS => $this->ctype!=USER_TYPE_EXPERT?CHAT_STATUS_LIVE:CHAT_STATUS_INIT,
+                TBL_CHAT_JID => $jid
+            ));
+
+        if ($newChat) {
+            for ($i = 0; $i < count($r_occupants); $i++) {
+                $user_email = $r_emails[$i];
+                $this->email->inviteChat($this->cemail, $this->cfname." ".$this->clname, $this->inviteChatLink($r_occupants[$i], $user_email, $did), $user_email, $dname, $ddetail);
+            }
+            echo "success";
+        }
+        else echo "error";
+        exit;
+    }
+    
+    function addMember()
+    {
+        $did = $this->input->post('did');
+        $occupants = $this->input->post('occupants');
+        
+        $r_occupants = array();
+        $r_emails = array();
+        
+        $newChat = $this->mchat->get($did);
+
+        foreach ($occupants as $occupant) {
+            if ($occupant[1] == "") {
+                $data_arr = array(
+                        TBL_USER_TYPE => USER_TYPE_EXPERT,
+                        TBL_USER_STATUS => $this->ctype!=USER_TYPE_EXPERT?USER_STATUS_INVITE:USER_STATUS_INIT,
+                        TBL_USER_EMAIL => strtolower($occupant[0])
+                    );
+                $new_id = $this->muser->add($data_arr);
+                if (!$new_id) {echo "error";exit;}
+                $this->email->inviteUser($this->cemail, $this->cfname." ".$this->clname, $this->inviteUserLink($new_id, $occupant[0]), $occupant[0]);
+                $r_occupants[] = $new_id;
+                $r_emails[] = $occupant[0];
+            } else {
+                $r_occupants[] = $occupant[1];
+                $r_emails[] = $occupant[0];
+            }    
+        }                  
+        
+        for ($i = 0; $i < count($r_occupants); $i++) {
+            $user_email = $r_emails[$i];
+            $this->email->inviteChat($this->cemail, $this->cfname." ".$this->clname, $this->inviteChatLink($r_occupants[$i], $user_email, $did), $user_email, $newChat->{TBL_CHAT_NAME}, "");
+        }
+        
+        $n_occupants = json_decode($newChat->{TBL_CHAT_OCCUPANTS});
+        foreach ($r_occupants as $uid) {
+            if (!in_array($uid, $n_occupants)) $n_occupants[] = $uid;
+        }
+        
+        $this->mchat->update($did, array(
+            TBL_CHAT_OCCUPANTS => json_encode($n_occupants)
+        ));
+        
+        echo "success";
+    
+        exit;
+    }
 }

@@ -1,14 +1,14 @@
 // build html for messages
-function buildMessageHTML(messageText, messageSenderId, messageDateSent, attachmentFileId, messageId, status){
+function buildMessageHTML(messageText, messageSenderId, messageSenderPic, messageDateSent, attachmentFileId, messageId, status){
   var messageAttach;
   if(attachmentFileId){
       messageAttach = '<img src="http://api.quickblox.com/blobs/'+attachmentFileId+'/download.xml?token='+token+'" alt="attachment" class="attachments img-responsive" />';
   }
   var delivered = '<img class="icon-small" src="assets/images/delivered.jpg" alt="" id="delivered_'+messageId+'">';
-  var read = '<img class="icon-small" src="assets/images/read.jpg" alt="" id="read_'+messageId+'">';
+  var read = '<img class="icon-small" src="'+site_url+'assets/images/read.jpg" alt="" id="read_'+messageId+'">';
 
   var messageHtml = '<div class="list-group-item" id="'+messageId+'" onclick="clickToAddMsg('+"'"+messageId+"'"+')">'+'<time datetime="'+messageDateSent+
-                    '" class="pull-right">'+jQuery.timeago(messageDateSent)+'</time>'+'<h4 class="list-group-item-heading">'+messageSenderId+'</h4>'+
+                    '" class="pull-right">'+jQuery.timeago(messageDateSent)+'</time>'+'<img class="sender-pic pull-left round" width="30" height="30" src="'+messageSenderPic+'">'+'<h4 class="list-group-item-heading">'+messageSenderId+'</h4>'+
                     '<p class="list-group-item-text">'+(messageAttach ? messageAttach : messageText)+'</p>'+delivered+read+'</div>';
   return messageHtml;
 }
@@ -58,14 +58,14 @@ function buildMetaHtml(jsonData) {
   }
     retHtml += '</div><div class="information_members"><h5 class="">'+jsonObj.d_users.length+' Members';
   if (jsonObj.d_owner == "Me" && jsonObj.d_type == "2") {
-    retHtml += '<a class="" onclick="showDialogInfoPopup()">+ Add Members</a>';
+    retHtml += '<a class="" onclick="addMember(\''+jsonObj.d_id+'\')">+ Add Members</a>';
   }  
     retHtml += '</h5><ul>';
   for (var i=0; i<jsonObj.d_users.length; i++) {
     var d_user = jsonObj.d_users[i];
     var username = '';
     if (d_user.fname) {
-        username = d_user.fname;
+        username = d_user.fname+" "+d_user.lname;
     } else {
         var strArr = d_user.email.split("@");
         username = strArr[0];

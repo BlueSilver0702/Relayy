@@ -17,7 +17,7 @@
 	</ul>
 
 	<div class="user-content">
-<?php 
+<?php
 	foreach ($chats as $chat) {
 
 		if ($chat['type'] == CHAT_TYPE_WELCOME) continue;
@@ -25,7 +25,7 @@
 		if ($chat['status'] != 1 && $page == 2) continue;
 
 		$emails = json_encode($chat['emails']);
-		?>
+?>
 	  <div class="row">
 	  	<div class="col-sm-1"><img src="<?= $chat['type']==CHAT_TYPE_PRIVATE?asset_base_url().'/images/ava-single.svg':asset_base_url().'/images/ava-group.svg'?>" width="38"></div>
 	    <div class="col-sm-2"><span><?= $chat['name']?></span></div>

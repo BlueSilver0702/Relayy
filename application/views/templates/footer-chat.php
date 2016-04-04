@@ -17,21 +17,22 @@
             var site_url = '<?= site_url()?>';
             var DialogID = '<?php if (isset($d_id)) echo $d_id?>';
             var DialogJID = '<?php if (isset($d_jid)) echo $d_jid?>';
+            var DialogStatus = <?= isset($d_status)&&$d_status==CHAT_STATUS_LIVE?"1":"0"?>; 
 <?php
             $djids = array();
             $duids = array();
+            $duidFlag = array();
             foreach ($history as $dialog) {
                 $djids[] = $dialog[TBL_CHAT_JID];
+                foreach ($dialog['d_users'] as $duser) {
+                    if (!in_array($duser[TBL_USER_EMAIL], $duidFlag)) {
+                        $nameArr = explode("@", $duser[TBL_USER_EMAIL]);
+                        $fname = $nameArr[0];
+                        $duids[] = array("id"=>$duser[TBL_USER_UID], "sid"=>$duser[TBL_USER_ID], "photo"=>$duser[TBL_USER_PHOTO]?$duser[TBL_USER_PHOTO]:asset_base_url()."/images/emp-sm.jpg", "name"=>$duser[TBL_USER_FNAME]?$duser[TBL_USER_FNAME]." ".$duser[TBL_USER_LNAME]:$fname);
+                        $duidFlag[] = $duser[TBL_USER_EMAIL];    
+                    }
+                }
             }      
-            
-            foreach ($d_users as $duser) {
-                $nameArr = explode("@", $duser[TBL_USER_EMAIL]);
-                $fname = $nameArr[0];
-                $duids[] = array("id"=>$duser[TBL_USER_UID], "sid"=>$duser[TBL_USER_ID], "photo"=>$duser[TBL_USER_PHOTO]?$duser[TBL_USER_PHOTO]:asset_base_url()."/images/emp-sm.jpg", "name"=>$duser[TBL_USER_FNAME]?$duser[TBL_USER_FNAME].$duser[TBL_USER_LNAME]:$fname);
-            }
-//            foreach ($d_users as $duser) {
-//                $duids[] = $duser[TBL_USER_UID];
-//            }
 ?>
             var DialogUIDS = <?= json_encode($duids)?>;
             
@@ -142,7 +143,7 @@ function sendInvite(userType) {
 
 </script>
 <?php 
-} else if ($body_class == "allow-page") {?>
+} else if ($body_class == "allow-page" || $body_class == "chat-page") {?>
 <script>
 function delAction(obj, did, dname) {
     var delObj = $(obj);
@@ -208,7 +209,7 @@ function createChat(type) {
                         occupants.push([$("#selected li").data("email"), $("#selected li").data("uid")]);
                                   
                         $.ajax({
-                           url: site_url + 'allow/newChat',
+                           url: site_url + '<?= $body_class=='allow-page'?'allow/newChat':'chat/newChat'?>',
                            data: {
                               did: createdDialog._id,
                               jid: createdDialog.xmpp_room_jid,
@@ -283,7 +284,7 @@ function createChat(type) {
                       });
                       
                       $.ajax({
-                           url: site_url + 'allow/newChat',
+                           url: site_url + '<?= $body_class=='allow-page'?'allow/newChat':'chat/newChat'?>',
                            data: {
                               did: createdDialog._id,
                               jid: createdDialog.xmpp_room_jid,
@@ -312,6 +313,62 @@ function createChat(type) {
     }  
 }
 
+function addMember(did) {
+    title = "Add New Members";
+    BootstrapDialog.show({
+        type: BootstrapDialog.TYPE_PRIMARY,
+        title: title,
+        message: '<div id="channel_edit">'+
+                  '<label class="d-label">'+
+                    '<span>ADD TEAM MEMBERS</span>'+
+                      '<input type="text" placeholder="Search email" onkeypress="handle(event, this, 2)">'+
+                  '</label>'+
+
+                  '<ul id="selected">'+
+                  '</ul>'+
+
+                  '<ul id="contacts">'+
+                  '</ul>'+
+                  '</div>',
+        buttons: [{
+            label: 'Cancel',
+            action: function(dialogRef){
+                dialogRef.close();
+            }
+        }, {
+            label: 'Send Invite',
+            cssClass: 'btn-primary',
+            icon: 'glyphicon glyphicon-send',
+            autospin: true,                
+            action: function(dialogRef) {  
+              var occupants = [];
+              $("#selected li").each(function(){
+                occupants.push([$(this).data("email"), $(this).data("uid")]);
+              });
+              
+              $.ajax({
+                   url: site_url + 'chat/addMember',
+                   data: {
+                      did: did,
+                      occupants: occupants
+                   },
+                   success: function(data) {
+                      if (data == "success")
+                        location.reload();
+                      else
+                        alert(data);
+                   },
+                   type: 'POST'
+              });
+            }
+        }]
+    });
+
+    getUsers('', function(data) {
+      buildUsersHTML(data, '', 2);
+    });
+}
+
 function handle(e, object, type) {
     var key=e.keyCode || e.which;
     if (key==13){
@@ -327,7 +384,7 @@ function handle(e, object, type) {
 // var chatusers = [];
 function getUsers(email, callback) {
     $.ajax({
-       url: site_url + 'allow/users',
+       url: site_url + '<?= $body_class=='allow-page'?'allow/users':'chat/users'?>',
        data: {
           email: email
        },
@@ -400,7 +457,56 @@ function tagClose(obj) {
 }
 </script>
 <?php 
+} else if ($body_class == "search-page") {?>
+<script>
+function searchChat(obj, uid) {
+    BootstrapDialog.show({
+        type: BootstrapDialog.TYPE_INFO,
+        title: "Confirm",
+        message: 'Are you sure to create 1:1 chat with this user?',
+        buttons: [{
+            label: 'Cancel',
+            action: function(dialogRef){
+                dialogRef.close();
+            }
+        }, {
+            label: 'Create',
+            cssClass: 'btn-info',
+            icon: 'glyphicon glyphicon-send',
+            autospin: true,                
+            action: function(dialogRef) {  
+              var params = {
+                type: 1,
+                name: "Private"
+              };
+
+              QB.chat.dialog.create(params, function(err, createdDialog) {
+                if (err) {
+                  console.log(err);
+                  alert(err);
+                } else {  
+                    $.ajax({
+                       url: site_url + 'search/action',
+                       data: {
+                          did: createdDialog._id,
+                          jid: createdDialog.xmpp_room_jid,
+                          occupant: uid
+                       },
+                       success: function(data) {
+                          if (data == "success")
+                            location.reload();
+                          else
+                            alert(data);
+                       },
+                       type: 'POST'
+                    });
+                }
+              });
+            }
+        }]
+    });
 }
-?>
+</script>
+<?php } ?>
     </body>
 </html>

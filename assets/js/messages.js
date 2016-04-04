@@ -50,7 +50,9 @@ function onMessage(userId, msg) {
   }
   // Here we process the regular messages
   //
-  updateDialogsList(msg.dialog_id, msg.body);
+  var sendDate = new Date();
+  updateDialogsList(msg.dialog_id, getUserLoginById(userId)+": "+msg.body, jQuery.timeago(sendDate));
+  updateDialogsDB(msg.dialog_id, getUserIDById(userId), msg.body);
 }
 
 function sendReadStatus(userId, messageId, dialogId) {
@@ -107,6 +109,7 @@ function retrieveChatMessages(dialog, beforeDateSent){
           var messageSenderId = item.sender_id;
           var messageDateSent = new Date(item.date_sent*1000);
           var messageSenderLogin = getUserLoginById(messageSenderId);
+          var messageSenderPic = getUserPicById(messageSenderId);
 
           // send read status
           if (item.read_ids.indexOf(currentUser.id) === -1) {
@@ -120,7 +123,7 @@ function retrieveChatMessages(dialog, beforeDateSent){
             }
           }
 
-          var messageHtml = buildMessageHTML(messageText, messageSenderLogin, messageDateSent, messageAttachmentFileId, messageId);
+          var messageHtml = buildMessageHTML(messageText, messageSenderLogin, messageSenderPic, messageDateSent, messageAttachmentFileId, messageId);
 
           $('#messages-list').prepend(messageHtml);
 
@@ -195,7 +198,7 @@ function sendMessage(text, attachmentFileId) {
     opponentId = QB.chat.helpers.getRecipientId(currentDialog.occupants_ids, currentUser.id);
     QB.chat.send(opponentId, msg);
 
-    $('.list-group-item.active .list-group-item-text').text(msg.body);
+    //$('.list-group-item.active .list-group-item-text').text(msg.body);
 
     if(attachmentFileId === null){
       showMessage(currentUser.id, msg);
@@ -203,8 +206,8 @@ function sendMessage(text, attachmentFileId) {
       showMessage(currentUser.id, msg, attachmentFileId);
     }
   } else {
-    console.log("### current dialog");
-    console.log(resultStanza); 
+    //console.log("### current dialog");
+    //console.log(resultStanza); 
     QB.chat.send(currentDialog.xmpp_room_jid, msg);
   }
 
@@ -219,7 +222,8 @@ function sendMessage(text, attachmentFileId) {
 function showMessage(userId, msg, attachmentFileId) {
   // add a message to list
   var userLogin = getUserLoginById(userId);
-  var messageHtml = buildMessageHTML(msg.body, userLogin, new Date(), attachmentFileId, msg.id);
+  var messageSenderPic = getUserPicById(userId);
+  var messageHtml = buildMessageHTML(msg.body, userLogin, messageSenderPic, new Date(), attachmentFileId, msg.id);
 
   $('#messages-list').append(messageHtml);
 

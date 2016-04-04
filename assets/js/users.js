@@ -76,3 +76,17 @@ function getUserLoginById(byId) {
 		return userLogin;
 	}
 }
+
+function getUserPicById(byId) {
+    if (users[byId]) {
+        userLogin = users[byId].photo;
+        return userLogin;
+    }
+}
+
+function getUserIDById(byId) {
+    if (users[byId]) {
+        userLogin = users[byId].sid;
+        return userLogin;
+    }
+}
