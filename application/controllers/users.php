@@ -153,7 +153,7 @@ class Users extends ChatController
 
 		$userObj = $this->muser->changeStatus($uid);
 
-		if ($userObj->{TBL_USER_TYPE} == USER_TYPE_ADMIN) $this->email->approveUser($this->cemail, $this->cfname." ".$this->clname, $userObj->{TBL_USER_EMAIL});
+		if ($userObj->{TBL_USER_STATUS} == USER_STATUS_LIVE) $this->email->approveUser($this->cemail, $this->cfname." ".$this->clname, $userObj->{TBL_USER_EMAIL});
 		else $this->email->deproveUser($this->cemail, $this->cfname." ".$this->clname, $userObj->{TBL_USER_EMAIL});
 
 		if ($page == 0) {
@@ -175,11 +175,20 @@ class Users extends ChatController
 
 		$emailAddress = urldecode($email);
 
-		$newID = $this->muser->add(array(
-            TBL_USER_TYPE => $type,
-            TBL_USER_STATUS => USER_STATUS_INVITE,
-            TBL_USER_EMAIL => strtolower($emailAddress)
-        ));
+        $oldUser = $this->muser->getEmail($emailAddress);
+        
+        $newID = NULL;
+        
+        if ($oldUser) {
+            $newID = $oldUser->{TBL_USER_ID};
+            $this->muser->edit($newID, array(TBL_USER_STATUS=>USER_STATUS_INVITE));
+        } else {
+            $newID = $this->muser->add(array(
+                TBL_USER_TYPE => $type,
+                TBL_USER_STATUS => USER_STATUS_INVITE,
+                TBL_USER_EMAIL => strtolower($emailAddress)
+            ));    
+        }
 
 		$this->email->inviteUser($this->cemail, $this->cfname." ".$this->clname, $this->inviteUserLink($newID, $emailAddress), $emailAddress);
 

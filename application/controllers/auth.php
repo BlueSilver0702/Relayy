@@ -35,11 +35,13 @@ class Auth extends CI_Controller
         $password = $this->input->post('sgn_pwd');
         
         $did = $this->input->post('did');
-
-        $object = $this->muser->login(strtolower($email), $password);
         
-        if($object) {
+        $login_status = $this->muser->login(strtolower($email), $password);
+        
+        if($login_status == USER_LOGIN_SUCCESS) {
 
+            $object = $this->muser->getEmail($email);
+            
             gf_registerCurrentUser($object);
 
             if ($did) {
@@ -55,8 +57,12 @@ class Auth extends CI_Controller
             }
 
         } else {
-
-            show_error("An Error has occurred while logging in!", 500, "Login Error");
+            if ($login_status == USER_LOGIN_DELETE)
+                show_error("Your account had been deleted by admin!", 500, "Login Error");
+            else if ($login_status == USER_LOGIN_PWD)
+                show_error("Login password is incorrect!", 500, "Login Error");
+            else 
+                show_error("Couldn't find user on Relayy!", 500, "Login Error");
         }	
 	}
 
@@ -104,6 +110,12 @@ class Auth extends CI_Controller
         $login = $this->input->post('li_login');
         $photo = $this->input->post('li_photo');
         $bio = $this->input->post('li_bio');
+        
+        $role = $this->input->post('li_role');
+        
+        if (!$role) $role = USER_TYPE_EXPERT;
+
+        $userObj = $this->muser->getEmail($email);
 
 		$object = $this->muser->register(
                 array(
@@ -113,16 +125,17 @@ class Auth extends CI_Controller
                     TBL_USER_EMAIL => strtolower($email),
                     TBL_USER_FACEBOOK => $login,
                     TBL_USER_PHOTO => $photo,
-                    TBL_USER_BIO   => $bio
+                    TBL_USER_BIO   => $bio,
+                    TBL_USER_TYPE  => $role
                     )
             );
         
-        // print_r($object);exit;
         if($object) {
 
             gf_registerCurrentUser($object);
 
-            $this->email->linkedin(strtolower($email), $fname." ".$lname);
+            if ($userObj == FALSE)
+                $this->email->linkedin(strtolower($email), $fname." ".$lname);
 
             if (gf_cu_type() == 1) {
 

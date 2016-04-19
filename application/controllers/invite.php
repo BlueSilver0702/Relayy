@@ -109,10 +109,14 @@ class Invite extends CI_Controller
         
         if (!$user) show_error("An Error has occurred while registering!", 500, "Register Error");
 
-		$object = $this->muser->login($user->{TBL_USER_EMAIL}, $password);
-        
-        if($object) {
+		// $object = $this->muser->login($user->{TBL_USER_EMAIL}, $password);
 
+        $login_status = $this->muser->login(strtolower($user->{TBL_USER_EMAIL}), $password);
+        
+        if($login_status == USER_LOGIN_SUCCESS) {
+
+            $object = $this->muser->getEmail($user->{TBL_USER_EMAIL});
+            
             gf_registerCurrentUser($object);
 
             if ($did) {
@@ -122,8 +126,12 @@ class Invite extends CI_Controller
             }
 
         } else {
-
-            show_error("An Error has occurred while logging in!", 500, "Login Error");
+            if ($login_status == USER_LOGIN_DELETE)
+                show_error("Your account had been deleted by admin!", 500, "Login Error");
+            else if ($login_status == USER_LOGIN_PWD)
+                show_error("Login password is incorrect!", 500, "Login Error");
+            else 
+                show_error("Couldn't find user on Relayy!", 500, "Login Error");
         }		        
 	}
 }

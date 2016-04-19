@@ -10,33 +10,59 @@ function registerDialogPopup() {
 function registerFacebook(uid, email, fname, lname, picture, bio, role) {
 
   var params = { 'login': email, 'password': QBApp.authKey, 'full_name': fname+" "+lname, 'email': email };
-
+  
   var filters = {filter: { field: 'email', param: 'eq', value: email }};
   QB.users.listUsers(filters, function(err, result){
     if (result && result.items.length> 0) {
       console.log("----------------linkedin register: old user");
       var user = result.items[0];
       // console.log(user.user);return;
-      $("#li_id").val(user.user.id);
-      $("#li_login").val(user.user.login);
-      $("#li_fname").val(fname);
-      $("#li_lname").val(lname);
-      $("#li_email").val(user.user.email);
-      $("#li_photo").val(picture);
-      $("#li_bio").val(bio);
-      $("#linkedin_form").submit();
+      $.ajax({
+       url: site_url + 'home/link',
+       data: {
+          email: user.user.email
+       },
+       success: function(data) {
+          if (data == "yes") {
+              $("#loginForm").modal("hide");
+              $("#lir_id").val(user.user.id);
+              $("#lir_login").val(user.user.login);
+              $("#lir_fname").val(fname);
+              $("#lir_lname").val(lname);
+              $("#lir_email").val(user.user.email);
+              $("#lir_photo").val(picture);
+              $("#lir_bio").val(bio);
+              
+              $("#linkedinForm").modal("show");
+          } else {
+              $("#li_id").val(user.user.id);
+              $("#li_login").val(user.user.login);
+              $("#li_fname").val(fname);
+              $("#li_lname").val(lname);
+              $("#li_email").val(user.user.email);
+              $("#li_photo").val(picture);
+              $("#li_bio").val(bio);
+              $("#linkedin_form").submit();     
+          }
+       },
+       type: 'POST'
+      });
     } else if (result && result.items.length == 0) {
       console.log("----------------linkedin register: new user");
+      
+      $("#loginForm").modal("hide");
       QB.users.create(params, function(err, user){
         if (user) {
-          $("#li_id").val(user.id);
-          $("#li_login").val(user.login);
-          $("#li_fname").val(fname);
-          $("#li_lname").val(lname);
-          $("#li_email").val(user.email);
-          $("#li_photo").val(picture);
-          $("#li_bio").val(bio);
-          $("#linkedin_form").submit();
+          $("#lir_id").val(user.id);
+          $("#lir_login").val(user.login);
+          $("#lir_fname").val(fname);
+          $("#lir_lname").val(lname);
+          $("#lir_email").val(user.email);
+          $("#lir_photo").val(picture);
+          $("#lir_bio").val(bio);
+          
+          $("#linkedinForm").modal("show");
+//          $("#linkedin_form").submit();
         } else  {
           alert("***********************" + JSON.stringify(err));
         }
@@ -69,22 +95,35 @@ $(document).ready(function() {
     var lname = $('#usr_reg_n_lname').val();
     var user_role = $('#user_role').val();
 
-    var params = { 'login': login, 'password': QBApp.authKey, 'full_name': fname+" "+lname, 'email': login };
+      var filters = {filter: { field: 'email', param: 'eq', value: login }};
+      QB.users.listUsers(filters, function(err, result){
+        if (result && result.items.length> 0) {
+          console.log("----------------linkedin register: old user");
+          var user = result.items[0];
+          $("#user_id").val(user.id);
+          $("#register_form").submit();
 
-    QB.users.create(params, function(err, user){
-      if (user) {
-        //alert(JSON.stringify(user));
-        $("#user_id").val(user.id);
-        $("#register_form").submit();
-      } else  {
-        alert(JSON.stringify(err));
-      }
+        } else if (result && result.items.length == 0) {
+          var params = { 'login': login, 'password': QBApp.authKey, 'full_name': fname+" "+lname, 'email': login };
 
-      $("#load-users").removeClass("visible");
-  	  $("#load-users").attr('disabled', false);
-      //$("#progressModal").modal("hide");
-      //$("html, body").animate({ scrollTop: 0 }, "slow");
-    });
+            QB.users.create(params, function(err, user){
+              if (user) {
+                //alert(JSON.stringify(user));
+                $("#user_id").val(user.id);
+                $("#register_form").submit();
+              } else  {
+                alert(JSON.stringify(err));
+              }
+
+              $("#load-users").removeClass("visible");
+                $("#load-users").attr('disabled', false);
+              //$("#progressModal").modal("hide");
+              //$("html, body").animate({ scrollTop: 0 }, "slow");
+            }); 
+        } else {
+          console.log(err);
+        }
+      });
   });
 
 

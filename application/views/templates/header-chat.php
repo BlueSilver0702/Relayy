@@ -4,11 +4,10 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
       <title><?php if(isset($page_title)) echo $page_title; ?></title>
-      <link rel="shortcut icon" href="<?= asset_base_url()?>/images/favicon.png">
-
+      <link rel="shortcut icon" href="<?= asset_base_url()?>/images/favicon.ico">
+      <!--reset styles-->
       <link rel="stylesheet" href="<?= asset_base_url()?>/libs/bootstrap.min.css" type="text/css">
       <link rel="stylesheet" href="<?= asset_base_url()?>/css/chat.css" type="text/css">
-      <link rel="stylesheet" href="<?= asset_base_url()?>/css/bootstrap-dialog.min.css" type="text/css">
       <link rel="stylesheet" href="<?= asset_base_url()?>/css/main.css" type="text/css">
 
 <?php 
@@ -25,13 +24,12 @@
         </div>
         <form class="pull-right search" method="post" action="<?php echo site_url('search')?>">
           <span class="glyphicon glyphicon-search"></span>
-          <input type="text" placeholder="search contact" class="search-box" name="search" value="<?= isset($search)?$search:""?>">
+          <input type="text" placeholder="search contact" class="search-box" name="search">
         </form>
         <div id="icon-list" class="pull-right">
-<?php if ($u_status < 2) {?>
           <a class="menu-chat <?= $body_class=='chat-page'?'current':''?>" href="<?php echo site_url('chat')?>" title="Chat Room"><span class="glyphicon glyphicon-comment"></span></a>
-<?php }
-      if ($u_type == 1 && $u_status < 2) { ?>
+<?php if ($u_type == 1) { ?>
+          <a class="menu-invite <?= $body_class=='invite-page'?'current':''?>" href="<?php echo site_url('invite')?>" title="Invite Management"><span class="glyphicon glyphicon-send"></span></a>
           <a class="menu-users <?= $body_class=='users-page'?'current':''?>" href="<?php echo site_url('users')?>" title="User Management"><span class="glyphicon glyphicon-user"></span></a>
           <a class="menu-allow <?= $body_class=='allow-page'?'current':''?>" href="<?php echo site_url('allow')?>" title="Chat Management"><span class="glyphicon glyphicon-flag"></span></a>
 <?php }?>

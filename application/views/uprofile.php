@@ -46,10 +46,11 @@
     </div>
   </div>
 
+  <?php if ($editable) {?>
   <div class="misc text-center">
     <a href="<?php echo site_url('profile/useredit/'.$id)?>" class="btn btn-secondary text-danger">Edit User</a>
   </div>
-
+  <?php }?>
   <div class="social">
     <div class="row">
 

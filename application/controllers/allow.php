@@ -29,7 +29,8 @@ class Allow extends ChatController
 		foreach ($chat_data['chats'] as &$chat) {
 			foreach (json_decode($chat[TBL_CHAT_OCCUPANTS]) as $occupant) {
 				$userObj = $this->muser->get($occupant);
-				$chat['emails'][] = $userObj->{TBL_USER_EMAIL};
+                if ($userObj)
+				    $chat['emails'][] = $userObj->{TBL_USER_EMAIL};
 			}		
 		}
 
@@ -61,7 +62,8 @@ class Allow extends ChatController
 		foreach ($chat_data['chats'] as &$chat) {
 			foreach (json_decode($chat[TBL_CHAT_OCCUPANTS]) as $occupant) {
 				$userObj = $this->muser->get($occupant);
-				$chat['emails'][] = $userObj->{TBL_USER_EMAIL};
+				if ($userObj && $userObj->{TBL_USER_STATUS} != USER_STATUS_DELETE)
+					$chat['emails'][] = $userObj->{TBL_USER_EMAIL};
 			}		
 		}
 
@@ -115,12 +117,13 @@ class Allow extends ChatController
 		$this->roleCheck();    	
 
 		$chatObj = $this->mchat->get($did);
-		$this->mchat->delete($did);
-
-		foreach ($chatObj->{TBL_CHAT_OCCUPANTS} as $user_id) {
+		$occupants_arr = json_decode($chatObj->{TBL_CHAT_OCCUPANTS});
+		foreach ($occupants_arr as $user_id) {
 			$userObj = $this->muser->get($user_id);
 			$this->email->removeChat($this->cemail, $this->cfname." ".$this->clname, $userObj->{TBL_USER_EMAIL}, $userObj->{TBL_USER_FNAME}, $chatObj->{TBL_CHAT_NAME});		
 		}
+
+		$this->mchat->delete($did);
 
 		if ($page == 0) {
 			redirect(site_url('allow'), 'get');
@@ -138,9 +141,9 @@ class Allow extends ChatController
 		$this->roleCheck();
 
 		$chatObj = $this->mchat->changeStatus($did);
-		foreach ($chatObj->{TBL_CHAT_OCCUPANTS} as $user_id) {
+		foreach (json_decode($chatObj->{TBL_CHAT_OCCUPANTS}) as $user_id) {
 			$userObj = $this->muser->get($user_id);
-			if ($chatObj->{TBL_CHAT_TYPE} == CHAT_TYPE_PRIVATE) $this->email->approveChat($this->cemail, $this->cfname." ".$this->clname, $userObj->{TBL_USER_EMAIL}, $userObj->{TBL_USER_FNAME}, $this->inviteChatLink($user_id, $userObj->{TBL_USER_EMAIL}, $chatObj->{TBL_CHAT_DID}), $chatObj->{TBL_CHAT_NAME});
+			if ($chatObj->{TBL_CHAT_STATUS} == CHAT_STATUS_LIVE) $this->email->approveChat($this->cemail, $this->cfname." ".$this->clname, $userObj->{TBL_USER_EMAIL}, $userObj->{TBL_USER_FNAME}, $this->inviteChatLink($user_id, $userObj->{TBL_USER_EMAIL}, $chatObj->{TBL_CHAT_DID}), $chatObj->{TBL_CHAT_NAME});
 			else $this->email->deproveChat($this->cemail, $this->cfname." ".$this->clname, $userObj->{TBL_USER_EMAIL}, $userObj->{TBL_USER_FNAME}, $chatObj->{TBL_CHAT_NAME});
 		}
 

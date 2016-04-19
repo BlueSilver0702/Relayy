@@ -51,6 +51,7 @@ class Muser extends CI_Model {
     {
         if ($status == USER_STATUS_ALL) {
             $query = $this->db->select('*')
+                          ->where_not_in(TBL_USER_STATUS, array(USER_STATUS_DELETE))
                           ->get(TBL_NAME_USER);
         } else {
             $query = $this->db->select('*')
@@ -79,6 +80,22 @@ class Muser extends CI_Model {
     {
         $query = $this->db->select('*')
                           ->where(TBL_USER_ID, $where_id)
+                          ->limit(1)
+                          ->get(TBL_NAME_USER);
+
+        if ($query->num_rows() === 1)
+        {
+            $user = $query->row();
+            return $user;
+        }
+
+        return FALSE;
+    }
+    
+    public function getEmail($where_email)
+    {
+        $query = $this->db->select('*')
+                          ->where(TBL_USER_EMAIL, $where_email)
                           ->limit(1)
                           ->get(TBL_NAME_USER);
 
@@ -148,8 +165,10 @@ class Muser extends CI_Model {
 
     public function delete($where_id)
     {
-        $this->db->where(TBL_USER_ID, $where_id);
-        $this->db->delete(TBL_NAME_USER);
+        $data = array(
+            TBL_USER_STATUS => USER_STATUS_DELETE
+        );
+        $this->db->update(TBL_NAME_USER, $data, array(TBL_USER_ID => $where_id));
 
         return "success";
     }
@@ -174,10 +193,18 @@ class Muser extends CI_Model {
 
             $pwd = $user->{TBL_USER_PWD};
 
-            if ($password == $pwd) return $user;
+            if ($password == $pwd) {
+                if ($user->{TBL_USER_STATUS} == USER_STATUS_DELETE) {
+                    return USER_LOGIN_DELETE;
+                } else {
+                    return USER_LOGIN_SUCCESS;
+                }
+            } else {
+                return USER_LOGIN_PWD;
+            }
         }
 
-        return FALSE;
+        return USER_LOGIN_404;
     }
 
     public function register($data_arr) {
@@ -189,11 +216,30 @@ class Muser extends CI_Model {
 
         if ($query->num_rows() >= 1) {
             $newUser = $query->row();
-
+            
+            if ($newUser->{TBL_USER_STATUS} == USER_STATUS_DELETE) {
+                
+                $data = array(
+                    TBL_USER_STATUS => USER_STATUS_INIT
+                );
+                $this->db->update(TBL_NAME_USER, $data, array(TBL_USER_ID => $newUser->{TBL_USER_ID}));   
+                $newUser->{TBL_USER_STATUS} = USER_STATUS_INIT;
+            }
+            
+            $this->db->update(TBL_NAME_USER, $data_arr, array(TBL_USER_ID => $newUser->{TBL_USER_ID}));
+            $newUser = $this->get($newUser->{TBL_USER_ID});
+            //if (array_key_exists(TBL_USER_TYPE, $data_arr)) {
+//                $data = array(
+//                    TBL_USER_TYPE => $data_arr(TBL_USER_TYPE)
+//                );
+//                $this->db->update(TBL_NAME_USER, $data, array(TBL_USER_ID => $newUser->{TBL_USER_ID}));
+//                $newUser->{TBL_USER_TYPE} = $data_arr(TBL_USER_TYPE);   
+//            }
+            
             return $newUser;
         } else {
             $data_arr[TBL_USER_STATUS] = USER_STATUS_INIT;
-            $data_arr[TBL_USER_TYPE] = USER_TYPE_EXPERT;
+//            $data_arr[TBL_USER_TYPE] = USER_TYPE_EXPERT;
             $newUser = $this->add($data_arr);
             return $this->get($newUser);
         }

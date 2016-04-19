@@ -83,15 +83,15 @@ class Mchat extends CI_Model {
                 TBL_CHAT_STATUS => CHAT_STATUS_LIVE
             );
 
-            $this->db->update(TBL_NAME_CHAT, $data, array(TBL_CHAT_DID => $did));
-            return $this->get($did);
+            $this->db->update(TBL_NAME_CHAT, $data, array(TBL_CHAT_DID => $where_did));
+            return $this->get($where_did);
         } else {
             $data = array(
                 TBL_CHAT_STATUS => CHAT_STATUS_INIT
             );
 
-            $this->db->update(TBL_NAME_CHAT, $data, array(TBL_CHAT_DID => $did));
-            return $this->get($did);
+            $this->db->update(TBL_NAME_CHAT, $data, array(TBL_CHAT_DID => $where_did));
+            return $this->get($where_did);
         }
     }
 }

@@ -4,7 +4,7 @@ class Home extends CI_Controller
 {
 	public function __construct()
 	{
-		parent::__construct();
+		parent::__construct(); 
 	}
 
 	public function index()
@@ -57,8 +57,8 @@ class Home extends CI_Controller
 		$this->load->view('templates/footer', $data);	
 	}
 
-	 public function channel($email, $did)
-	 {
+	public function channel($email, $did)
+	{
 	 	if ( gf_isLogin() )
 	 	{
 	 		redirect(site_url('chat/channel/'.$did), 'get');
@@ -83,8 +83,22 @@ class Home extends CI_Controller
 	 	$this->load->view('home', $data);
 
 	 	$this->load->view('templates/footer', $data);	
-	 }
+	}
 
+    public function link() {
+        
+        $email = $this->input->post('email');
+        $this->load->model('muser');
+        $user = $this->muser->getEmail($email);
+        if ($user) {
+            if ($user->{TBL_USER_STATUS} == USER_STATUS_LIVE) {
+                echo "no";exit;
+            }
+        }
+        
+        echo "yes";exit;
+    }
+     
 	public function logout()
 	{
 		

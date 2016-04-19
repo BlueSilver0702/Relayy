@@ -42,6 +42,9 @@ class Profile extends ChatController
 		$c_data['page_title'] = 'Profile | Relayy';
 
 		$user_data = $this->muser->getUserArray($c_id);
+        
+        if ($c_id == $this->cid || $this->ctype == USER_TYPE_ADMIN) $user_data['editable'] = true;
+        else $user_data['editable'] = false;
 		// print_r($user);exit;
     
     	$this->load->view('templates/header-chat', $c_data);

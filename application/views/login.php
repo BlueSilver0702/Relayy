@@ -1,3 +1,19 @@
+<!doctype html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+      <title><?php if(isset($page_title)) echo $page_title; ?></title>
+      <link rel="shortcut icon" href="<?= asset_base_url()?>/images/favicon.png">
+
+      <!--reset styles-->
+      <link rel="stylesheet" href="<?= asset_base_url()?>/css/style.css" type="text/css">
+      <link rel="stylesheet" href="<?= asset_base_url()?>/libs/bootstrap.min.css" type="text/css">
+      <script>var site_url = "<?php echo site_url() ?>";</script>
+   </head>
+   <body class="<?php if(isset($body_class)) echo $body_class; ?>">
+<!-- header end -->
+
 <script type="text/javascript" src="//platform.linkedin.com/in.js">
     api_key: 75yg45wf5h9itq
     authorize: true
@@ -36,27 +52,9 @@
 
 </script>
 <div id="main" class="main">
-    <div class="section_wrapper container">
-        <div class="text_hero col-sm-6">
-            <p class="hi_logo"></p>
-            <div class="hi_tit">Talk business, build business relationships.</div>
-            <p class="hi_icos"></p>
-            <p class="con_text">
-            
-            <a href="#" class="btn_download" onclick="loginDialogPopup()">Signin to Relayy</a>
+    
 
-            <span class="subtext">Available for iOS &amp; Android</span>
-            <a class="appstore" title="download Relayy for iOS"></a>
-            <a class="playstore" title="download Relayy for Android" target="_blank"></a>
-        </p>
-
-        </div>
-        <div class="image_hero col-sm-6">
-            <img src="<?php echo asset_base_url()?>/images/mobile.jpg">
-        </div>
-    </div>
-
-    <div id="loginForm" class="modal fade <?= isset($email)?"show":""?>" role="dialog">
+    <div id="loginForm">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -98,67 +96,7 @@
               <input type="hidden" id="li_bio" name="li_bio" value="">
               <button type="button" class="btn btn-primary btn-lg btn-block facebook"  onclick="onLinkedInClk()">Login with LinkedIn</button>
             </form>
-            <button type="button" class="btn btn-success btn-lg btn-block" onclick="registerDialogPopup()">Register to Relayy</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div id="registerForm" class="modal fade" role="dialog">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h3 class="modal-title">Register to Relayy</h3>
-          </div>
-          <div class="modal-body">
-            <form class="form-horizontal" method="post" action="<?php echo site_url('auth/register') ?>" id="register_form">
-              <input type="hidden" name="reg_id" value="" id="user_id">
-              <div class="form-group">
-                <label class="col-sm-4 control-label">User Role:</label>
-                <div class="col-sm-6 selectContainer">
-                  <select class="form-control" name="reg_role" id="user_role">
-                    <option value="">Choose a role</option>
-                    <option value="1">Admin</option>
-                    <option value="2">Advisor</option>
-                    <option value="3">Startups & Expert</option>
-                  </select>
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="control-label col-sm-4" for="usr_reg_n_fname">First Name:</label>
-                <div class="col-sm-6">
-                  <input type="text" class="form-control" name="reg_fname" id="usr_reg_n_fname" placeholder="Enter first name">
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="control-label col-sm-4" for="usr_reg_n_lname">Last Name:</label>
-                <div class="col-sm-6">
-                  <input type="text" class="form-control" name="reg_lname" id="usr_reg_n_lname" placeholder="Enter last name">
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="control-label col-sm-4" for="usr_reg_n_lgn">Login Email:</label>
-                <div class="col-sm-6">
-                  <input type="email" class="form-control" name="reg_email" id="usr_reg_n_lgn" placeholder="Enter email">
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="control-label col-sm-4" for="usr_reg_n_pwd">Password:</label>
-                <div class="col-sm-6">
-                  <input type="password" class="form-control" name="reg_pwd" id="usr_reg_n_pwd" placeholder="Enter password">
-                </div>
-              </div>
-              <div class="form-group" style="margin-bottom:0">
-                <div class="col-sm-offset-4 col-sm-6">
-                  <button type="button" class="btn btn-danger btn-block" id="sign_up" data-toggle="modal">Register</button>
-                </div>
-              </div>
-              <div style="margin-top:5px;">
-                <div class="col-sm-offset-4 col-sm-6">
-                  <img src="assets/images/ajax-loader.gif" id="load-users">
-                </div>
-              </div>
-            </form>
+            <a class="btn btn-success btn-lg btn-block" href="<?= site_url('register')?>">Register to Relayy</a>
           </div>
         </div>
       </div>
@@ -200,3 +138,13 @@
     </div>
     
 </div>
+<!-- footer.php -->
+            <script src="<?= asset_base_url()?>/libs/jquery.min.js" type="text/javascript"></script>
+            <script src="<?= asset_base_url()?>/libs/bootstrap.min.js" type="text/javascript"></script>
+
+            <script src="<?= asset_base_url()?>/libs/quickblox.min.js"></script>
+            <script src="<?= asset_base_url()?>/js/config.js"></script>
+            <script src="<?= asset_base_url()?>/js/page_home.js"></script>
+            
+    </body>
+</html>

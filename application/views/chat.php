@@ -10,7 +10,7 @@
             </ul>
         </div>
 
-        <div class="panel panel-primary" style="height:100%;position:relative;clear:both;">
+        <div class="panel panel-primary">
           <div class="panel-body">
             <div class="row">
               

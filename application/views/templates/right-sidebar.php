@@ -1,5 +1,4 @@
 <div class="pull-right" id="r-side">
-<?php if ($d_current != 0) {?>
   <div class="col-md-12 owner" id="information">
     <div id="information_holder">
 	    <h4>
@@ -39,26 +38,19 @@
 	      <h5 class="">
 	        <?= count($d_occupants);?> Members
 <?php if ($d_owner == "Me" && $d_type == 2) {?>
-	        <a class="" onclick="addMember('<?= $d_id?>')">+ Add Members</a>
+	        <a class="" onclick="showDialogInfoPopup()">+ Add Members</a>
 <?php }?>
 	      </h5>
 	      
 	      <ul>
-<?php   foreach ($d_users as $user) {
-$username = '';
-if ($user['fname']) $username = $user['fname']." ".$user['lname'];
-else {
-    $str_arr = explode("@", $user['email']);
-    $username = $str_arr[0];
-}
-?>
-			<li class="" id="remove-<?= $user['id']?>">
-	          <a class="" href="<?= site_url("profile/user/".$user['id'])?>">
+<?php   foreach ($d_users as $user) {?>
+			<li class="" id="remove-<?= $user['uid']?>">
+	          <a class="">
 	            <img class="avatar avatar_small" src="<?= strlen($user['photo'])>0?$user['photo']:asset_base_url().'/images/emp-sm.jpg'?>">
-<?= $username ?>
+	            <?= $user['fname']?>
 	          </a>
 <?php if ($d_owner == "Me") {?>
-	          <a class="information_remove_user" onclick="removeAction('<?= $d_id?>', '<?= $user['id']?>', '<?= $username?>')"></a>
+	          <a class="information_remove_user" onclick="removeAction('<?= $d_id?>', '<?= $user['uid']?>')"></a>
 <?php }?>
 	          <span class="">
 	            <lastseen data-user-id="4513703"><span class="lastseen">offline</span></lastseen>
@@ -72,5 +64,4 @@ else {
     
     </div>
   </div>
-<?php } ?>
 </div>

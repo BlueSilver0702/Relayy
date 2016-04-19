@@ -85,6 +85,7 @@ class ChatController extends CI_Controller
 	    	
 	    	$d_owner = $this->muser->get($occupants_arr[0]);
 	    	
+            if (!$d_owner) $d_owner = $this->muser->get($this->cid);
 	    	$chat_data['d_owner'] = $d_owner->{TBL_USER_FNAME};
 
 	    	$chat_data['d_noti'] = $this->moption->get($this->cid, 'notify_'.$chat_data['d_id']);
@@ -103,7 +104,11 @@ class ChatController extends CI_Controller
             }
             if ($dialog[TBL_CHAT_SENDER]) {
                 $sender = $this->muser->get($dialog[TBL_CHAT_SENDER]);
-                $dialog['h_message'] = $sender->{TBL_USER_FNAME}." ".$sender->{TBL_USER_LNAME}. ": " . $dialog[TBL_CHAT_MESSAGE];
+                if ($sender) {
+                    $dialog['h_message'] = $sender->{TBL_USER_FNAME}." ".$sender->{TBL_USER_LNAME}. ": " . $dialog[TBL_CHAT_MESSAGE];    
+                } else {
+                    $dialog['h_message'] = "Relayy User: ".$dialog[TBL_CHAT_MESSAGE];
+                }
             } else {
                 if ($dialog[TBL_CHAT_TYPE] == CHAT_TYPE_PRIVATE)
                     $dialog['h_message'] = $dialog['d_users'][0][TBL_USER_FNAME]." ".$dialog['d_users'][0][TBL_USER_LNAME].": Created a new 1:1 chat";

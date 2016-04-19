@@ -180,7 +180,9 @@ body {
 
 .user-manage {
 	width:100%;
-	padding: 90px 30px 0;
+	padding: 90px 30px 50px;
+    overflow-y: auto;
+    position: relative;
 }
 
 .user-manage .row span, .user-manage .row a {
@@ -529,7 +531,18 @@ img.avatar.avatar_small {
 }
 
 #main_block .pre-scrollable {
-    max-height: 600px!important;
+    max-height: 1000px!important;
+    overflow-y:auto!important;
+}
+
+#main_block .panel-primary {
+     height:100%;
+     position:relative;
+     clear:both;
+}
+
+#main_block .panel-body, #main_block .panel-body .row, #main_block .panel-body #mcs_container, #main_block .panel-body .customScrollBox, #main_block .panel-body .del-style, #main_block #messages-list {
+    height:100%!important;
 }
 
 #l-side .list-group-item.deactive {

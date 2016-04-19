@@ -9,43 +9,28 @@
                     <p class="footer_copyright col-md-5 clear">Copyright &copy; 2016 Relayy, Inc</p>
                 </footer>
             </div>
+<?php   if(isset($js_home)) {
+            echo '<script src="'.asset_base_url().'/libs/jquery.min.js" type="text/javascript"></script>
+                  <script src="'.asset_base_url().'/libs/bootstrap.min.js" type="text/javascript"></script>';
 
-            <script src="<?= asset_base_url()?>/libs/jquery.min.js" type="text/javascript"></script>
-            <script src="<?= asset_base_url()?>/libs/bootstrap.min.js" type="text/javascript"></script>
+            echo '<script src="'.asset_base_url().'/libs/quickblox.min.js"></script>';
+            echo '<script src="'.asset_base_url().'/js/config.js"></script>';
+            echo '<script src="'.asset_base_url().'/js/page_home.js"></script>';
+            echo '
+                <script>
+                    function startChat() {
+                      window.location.href = "'.site_url('chat').'";
+                    }
+                </script>
+            ';
 
-            <script src="<?= asset_base_url()?>/libs/quickblox.min.js"></script>
-            <script src="<?= asset_base_url()?>/js/config.js"></script>
-            <script src="<?= asset_base_url()?>/js/page_home.js"></script>
-            
-            <script>
-                function startChat() {
-                  window.location.href = "<?= site_url('chat')?>";
-                }
-            </script>
-
-<?php       if (isset($js_home) && $js_home == 2) { ?>
-            <script>
-              $("#loginForm").modal("show")
-            </script>
-<?php       }
-        
-        if ($body_class == 'invite-page') {
-?>
-<script>    
-    $("#invite_accept").click(function(){
-    var email = $("#usr_reg_n_lgn").val();
-    var params = { 'login': email, 'password': QBApp.authKey, 'email': email };
-    QB.users.create(params, function(err, user){
-        if (user) {
-          $("#user_uid").val(user.id);
-          $("#register_form").submit();
-        } else  {
-          alert(JSON.stringify(err));
-        }
-    }); 
-})
-</script>
-<?php
+            if ($js_home == 2) {
+              echo '
+                <script>
+                  $("#loginForm").modal("show")
+                </script>
+              ';
+            }
         }
 ?>
     </body>

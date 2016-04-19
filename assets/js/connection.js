@@ -73,6 +73,6 @@ function onReconnectListener(){
 $(document).ready(
     function() {
         $("html").niceScroll({cursorcolor:"#02B923", cursorwidth:"7", zindex:"99999"});
-        $(".nice-scroll").niceScroll({cursorcolor:"#02B923", cursorwidth:"7", zindex:"99999"});
+        //$(".nice-scroll").niceScroll({cursorcolor:"#02B923", cursorwidth:"7", zindex:"99999"});
     }
 );

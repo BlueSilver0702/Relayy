@@ -310,12 +310,22 @@ class Chat extends ChatController
         foreach ($occupants as $occupant) {
             if (in_array($occupant[1], $r_occupants)) continue;
             if ($occupant[1] == "") {
-                $data_arr = array(
+                
+                $oldUser = $this->muser->getEmail($occupant[0]);
+                $new_id = NULL;
+                
+                if ($oldUser) {
+                    $new_id = $oldUser->{TBL_USER_ID};
+                    $this->muser->edit($new_id, array(TBL_USER_STATUS=>USER_STATUS_INVITE));
+                } else {
+                    $data_arr = array(
                         TBL_USER_TYPE => USER_TYPE_EXPERT,
                         TBL_USER_STATUS => $this->ctype!=USER_TYPE_EXPERT?USER_STATUS_INVITE:USER_STATUS_INIT,
                         TBL_USER_EMAIL => strtolower($occupant[0])
                     );
-                $new_id = $this->muser->add($data_arr);
+                    $new_id = $this->muser->add($data_arr);
+                }
+                
                 if (!$new_id) {echo "error";exit;}
                 $this->email->inviteUser($this->cemail, $this->cfname." ".$this->clname, $this->inviteUserLink($new_id, $occupant[0]), $occupant[0]);
                 $r_occupants[] = $new_id;
@@ -358,12 +368,22 @@ class Chat extends ChatController
 
         foreach ($occupants as $occupant) {
             if ($occupant[1] == "") {
-                $data_arr = array(
+                            
+                $oldUser = $this->muser->getEmail($occupant[0]);
+                $new_id = NULL;
+                
+                if ($oldUser) {
+                    $new_id = $oldUser->{TBL_USER_ID};
+                    $this->muser->edit($new_id, array(TBL_USER_STATUS=>USER_STATUS_INVITE));
+                } else {
+                    $data_arr = array(
                         TBL_USER_TYPE => USER_TYPE_EXPERT,
                         TBL_USER_STATUS => $this->ctype!=USER_TYPE_EXPERT?USER_STATUS_INVITE:USER_STATUS_INIT,
                         TBL_USER_EMAIL => strtolower($occupant[0])
                     );
-                $new_id = $this->muser->add($data_arr);
+                    $new_id = $this->muser->add($data_arr);
+                }
+                
                 if (!$new_id) {echo "error";exit;}
                 $this->email->inviteUser($this->cemail, $this->cfname." ".$this->clname, $this->inviteUserLink($new_id, $occupant[0]), $occupant[0]);
                 $r_occupants[] = $new_id;

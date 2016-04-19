@@ -93,6 +93,7 @@ defined('USER_STATUS_INIT')       OR define('USER_STATUS_INIT',    0);
 defined('USER_STATUS_LIVE')       OR define('USER_STATUS_LIVE',       1);
 defined('USER_STATUS_INVITE')     OR define('USER_STATUS_INVITE',    2);
 defined('USER_STATUS_INVITED')    OR define('USER_STATUS_INVITED',    3);
+defined('USER_STATUS_DELETE')    OR define('USER_STATUS_DELETE',    4);
 defined('USER_STATUS_ALL')        OR define('USER_STATUS_ALL',      100);
 
 
@@ -131,6 +132,11 @@ defined('TBL_OPTION_UID')         OR define('TBL_OPTION_UID',       'uid');
 defined('TBL_OPTION_KEY')         OR define('TBL_OPTION_KEY',       'meta_key');
 defined('TBL_OPTION_VALUE')       OR define('TBL_OPTION_VALUE',     'meta_value');
 
-defined('TBL_NAME_USER')		  OR define('TBL_NAME_USER',     'tbl_user');
-defined('TBL_NAME_CHAT')		  OR define('TBL_NAME_CHAT',     'tbl_chat');
-defined('TBL_NAME_OPTION')		  OR define('TBL_NAME_OPTION',   'tbl_option');
+defined('TBL_NAME_USER')          OR define('TBL_NAME_USER',     'tbl_user');
+defined('TBL_NAME_CHAT')          OR define('TBL_NAME_CHAT',     'tbl_chat');
+defined('TBL_NAME_OPTION')          OR define('TBL_NAME_OPTION',   'tbl_option');
+
+defined('USER_LOGIN_SUCCESS')     OR define('USER_LOGIN_SUCCESS', 1);
+defined('USER_LOGIN_404')         OR define('USER_LOGIN_404', 0);
+defined('USER_LOGIN_DELETE')      OR define('USER_LOGIN_DELETE', 2);
+defined('USER_LOGIN_PWD')         OR define('USER_LOGIN_PWD', 3);
