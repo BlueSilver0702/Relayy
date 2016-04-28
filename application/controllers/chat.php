@@ -16,7 +16,6 @@ class Chat extends ChatController
 	
     	$this->loginCheck();    	
 
-		///////////////////////////
     	$chat_data = $this->getChatData();
 
     	$chat_data['d_current'] = $chat_data['d_id'];
@@ -110,6 +109,23 @@ class Chat extends ChatController
 
 		$this->load->view('templates/footer-chat', $chat_data);
 	}
+
+    public function channel_admin($current_id)
+    {
+        if (!gf_isAdmin()) 
+            redirect(site_url('profile'), 'get');
+
+        $d_obj = $this->mchat->get($current_id);
+        $occupants = json_decode($d_obj->{TBL_CHAT_OCCUPANTS});
+
+        foreach ($occupants as $user) {
+            if ($user == $this->cid) {
+                
+            }
+        }
+
+        $this->channel($current_id);
+    }
 
 	public function add()
 	{
